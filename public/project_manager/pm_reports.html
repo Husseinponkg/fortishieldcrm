@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Project Reports - Fortishield CRM</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    body {
+      padding: 2rem;
+    }
+    
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* Header Styles */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Form Styles */
+    .form-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--light);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .form-title i {
+      color: var(--primary);
+    }
+    
+    #reportForm {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .form-group label {
+      font-weight: 500;
+      color: var(--light);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .form-group label i {
+      color: var(--primary);
+      width: 20px;
+    }
+    
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    
+    .full-width {
+      grid-column: 1 / -1;
+    }
+    
+    .submit-btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    .submit-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    
+    /* Reports List Styles */
+    .reports-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .reports-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--light);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .reports-title i {
+      color: var(--primary);
+    }
+    
+    .reports-list {
+      display: grid;
+      gap: 1rem;
+    }
+    
+    .report-card {
+      background: var(--secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .report-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .report-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    
+    .report-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--light);
+    }
+    
+    .report-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .report-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+    
+    .report-meta-item i {
+      color: var(--primary);
+    }
+    
+    .report-description {
+      color: var(--gray);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    
+    .report-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    
+    .btn-view {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-view:hover {
+      background: var(--primary-hover);
+    }
+    
+    .btn-download {
+      background: var(--success);
+      color: white;
+    }
+    
+    .btn-download:hover {
+      background: #0d9c6d;
+    }
+    
+    .btn-delete {
+      background: var(--danger);
+      color: white;
+    }
+    
+    .btn-delete:hover {
+      background: #d334;
+    }
+    
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .status-pending {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+    
+    .status-in-progress {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--primary);
+    }
+    
+    .status-completed {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+    
+    .status-on-hold {
+      background: rgba(239, 68, 0.2);
+      color: var(--danger);
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--gray);
+      font-style: italic;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .app-container {
+        max-width: 100%;
+      }
+      
+      .header {
+        padding: 1.25rem;
+      }
+      
+      .header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .form-container, .reports-container {
+        padding: 1.5rem;
+      }
+      
+      #reportForm {
+        grid-template-columns: 1fr;
+      }
+      
+      .report-header {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      
+      .report-meta {
+        flex-wrap: wrap;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 1.3rem;
+      }
+      
+      .form-container, .reports-container {
+        padding: 1.25rem;
+      }
+      
+      .submit-btn {
+        padding: 0.6rem 1.2rem;
+      }
+      
+      .report-actions {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="header">
+      <h1><i class="fas fa-chart-line"></i> Project Reports</h1>
+    </div>
+    
+    <div class="form-container">
+      <h2 class="form-title"><i class="fas fa-plus-circle"></i> Create Report</h2>
+      <form id="reportForm">
+        <div class="form-group">
+          <label for="title"><i class="fas fa-heading"></i> developer name:</label>
+          <input type="text" id="title" name="title" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="task_type"><i class="fas fa-tasks"></i> Task Type:</label>
+          <input type="text" id="task_type" name="task_type" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="task_status"><i class="fas fa-status"></i> Status:</label>
+          <select id="task_status" name="task_status" required>
+            <option value="pending">pending</option>
+            <option value="in progress">in progress</option>
+            <option value="completed">completed</option>
+            <option value="on hold">on hold</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="file_extension"><i class="fas fa-file"></i> File Type:</label>
+          <select id="file_extension" name="file_extension">
+            <option value="pdf">PDF</option>
+            <option value="docx">DOCX</option>
+            <option value="txt">TXT</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="signature"><i class="fas fa-signature"></i> Signature:</label>
+          <input type="text" id="signature" name="signature">
+        </div>
+        
+        <div class="form-group full-width">
+          <label for="description"><i class="fas fa-align-left"></i> Description:</label>
+          <textarea id="description" name="description" rows="6" cols="60"></textarea>
+        </div>
+        
+        <div class="full-width">
+          <button type="submit" class="submit-btn"><i class="fas fa-plus"></i> Create Report</button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="reports-container">
+      <h2 class="reports-title"><i class="fas fa-list"></i> Reports</h2>
+      <div id="reportsList" class="reports-list">
+        <div class="loading">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/report.js"></script>
+  <script>
+    // simple alert helper used by client script
+    function showAlert(msg, type) {
+      alert(msg);
+    }
+  </script>
+</body>
+</html>

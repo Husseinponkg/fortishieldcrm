@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fortishield Matrix CRM - Daily Tasks</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+ :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary: #1f2937;
+            --dark: #111827;
+            --darker: #0a0e17;
+            --light: #f3f4f6;
+            --gray: #9ca3af;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --card-bg: #1e293b;
+            --card-border: #374151;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--card-border);
+            text-align: center;
+        }
+        
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .logo-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary) 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
+        }
+        
+        .logo-subtitle {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: rgba(31, 41, 55, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .nav-list {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-item a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-item a:hover, .nav-item a.active {
+            color: var(--light);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .notification-badge {
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.5rem;
+        }
+        
+        /* Main layout */
+        .main-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            gap: 2rem;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+        }
+        
+        .sidebar h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+        
+        .sidebar h3 i {
+            color: var(--primary);
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--gray);
+            text-decoration: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--light);
+        }
+        
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main content area */
+        .content {
+            flex: 1;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+        }
+        
+        .content h2 {
+            color: var(--light);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .content h2 i {
+            color: var(--primary);
+        }
+        
+        .content > p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-card {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--card-bg) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dashboard-card h3 {
+            color: var(--light);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .dashboard-card h3 i {
+            color: var(--primary);
+        }
+        
+        .dashboard-card p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 1rem;
+            border-top: 1px solid var(--card-border);
+        }
+        
+        .stat {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        /* Activity section */
+        .activity-section {
+            margin-top: 2rem;
+        }
+        
+        .activity-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary);
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--light);
+        }
+        
+        .activity-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--card-border);
+            margin-top: auto;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .copyright {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                margin-bottom: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+            }
+            
+            .logo {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo-text {
+                align-items: center;
+            }
+            
+            .nav-list {
+                gap: 0.5rem;
+            }
+            
+            .nav-item a {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+            
+            .content, .sidebar {
+                padding: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stat {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: left;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid var(--card-border);
+            }
+            
+            .stat:last-child {
+                border-bottom: none;
+            }
+            
+            .activity-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .activity-icon {
+                margin-bottom: 0.75rem;
+            }
+        }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.6);
+      padding-top: 60px;
+    }
+    .modal-content {
+      background-color: var(--card-bg);
+      margin: auto;
+      padding: 20px;
+      border: 1px solid var(--card-border);
+      width: 90%;
+      max-width: 500px;
+      border-radius: 12px;
+      color: var(--light);
+    }
+    .close {
+      color: var(--gray);
+      float: right;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover { color: var(--danger); }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: .5rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: .5rem; border-radius: 6px;
+      border: 1px solid var(--card-border);
+      background: var(--dark); color: var(--light);
+    }
+    .form-actions { display: flex; justify-content: flex-end; gap: 1rem; }
+    .form-actions button {
+      padding: .5rem 1rem;
+      border: none; border-radius: 6px;
+      cursor: pointer;
+    }
+    #cancelBtn { background: var(--danger); color: #fff; }
+    #cancelBtn:hover { background: #b91c1c; }
+    #taskForm button[type="submit"] { background: var(--primary); color: #fff; }
+    #taskForm button[type="submit"]:hover { background: var(--primary-hover); }
+    /* Task list styling */
+    .task-list { list-style: none; margin-top: 1rem; }
+    .task-item { padding: 1rem; border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 1rem; background: var(--secondary); }
+    .task-header { display: flex; justify-content: space-between; align-items: center; }
+    .task-status { padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.8rem; text-transform: capitalize; }
+    .status-pending { background: var(--warning); color: #fff; }
+    .status-completed { background: var(--success); color: #fff; }
+    .status-not-completed { background: var(--danger); color: #fff; }
+    .task-actions { margin-top: .75rem; display: flex; gap: .5rem; }
+    .task-actions button { border: none; padding: .5rem .75rem; border-radius: 6px; cursor: pointer; }
+    .edit-btn { background: var(--primary); color: #fff; }
+    .delete-btn { background: var(--danger); color: #fff; }
+    .complete-btn { background: var(--success); color: #fff; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <img src="https://images.unsplash.com/photo-1569012871812-f38ee64cd54c?auto=format&fit=crop&w=100&q=80" alt="Fortishield Logo">
+    <h1>Fortishield Matrix CRM</h1>
+    <p>Daily Tasks Dashboard</p>
+  </header>
+
+  <!-- Navigation -->
+  <nav>
+    <ul>
+      <li><a href="customers.html"><i class="fas fa-users"></i> View Customers</a></li>
+      <li><a href="daily_tasks.html" class="active"><i class="fas fa-tasks"></i> Daily Tasks</a></li>
+      <li><a href="contacts.html"><i class="fas fa-chart-bar"></i> Customer Benchmarks</a></li>
+    </ul>
+  </nav>
+
+  <div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3><i class="fas fa-bars"></i> Navigation Menu</h3>
+      <a href="gm_dash.html"><i class="fas fa-home"></i> View Dashboard</a>
+      <a href="customers.html"><i class="fas fa-user-plus"></i> Record Customers</a>
+      <a href="views.html"><i class="fas fa-list"></i> View Customers</a>
+      <a href="opportunities.html"><i class="fas fa-briefcase"></i> View Opportunities</a>
+      <a href="activities_dash.html"><i class="fas fa-tasks"></i> Detailed Activities</a>
+      <a href="activities_icons.html"><i class="fas fa-icons"></i> Activities Overview</a>
+      <a href="daily_tasks.html" class="active"><i class="fas fa-calendar-day"></i> Daily Tasks</a>
+      <a href="contacts.html"><i class="fas fa-address-book"></i> View Contacts</a>
+      <a href="trends.html"><i class="fas fa-chart-line"></i> Customer Trends</a>
+      <a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <h2><i class="fas fa-calendar-day"></i> Daily Tasks Dashboard</h2>
+
+      <div class="controls">
+        <div class="filter-group">
+          <label for="assignedFilter">Filter by Assignee:</label>
+          <select id="assignedFilter">
+            <option value="all">All</option>
+          </select>
+        </div>
+        <button id="addTaskBtn"><i class="fas fa-plus"></i> Assign New Task</button>
+      </div>
+
+      <div class="task-section">
+        <h3><i class="fas fa-calendar-day"></i> Today's Tasks</h3>
+        <ul id="todaysTasksList"></ul>
+      </div>
+
+      <div class="task-section">
+        <h3><i class="fas fa-clock"></i> Upcoming Tasks</h3>
+        <ul id="upcomingTasksList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="taskModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="modalTitle">Assign New Task</h2>
+      <form id="taskForm">
+        <input type="hidden" id="taskId">
+        <div class="form-group">
+          <label for="customerId">Customer:</label>
+          <select id="customerId"><option value="">Select a customer (optional)</option></select>
+        </div>
+        <div class="form-group"><label for="taskType">Task Type:</label><input type="text" id="taskType" required></div>
+        <div class="form-group"><label for="description">Description:</label><textarea id="description" rows="3" required></textarea></div>
+        <div class="form-group"><label for="assignedTo">Assign To:</label><input type="text" id="assignedTo" required></div>
+        <div class="form-group"><label for="dueDate">Due Date:</label><input type="date" id="dueDate" required></div>
+        <div class="form-group">
+          <label for="status">Status:</label>
+          <select id="status" required>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="not completed">Not Completed</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="button" id="cancelBtn">Cancel</button>
+          <button type="submit">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer><p>&copy; 2025 Fortishield. All rights reserved. | CRM System v2.1</p></footer>
+
+  <script>
+    let activities = [], customers = [];
+    const todaysTasksList = document.getElementById('todaysTasksList');
+    const upcomingTasksList = document.getElementById('upcomingTasksList');
+    const assignedFilter = document.getElementById('assignedFilter');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const taskModal = document.getElementById('taskModal');
+    const closeModal = document.querySelector('.close');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const taskForm = document.getElementById('taskForm');
+    const modalTitle = document.getElementById('modalTitle');
+    const customerId = document.getElementById('customerId');
+    const dueDateInput = document.getElementById('dueDate');
+
+    document.addEventListener('DOMContentLoaded', () => {
+      dueDateInput.value = new Date().toISOString().split('T')[0];
+      fetchActivities();
+      fetchCustomers();
+      assignedFilter.addEventListener('change', renderTasks);
+      addTaskBtn.addEventListener('click', openAddTaskModal);
+      closeModal.addEventListener('click', closeTaskModal);
+      cancelBtn.addEventListener('click', closeTaskModal);
+      taskForm.addEventListener('submit', saveTask);
+      window.addEventListener('click', e => { if (e.target === taskModal) closeTaskModal(); });
+    });
+
+    async function fetchActivities() {
+      try {
+        const res = await fetch('/activities');
+        if (res.ok) {
+          activities = await res.json();
+          renderTasks(); populateAssignedFilter();
+        }
+      } catch (err) { console.error(err); }
+    }
+    async function fetchCustomers() {
+      try {
+        const res = await fetch('/customer/');
+        if (res.ok) customers = await res.json();
+        populateCustomerDropdown();
+      } catch (err) { console.error(err); }
+    }
+    function renderTasks() {
+      const today = new Date().toISOString().split('T')[0];
+      const todays = activities.filter(a => new Date(a.created_at).toISOString().split('T')[0] === today);
+      const upcoming = activities.filter(a => new Date(a.created_at).toISOString().split('T')[0] > today);
+      const filter = assignedFilter.value;
+      renderTaskList(filter==="all"?todays:todays.filter(t=>t.assigned_to===filter), todaysTasksList);
+      renderTaskList(filter==="all"?upcoming:upcoming.filter(t=>t.assigned_to===filter), upcomingTasksList);
+    }
+    function renderTaskList(tasks, container) {
+      container.innerHTML='';
+      if (!tasks.length) { container.innerHTML='<li style="text-align:center;color:#666;padding:1rem">No tasks found</li>'; return; }
+      tasks.forEach(task=>{
+        const li=document.createElement('li'); li.className='task-item';
+        const dueDate=new Date(task.created_at).toLocaleDateString();
+        li.innerHTML=`
+          <div class="task-header"><h4>${task.task_type}</h4><span class="task-status status-${task.status.replace(' ','-')}">${task.status}</span></div>
+          <div class="task-details"><div><b>Assigned:</b> ${task.assigned_to}</div><div><b>Customer:</b> ${task.customer_name||'N/A'}</div><div><b>Due:</b> ${dueDate}</div></div>
+          <p>${task.description}</p>
+          <div class="task-actions">
+            <button class="edit-btn" data-id="${task.id}"><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" data-id="${task.id}"><i class="fas fa-trash"></i></button>
+            <button class="complete-btn" data-id="${task.id}" data-status="${task.status}"><i class="fas fa-check"></i></button>
+          </div>`;
+        container.appendChild(li);
+      });
+      container.querySelectorAll('.edit-btn').forEach(b=>b.onclick=()=>openEditTaskModal(b.dataset.id));
+      container.querySelectorAll('.delete-btn').forEach(b=>b.onclick=()=>deleteTask(b.dataset.id));
+      container.querySelectorAll('.complete-btn').forEach(b=>b.onclick=()=>updateTaskStatus(b.dataset.id,b.dataset.status==='completed'?'pending':'completed'));
+    }
+    function populateAssignedFilter() {
+      assignedFilter.innerHTML='<option value="all">All</option>';
+      [...new Set(activities.map(a=>a.assigned_to))].forEach(u=>{
+        const opt=document.createElement('option'); opt.value=u; opt.textContent=u; assignedFilter.appendChild(opt);
+      });
+    }
+    function populateCustomerDropdown() {
+      customerId.innerHTML='<option value="">Select a customer (optional)</option>';
+      customers.forEach(c=>{
+        const opt=document.createElement('option'); opt.value=c.id; opt.textContent=c.username; customerId.appendChild(opt);
+      });
+    }
+    function openAddTaskModal() { modalTitle.textContent='Assign New Task'; taskForm.reset(); document.getElementById('taskId').value=''; dueDateInput.value=new Date().toISOString().split('T')[0]; taskModal.style.display='block'; }
+    function openEditTaskModal(id) {
+      const t=activities.find(a=>a.id==id); if(!t)return;
+      modalTitle.textContent='Edit Task'; document.getElementById('taskId').value=t.id;
+      customerId.value=t.customer_id||''; document.getElementById('taskType').value=t.task_type;
+      document.getElementById('description').value=t.description; document.getElementById('assignedTo').value=t.assigned_to;
+      dueDateInput.value=new Date(t.created_at).toISOString().split('T')[0]; document.getElementById('status').value=t.status;
+      taskModal.style.display='block';
+    }
+    function closeTaskModal() { taskModal.style.display='none'; taskForm.reset(); }
+    async function saveTask(e) {
+      e.preventDefault();
+      const id=document.getElementById('taskId').value;
+      const data={customer_id:customerId.value||null,task_type:taskForm.taskType.value,description:taskForm.description.value,assigned_to:taskForm.assignedTo.value,status:taskForm.status.value};
+      try {
+        const res=await fetch(id?`/activities/${id}`:'/activities',{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+        if(res.ok){closeTaskModal(); fetchActivities();}
+      } catch(err){console.error(err);}
+    }
+    async function deleteTask(id) {
+      if(!confirm('Delete task?'))return;
+      try{const res=await fetch(`/activities/${id}`,{method:'DELETE'}); if(res.ok)fetchActivities();}catch(err){console.error(err);}
+    }
+    async function updateTaskStatus(id,newStatus) {
+      const t=activities.find(a=>a.id==id); if(!t)return;
+      try{
+        const res=await fetch(`/activities/${id}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({...t,status:newStatus})});
+        if(res.ok)fetchActivities();
+      }catch(err){console.error(err);}
+    }
+  </script>
+</body>
+</html>

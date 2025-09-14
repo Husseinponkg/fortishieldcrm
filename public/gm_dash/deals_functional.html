@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortishield Matrix CRM - Deals Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary: #1f2937;
+            --dark: #111827;
+            --darker: #0a0e17;
+            --light: #f3f4f6;
+            --gray: #9ca3af;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --card-bg: #1e293b;
+            --card-border: #374151;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header img {
+            max-width: 150px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin: 0.5rem 0;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--secondary);
+            padding: 1rem;
+            margin: 1rem auto;
+            max-width: 1400px;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            justify-content: center;
+        }
+
+        nav ul li a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            color: var(--light);
+        }
+
+        nav ul li a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        nav ul li a:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background: var(--secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-right: 2rem;
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar h3 i {
+            color: var(--primary);
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.75rem;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--gray);
+            text-decoration: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .sidebar a:hover, .sidebar a:focus, .sidebar a.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .sidebar a:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Dashboard Content */
+        .dashboard {
+            flex: 1;
+        }
+
+        .dashboard h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Notification */
+        .notification {
+            display: none;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            color: var(--light);
+        }
+
+        .notification.success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--success);
+        }
+
+        .notification.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--danger);
+        }
+
+        /* Stats Container */
+        .stats-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--gray);
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--light);
+        }
+
+        .pipeline-stage {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pipeline-stage h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--light);
+        }
+
+        .pipeline-count {
+            background: var(--primary);
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            background: var(--secondary);
+            border: 1px solid var(--card-border);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            margin-right: 0.5rem;
+            font-weight: 500;
+            color: var(--gray);
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: var(--light);
+            border-color: var(--primary);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .tab:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--gray);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        /* Deals Table */
+        #dealsTable {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        th {
+            background: var(--secondary);
+            font-weight: 500;
+            color: var(--light);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .stage-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .stage-prospect {
+            background: var(--primary);
+        }
+
+        .stage-qualification {
+            background: #9b59b6;
+        }
+
+        .stage-proposal {
+            background: var(--warning);
+        }
+
+        .stage-negotiation {
+            background: #e67e22;
+        }
+
+        .stage-closed_won {
+            background: var(--success);
+        }
+
+        .stage-closed_lost {
+            background: var(--danger);
+        }
+
+        .action-btn {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            background: var(--secondary);
+            color: var(--light);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--card-border);
+            margin-top: auto;
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            header img {
+                max-width: 120px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                border-radius: 8px;
+                margin-bottom: 0.5rem;
+            }
+
+            .actions {
+                justify-content: center;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .stat-card,
+            .pipeline-stage {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header>
+            <div class="header-content">
+                <img src="https://images.unsplash.com/photo-1569012871812-f38ee64cd54c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Fortishield Logo">
+                <div>
+                    <h1><i class="fas fa-handshake"></i> Fortishield Matrix CRM</h1>
+                    <p>Deals Management</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Section -->
+        <nav>
+            <ul>
+                <li><a href="customers.html" aria-label="View customer list"><i class="fas fa-users"></i> View Customers</a></li>
+                <li><a href="daily_tasks.html" aria-label="View daily tasks"><i class="fas fa-tasks"></i> Daily Tasks</a></li>
+                <li><a href="contacts.html" aria-label="View customer benchmarks"><i class="fas fa-chart-bar"></i> Customer Benchmarks</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Sidebar Section -->
+            <div class="sidebar">
+                <h3><i class="fas fa-bars"></i> Navigation Menu</h3>
+                <ul>
+                    <li><a href="gm_dash.html" aria-label="View dashboard"><i class="fas fa-home"></i> View Dashboard</a></li>
+                   
+                    <li><a href="views.html"><i class="fas fa-list"></i> View Customers</a></li>
+                    <li><a href="opportunities.html" aria-label="View opportunities" class="active"><i class="fas fa-briefcase"></i> View Opportunities</a></li>
+                    <li><a href="activities_dash.html" aria-label="View detailed activities"><i class="fas fa-tasks"></i> Detailed Activities</a></li>
+                    <li><a href="activities_icons.html" aria-label="View activities overview"><i class="fas fa-icons"></i> Activities Overview</a></li>
+                    <li><a href="daily_tasks.html" aria-label="View daily tasks"><i class="fas fa-calendar-day"></i> Daily Tasks</a></li>
+                    <li><a href="contacts.html" aria-label="View contacts"><i class="fas fa-address-book"></i> View Contacts</a></li>
+                    <li><a href="trends.html" aria-label="View customer trends"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
+                    <li><a href="index.html" aria-label="Log out"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard">
+                <div class="notification" id="notification"></div>
+
+                <div class="stats-container">
+                    <h2><i class="fas fa-chart-line"></i> Sales Overview</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Deals</h3>
+                            <div class="value" id="totalDeals">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Value</h3>
+                            <div class="value" id="totalValue">$0</div>
+                        </div>
+                    </div>
+
+                    <h2><i class="fas fa-tasks"></i> Pipeline Stages</h2>
+                    <div id="pipelineStages">
+                        <div class="loading">Loading pipeline data...</div>
+                    </div>
+                </div>
+
+                <div class="content-area">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="view" role="tab" aria-selected="true" tabindex="0">View Deals</div>
+                        <div class="tab" data-tab="add" role="tab" aria-selected="false" tabindex="0">Add New Deal</div>
+                    </div>
+
+                    <div class="tab-content active" id="viewTab">
+                        <h2><i class="fas fa-list"></i> All Deals</h2>
+                        <div class="actions">
+                            <button class="btn btn-primary" id="refreshDeals" aria-label="Refresh deals">
+                                <i class="fas fa-sync"></i> Refresh
+                            </button>
+                        </div>
+                        <div id="dealsTable">
+                            <div class="loading">Loading deals...</div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="addTab">
+                        <h2><i class="fas fa-plus-circle"></i> Add New Deal</h2>
+                        <form id="dealForm">
+                            <div class="form-group">
+                                <label for="customer_id">Customer (Optional)</label>
+                                <select id="customer_id" name="customer_id" aria-label="Select a customer">
+                                    <option value="">Select a customer</option>
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Deal Title *</label>
+                                <input type="text" id="title" name="title" required aria-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="value">Deal Value ($)</label>
+                                <input type="number" id="value" name="value" step="0.01" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="stage">Stage</label>
+                                <select id="stage" name="stage" aria-label="Select deal stage">
+                                    <option value="prospect">Prospect</option>
+                                    <option value="qualification">Qualification</option>
+                                    <option value="proposal">Proposal</option>
+                                    <option value="negotiation">Negotiation</option>
+                                    <option value="closed_won">Closed Won</option>
+                                    <option value="closed_lost">Closed Lost</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="probability">Probability (%)</label>
+                                <input type="number" id="probability" name="probability" min="0" max="100" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="dead_line">Deadline</label>
+                                <input type="date" id="dead_line" name="dead_line">
+                            </div>
+                            <div class="form-actions">
+                                <button type="reset" class="btn btn-secondary" aria-label="Reset form">
+                                    <i class="fas fa-times"></i> Reset
+                                </button>
+                                <button type="submit" class="btn btn-primary" aria-label="Save deal">
+                                    <i class="fas fa-save"></i> Save Deal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <footer>
+            <p>&copy; 2025 Fortishield. All rights reserved. | CRM System v2.1</p>
+        </footer>
+    </div>
+
+    <script>
+        // Sample data for demonstration
+        const sampleDeals = [
+          
+        ];
+
+        const sampleCustomers = [
+         
+        ];
+
+        const DealsManager = {
+            elements: {
+                notification: document.getElementById('notification'),
+                totalDeals: document.getElementById('totalDeals'),
+                totalValue: document.getElementById('totalValue'),
+                pipelineStages: document.getElementById('pipelineStages'),
+                dealsTable: document.getElementById('dealsTable'),
+                customerSelect: document.getElementById('customer_id'),
+                dealForm: document.getElementById('dealForm'),
+                refreshDealsBtn: document.getElementById('refreshDeals')
+            },
+
+            init: function () {
+                this.deals = sampleDeals;
+                this.customers = sampleCustomers;
+                this.initializePage();
+            },
+
+            initializePage: function () {
+                this.bindEvents();
+                this.loadInitialData();
+                this.startPeriodicUpdates();
+            },
+
+            bindEvents: function () {
+                this.bindTabSwitching();
+                this.bindRefreshButton();
+                this.bindFormSubmission();
+                this.bindFormReset();
+            },
+
+            bindTabSwitching: function () {
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => this.switchTab(tab));
+                    tab.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.switchTab(tab);
+                        }
+                    });
+                });
+            },
+
+            bindRefreshButton: function () {
+                this.elements.refreshDealsBtn.addEventListener('click', () => this.refreshDeals());
+            },
+
+            bindFormSubmission: function () {
+                this.elements.dealForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const dealId = this.elements.dealForm.dataset.id;
+                    if (dealId) {
+                        this.updateDeal(dealId);
+                    } else {
+                        this.createDeal();
+                    }
+                });
+            },
+
+            bindFormReset: function () {
+                this.elements.dealForm.addEventListener('reset', () => this.resetForm());
+            },
+
+            switchTab: function (tab) {
+                this.hideAllTabs();
+                this.showActiveTab(tab);
+            },
+
+            hideAllTabs: function () {
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            },
+
+            showActiveTab: function (tab) {
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+                const tabName = tab.getAttribute('data-tab');
+                document.getElementById(`${tabName}Tab`).classList.add('active');
+            },
+
+            refreshDeals: function () {
+                this.loadDeals();
+                this.loadDealsSummary();
+            },
+
+            loadInitialData: function () {
+                this.loadCustomers();
+                this.loadDeals();
+                this.loadDealsSummary();
+                this.loadDealsNearingDeadline();
+            },
+
+            startPeriodicUpdates: function () {
+                setInterval(() => {
+                    this.loadDeals();
+                    this.loadDealsSummary();
+                    this.loadDealsNearingDeadline();
+                }, 30000);
+            },
+
+            resetForm: function () {
+                this.elements.dealForm.dataset.id = '';
+                document.querySelector('.tab[data-tab="add"]').textContent = 'Add New Deal';
+                this.showNotification('Form reset successfully', 'success');
+            },
+
+            loadCustomers: function () {
+                this.populateCustomerDropdown(this.customers);
+            },
+
+            populateCustomerDropdown: function (customers) {
+                if (this.elements.customerSelect) {
+                    this.elements.customerSelect.innerHTML = '<option value="">Select a customer</option>';
+                    customers.forEach(customer => {
+                        const option = document.createElement('option');
+                        option.value = customer.id;
+                        option.textContent = customer.username;
+                        this.elements.customerSelect.appendChild(option);
+                    });
+                }
+            },
+
+            loadDeals: function () {
+                if (!this.elements.dealsTable) {
+                    console.error('Deals table element not found');
+                    return;
+                }
+                this.showLoadingDeals();
+                this.renderDealsTable(this.deals);
+            },
+
+            showLoadingDeals: function () {
+                this.elements.dealsTable.innerHTML = '<div class="loading">Loading deals...</div>';
+            },
+
+            renderDealsTable: function (deals) {
+                if (deals.length === 0) {
+                    this.showNoDealsMessage();
+                    return;
+                }
+                this.populateDealsTable(deals);
+            },
+
+            showNoDealsMessage: function () {
+                this.elements.dealsTable.innerHTML = '<div class="loading">No deals found</div>';
+            },
+
+            populateDealsTable: function (deals) {
+                let tableHTML = this.createDealsTableHeader();
+                tableHTML += this.createDealsTableBody(deals);
+                tableHTML += this.closeDealsTable();
+                this.elements.dealsTable.innerHTML = tableHTML;
+
+                // Add event listeners for action buttons
+                document.querySelectorAll('.action-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.dataset.id;
+                        const action = btn.dataset.action;
+                        if (action === 'progress') {
+                            this.progressDeal(id, btn.dataset.direction);
+                        } else if (action === 'edit') {
+                            this.editDeal(id);
+                        } else if (action === 'delete') {
+                            this.deleteDeal(id);
+                        }
+                    });
+                });
+            },
+
+            createDealsTableHeader: function () {
+                return `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Customer</th>
+                                <th>Value</th>
+                                <th>Stage</th>
+                                <th>Probability</th>
+                                <th>Deadline</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+            },
+
+            createDealsTableBody: function (deals) {
+                let bodyHTML = '';
+                deals.forEach(deal => {
+                    bodyHTML += this.createDealRow(deal);
+                });
+                return bodyHTML;
+            },
+
+            createDealRow: function (deal) {
+                const deadline = this.formatDeadline(deal.dead_line);
+                const value = this.formatDealValue(deal.value);
+                const deadlineClass = this.getDeadlineClass(deal.dead_line);
+
+                return `
+                    <tr>
+                        <td>${this.escapeHtml(deal.title)}</td>
+                        <td>${this.escapeHtml(deal.customer_name || 'No customer')}</td>
+                        <td>${value}</td>
+                        <td><span class="stage-badge stage-${deal.stage}" aria-label="Stage: ${deal.stage.replace('_', ' ')}">${deal.stage.replace('_', ' ')}</span></td>
+                        <td>${deal.probability}%</td>
+                        <td${deadlineClass}>${deadline}</td>
+                        <td class="actions">
+                            <button class="action-btn btn-secondary" data-id="${deal.id}" data-action="progress" data-direction="backward" aria-label="Move to previous stage" title="Move to previous stage">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button class="action-btn btn-primary" data-id="${deal.id}" data-action="edit" aria-label="Edit deal" title="Edit deal">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn btn-secondary" data-id="${deal.id}" data-action="progress" data-direction="forward" aria-label="Move to next stage" title="Move to next stage">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button class="action-btn btn-danger" data-id="${deal.id}" data-action="delete" aria-label="Delete deal" title="Delete deal">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            },
+
+            formatDeadline: function (deadLine) {
+                return deadLine ? new Date(deadLine).toLocaleDateString() : 'N/A';
+            },
+
+            formatDealValue: function (value) {
+                return value ? `$${parseFloat(value).toFixed(2)}` : '$0.00';
+            },
+
+            getDeadlineClass: function (deadLine) {
+                if (deadLine && new Date(deadLine) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)) {
+                    return ' style="color: var(--danger); font-weight: bold;"';
+                }
+                return '';
+            },
+
+            escapeHtml: function (text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            },
+
+            closeDealsTable: function () {
+                return `
+                        </tbody>
+                    </table>
+                `;
+            },
+
+            loadDealsSummary: function () {
+                const summary = {
+                    totalDeals: this.deals.length,
+                    totalValue: this.deals.reduce((sum, deal) => sum + (deal.value || 0), 0),
+                    dealsByStage: [
+                        { stage: 'prospect', count: this.deals.filter(d => d.stage === 'prospect').length },
+                        { stage: 'qualification', count: this.deals.filter(d => d.stage === 'qualification').length },
+                        { stage: 'proposal', count: this.deals.filter(d => d.stage === 'proposal').length },
+                        { stage: 'negotiation', count: this.deals.filter(d => d.stage === 'negotiation').length },
+                        { stage: 'closed_won', count: this.deals.filter(d => d.stage === 'closed_won').length },
+                        { stage: 'closed_lost', count: this.deals.filter(d => d.stage === 'closed_lost').length }
+                    ]
+                };
+                this.updateSummary(summary);
+            },
+
+            updateSummary: function (summary) {
+                this.updateTotalDeals(summary.totalDeals);
+                this.updateTotalValue(summary.totalValue);
+                this.renderPipelineStages(summary);
+            },
+
+            updateTotalDeals: function (totalDeals) {
+                this.elements.totalDeals.textContent = totalDeals;
+            },
+
+            updateTotalValue: function (totalValue) {
+                this.elements.totalValue.textContent = `$${parseFloat(totalValue || 0).toFixed(2)}`;
+            },
+
+            renderPipelineStages: function (summary) {
+                let pipelineHTML = '';
+                const stageOrder = ['prospect', 'qualification', 'proposal', 'negotiation', 'closed_won', 'closed_lost'];
+                const stageLabels = {
+                    'prospect': 'Prospect',
+                    'qualification': 'Qualification',
+                    'proposal': 'Proposal',
+                    'negotiation': 'Negotiation',
+                    'closed_won': 'Closed Won',
+                    'closed_lost': 'Closed Lost'
+                };
+
+                stageOrder.forEach(stage => {
+                    const count = summary.dealsByStage.find(s => s.stage === stage)?.count || 0;
+                    pipelineHTML += this.createPipelineStage(stageLabels[stage], count);
+                });
+
+                this.elements.pipelineStages.innerHTML = pipelineHTML;
+            },
+
+            createPipelineStage: function (label, count) {
+                return `
+                    <div class="pipeline-stage">
+                        <h3>${label}</h3>
+                        <div class="pipeline-count">${count}</div>
+                    </div>
+                `;
+            },
+
+            loadDealsNearingDeadline: function () {
+                const deals = this.deals.filter(deal => {
+                    return deal.dead_line && new Date(deal.dead_line) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+                });
+                this.showDeadlineReminders(deals);
+            },
+
+            showDeadlineReminders: function (deals) {
+                if (deals.length > 0) {
+                    let reminderText = `You have ${deals.length} deal(s) with upcoming deadlines:\n`;
+                    deals.forEach(deal => {
+                        const deadline = new Date(deal.dead_line).toLocaleDateString();
+                        reminderText += `- ${deal.title} (${deadline})\n`;
+                    });
+                    console.log(reminderText);
+                    this.showNotification(`${deals.length} deal(s) nearing deadline`, 'warning');
+                }
+            },
+
+            createDeal: function () {
+                if (!this.elements.dealForm) {
+                    console.error('Deal form element not found');
+                    this.showNotification('Form not found. Please refresh the page.', 'error');
+                    return;
+                }
+
+                const dealData = this.getDealFormData();
+                this.deals.push({
+                    id: Date.now(),
+                    ...dealData,
+                    customer_name: this.customers.find(c => c.id == dealData.customer_id)?.username || null
+                });
+
+                this.showNotification('Deal created successfully!', 'success');
+                this.elements.dealForm.reset();
+                this.loadDeals();
+                this.loadDealsSummary();
+                this.notifyDealAdded();
+                this.switchToViewTab();
+            },
+
+            getDealFormData: function () {
+                const formData = new FormData(this.elements.dealForm);
+                const dealData = Object.fromEntries(formData.entries());
+                if (dealData.value) {
+                    dealData.value = parseFloat(dealData.value);
+                }
+                dealData.probability = parseInt(dealData.probability) || 0;
+                if (!dealData.customer_id || dealData.customer_id === "" || dealData.customer_id === "0") {
+                    delete dealData.customer_id;
+                }
+                return dealData;
+            },
+
+            editDeal: function (id) {
+                const deal = this.deals.find(d => d.id == id);
+                if (!deal) {
+                    this.showNotification('Deal not found', 'error');
+                    return;
+                }
+
+                this.elements.customerSelect.value = deal.customer_id || '';
+                this.elements.dealForm.querySelector('#title').value = deal.title;
+                this.elements.dealForm.querySelector('#description').value = deal.description || '';
+                this.elements.dealForm.querySelector('#value').value = deal.value || '';
+                this.elements.dealForm.querySelector('#stage').value = deal.stage;
+                this.elements.dealForm.querySelector('#probability').value = deal.probability;
+                this.elements.dealForm.querySelector('#dead_line').value = deal.dead_line || '';
+                this.elements.dealForm.dataset.id = id;
+
+                this.switchToAddTab();
+                document.querySelector('.tab[data-tab="add"]').textContent = 'Edit Deal';
+            },
+
+            updateDeal: function (id) {
+                const dealData = this.getDealFormData();
+                const index = this.deals.findIndex(d => d.id == id);
+                if (index !== -1) {
+                    this.deals[index] = {
+                        id,
+                        ...dealData,
+                        customer_name: this.customers.find(c => c.id == dealData.customer_id)?.username || null
+                    };
+                    this.showNotification('Deal updated successfully!', 'success');
+                    this.elements.dealForm.reset();
+                    this.loadDeals();
+                    this.loadDealsSummary();
+                    this.notifyDealUpdated();
+                    this.switchToViewTab();
+                } else {
+                    this.showNotification('Deal not found', 'error');
+                }
+            },
+
+            deleteDeal: function (id) {
+                if (!this.confirmDealDeletion()) {
+                    return;
+                }
+                this.deals = this.deals.filter(d => d.id != id);
+                this.showNotification('Deal deleted successfully!', 'success');
+                this.loadDeals();
+                this.loadDealsSummary();
+                this.notifyDealDeleted();
+            },
+
+            confirmDealDeletion: function () {
+                return confirm('Are you sure you want to delete this deal?');
+            },
+
+            progressDeal: function (id, direction) {
+                const deal = this.deals.find(d => d.id == id);
+                if (!deal) {
+                    this.showNotification('Deal not found', 'error');
+                    return;
+                }
+
+                const stageOrder = ['prospect', 'qualification', 'proposal', 'negotiation', 'closed_won', 'closed_lost'];
+                const currentIndex = stageOrder.indexOf(deal.stage);
+                let newIndex = direction === 'forward' ? currentIndex + 1 : currentIndex - 1;
+
+                if (newIndex >= 0 && newIndex < stageOrder.length) {
+                    deal.stage = stageOrder[newIndex];
+                    this.showNotification(`Deal moved to ${stageOrder[newIndex].replace('_', ' ')}`, 'success');
+                    this.loadDeals();
+                    this.loadDealsSummary();
+                    this.notifyDealUpdated();
+                } else {
+                    this.showNotification('Cannot progress further', 'error');
+                }
+            },
+
+            switchToAddTab: function () {
+                const addTab = document.querySelector('.tab[data-tab="add"]');
+                if (addTab) {
+                    this.switchTab(addTab);
+                }
+            },
+
+            switchToViewTab: function () {
+                const viewTab = document.querySelector('.tab[data-tab="view"]');
+                if (viewTab) {
+                    this.switchTab(viewTab);
+                    document.querySelector('.tab[data-tab="add"]').textContent = 'Add New Deal';
+                }
+            },
+
+            notifyDealAdded: function () {
+                if (typeof window.onDealAdded === 'function') {
+                    window.onDealAdded();
+                }
+            },
+
+            notifyDealUpdated: function () {
+                if (typeof window.onDealUpdated === 'function') {
+                    window.onDealUpdated();
+                }
+            },
+
+            notifyDealDeleted: function () {
+                if (typeof window.onDealDeleted === 'function') {
+                    window.onDealDeleted();
+                }
+            },
+
+            showNotification: function (message, type) {
+                if (!this.elements.notification) return;
+                this.elements.notification.textContent = message;
+                this.elements.notification.className = `notification ${type}`;
+                this.elements.notification.style.display = 'block';
+                setTimeout(() => {
+                    this.elements.notification.style.display = 'none';
+                }, 3000);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            DealsManager.init();
+        });
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function () {
+                DealsManager.init();
+            });
+        } else {
+            DealsManager.init();
+        }
+
+        window.DealsManager = DealsManager;
+
+        window.updateDashboardDeals = function () {
+            if (window.DealsManager) {
+                DealsManager.loadDealsSummary();
+            }
+        };
+
+        window.onDealAdded = function () {
+            console.log('Deal added, refreshing dashboard deals...');
+            if (window.DealsManager) {
+                DealsManager.loadDealsSummary();
+            }
+            if (typeof window.updateDashboardDeals === 'function') {
+                window.updateDashboardDeals();
+            }
+        };
+
+        window.onDealUpdated = function () {
+            console.log('Deal updated, refreshing dashboard deals...');
+            if (window.DealsManager) {
+                DealsManager.loadDealsSummary();
+            }
+            if (typeof window.updateDashboardDeals === 'function') {
+                window.updateDashboardDeals();
+            }
+        };
+
+        window.onDealDeleted = function () {
+            console.log('Deal deleted, refreshing dashboard deals...');
+            if (window.DealsManager) {
+                DealsManager.loadDealsSummary();
+            }
+            if (typeof window.updateDashboardDeals === 'function') {
+                window.updateDashboardDeals();
+            }
+        };
+    </script>
+</body>
+</html>

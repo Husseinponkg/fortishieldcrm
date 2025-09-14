@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Projects</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .project-card h3 {
+            margin-top: 0;
+            color: var(--light);
+        }
+        
+        .project-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .status-not-started {
+            background-color: rgba(156, 163, 175, 0.2);
+            color: var(--gray);
+        }
+        
+        .status-in-progress {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        
+        .status-completed {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .status-on-hold {
+            background-color: rgba(239, 68, 0.2);
+            color: var(--danger);
+        }
+        
+        .project-meta {
+            margin: 10px 0;
+            color: var(--gray);
+        }
+        
+        .project-actions {
+            margin-top: 15px;
+        }
+        
+        .project-actions a {
+            margin-right: 10px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .project-actions a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fas fa-project-diagram"></i></div>
+                    <div class="logo-text">Fortishield Matrix</div>
+                </div>
+                
+                <nav class="nav">
+                    <a href="pm_dash.html"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="pm_projects.html" class="active"><i class="fas fa-folder"></i> Projects</a>
+                    <a href="pm_team.html"><i class="fas fa-users"></i> Team</a>
+                    <a href="pm_reports.html"><i class="fas fa-chart-bar"></i> Reports</a>
+                    <a href="conversations.html"><i class="fas fa-comments"></i> Conversations</a>
+                </nav>
+                
+                <div class="user-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    
+                    <div class="user-profile">
+                        <div class="avatar">PM</div>
+                        <div>
+                            <div>Project Manager</div>
+                            <div style="font-size: 0.8rem; color: var(--gray);">Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <aside class="sidebar">
+                <h2><i class="fas fa-bolt"></i> Quick Links</h2>
+                <ul>
+                    <li><a href="view_projects.html"><i class="fas fa-folder-open"></i> View Projects</a></li>
+                    <li><a href="add_projects.html"><i class="fas fa-plus-circle"></i> Add New Project</a></li>
+                    <li><a href="pm_team.html"><i class="fas fa-user-cog"></i> Manage Team</a></li>
+                    <li><a href="pm_reports.html"><i class="fas fa-chart-pie"></i> Generate Reports</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+                </ul>
+            </aside>
+            
+            <main class="dashboard">
+                <div class="container">
+                    <div class="header">
+                        <h1>All Projects</h1>
+                        <a href="add_projects.html" class="btn btn-primary">Add New Project</a>
+                    </div>
+                    
+                    <div class="projects-grid" id="projectsContainer">
+                        <!-- Projects will be loaded here dynamically -->
+                        <p>Loading projects...</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <footer>
+            <div class="footer-content">
+                <div class="copyright">© 2023 Fortishield Matrix. All rights reserved.</div>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Help Center</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/projects');
+                const projects = await response.json();
+                
+                const container = document.getElementById('projectsContainer');
+                container.innerHTML = '';
+                
+                if (projects.length === 0) {
+                    container.innerHTML = '<p>No projects found.</p>';
+                    return;
+                }
+                
+                projects.forEach(project => {
+                    const projectCard = document.createElement('div');
+                    projectCard.className = 'project-card';
+                    
+                    // Format dates
+                    const startDate = new Date(project.start_date).toLocaleDateString();
+                    const endDate = new Date(project.end_date).toLocaleDateString();
+                    
+                    // Status class
+                    let statusClass = 'status-not-started';
+                    if (project.status === 'in progress') statusClass = 'status-in-progress';
+                    if (project.status === 'completed') statusClass = 'status-completed';
+                    if (project.status === 'on hold') statusClass = 'status-on-hold';
+                    
+                    projectCard.innerHTML = `
+                        <h3>${project.title}</h3>
+                        <p>${project.description}</p>
+                        <div class="project-meta">
+                            <strong>Status:</strong> 
+                            <span class="project-status ${statusClass}">${project.status}</span>
+                        </div>
+                        <div class="project-meta">
+                            <strong>Start Date:</strong> ${startDate}
+                        </div>
+                        <div class="project-meta">
+                            <strong>End Date:</strong> ${endDate}
+                        </div>
+                        <div class="project-meta">
+                            <strong>Assigned To:</strong> ${project.assigned_to}
+                        </div>
+                        ${project.report_upload ? `
+                        <div class="project-meta">
+                            <strong>Report:</strong> <a href="/uploads/${project.report_upload}" target="_blank">View Report</a>
+                        </div>` : ''}
+                        <div class="project-actions">
+                            <a href="project_details.html?id=${project.id}">View Details</a>
+                            <a href="edit_project.html?id=${project.id}">Edit</a>
+                        </div>
+                    `;
+                    
+                    container.appendChild(projectCard);
+                });
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+                document.getElementById('projectsContainer').innerHTML = '<p>Error loading projects. Please try again later.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

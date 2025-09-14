@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Projects View - Fortishield CRM</title>
+   
+    <link rel="stylesheet" href="../css/b.css">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .data-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .data-table a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+        
+        .data-table a:hover {
+            text-decoration: underline;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .status-not-started {
+            background-color: #f0f0f0;
+            color: #666;
+        }
+        
+        .status-in-progress {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-on-hold {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .filter-controls {
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background-color: #6366f1;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>My Projects</h1>
+        <p>View and manage your assigned projects</p>
+    </div>
+    
+    <div class="container">
+        <div class="filter-controls">
+            <button id="toggleFilter" class="btn">Show All Projects</button>
+        </div>
+        
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Created At</th>
+                        <th>Assigned To</th>
+                        <th>Attachment</th>
+                    </tr>
+                </thead>
+                <tbody id="developerTableBody">
+                    <!-- Project rows will be populated here -->
+                    <tr>
+                        <td colspan="8">Loading projects...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script src="../js/developer.js"></script>
+    <script>
+        // Add filter toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('toggleFilter');
+            let showingAssignedOnly = true;
+            
+            toggleButton.addEventListener('click', function() {
+                showingAssignedOnly = !showingAssignedOnly;
+                viewProjects(showingAssignedOnly);
+                toggleButton.textContent = showingAssignedOnly ? 'Show All Projects' : 'Show My Projects';
+            });
+        });
+    </script>
+</body>
+</html>

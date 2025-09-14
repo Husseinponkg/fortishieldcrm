@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMS Test Page - Fortishield CRM</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* Additional styles specific to SMS functionality */
+    .message {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      font-family: monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    
+    .message.info {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+    }
+    
+    .message.success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+    }
+    
+    .message.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+    
+    code {
+      background: var(--secondary);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    
+    small {
+      color: var(--gray);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+          <div class="logo-text">Fortishield CRM</div>
+        </div>
+        
+        <nav class="nav">
+          <a href="customer_dash.html"><i class="fas fa-home"></i> Home</a>
+          <a href="records.html"><i class="fas fa-user-plus"></i> Records</a>
+          <a href="sms.html"><i class="fas fa-comments"></i> Communications</a>
+          <a href="sms.html" class="active"><i class="fas fa-sms"></i> SMS</a>
+        </nav>
+        
+        <div class="user-actions">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">3</span>
+          </button>
+          
+        
+        </div>
+      </div>
+    </header>
+    
+    <div class="main-content">
+      <aside class="sidebar">
+        <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+        <ul>
+          <li><a href="customer_dash.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="view.html"><i class="fas fa-users"></i> View Customers</a></li>
+          <li><a href="records.html"><i class="fas fa-user-plus"></i> Record Customers</a></li>
+          <li><a href="communications.html"><i class="fas fa-comment-alt"></i> Customers InTouch</a></li>
+          <li><a href="trends.html"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
+          <li><a href="sms.html" class="active"><i class="fas fa-sms"></i> Communications</a></li>
+          <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+      </aside>
+      
+      <main class="dashboard">
+        <div class="welcome-banner">
+          <h1>SMS Test Page</h1>
+          <p>Test and configure your SMS messaging system</p>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-cogs"></i> Test Twilio Configuration</div>
+          </div>
+          <div class="card-content">
+            <button id="testConfig" class="btn btn-primary"><i class="fas fa-check-circle"></i> Test Twilio Configuration</button>
+            <div id="configResult" class="message" style="display: none;"></div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-paper-plane"></i> Send Test SMS</div>
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <label for="testMessage"><i class="fas fa-align-left"></i> Message</label>
+              <textarea id="testMessage" class="form-control" placeholder="Type your test message here...">This is a test message from the CRM system.</textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="testPhone"><i class="fas fa-phone"></i> Phone Number</label>
+              <input type="text" id="testPhone" class="form-control" placeholder="+255712345678, +255766543210">
+              <small>Separate multiple numbers with commas (e.g. <code>+255712345678, +255766543210</code>).</small>
+            </div>
+
+            <button id="sendTest" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Test SMS</button>
+            <div id="sendResult" class="message" style="display: none;"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+    
+    <footer>
+      <div class="footer-content">
+        <div class="copyright">© 2023 Fortishield Matrix CRM. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Contact Us</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Test Twilio configuration
+    document.getElementById('testConfig').addEventListener('click', async () => {
+      const resultDiv = document.getElementById('configResult');
+      resultDiv.style.display = 'block';
+      resultDiv.className = 'message info';
+      resultDiv.textContent = 'Testing...';
+      
+      try {
+        const response = await fetch('/sms/test');
+        const data = await response.json();
+        
+        if (data.success) {
+          resultDiv.className = 'message success';
+          resultDiv.textContent = `SUCCESS: ${data.message}\nRecent messages: ${data.recentMessages}`;
+        } else {
+          resultDiv.className = 'message error';
+          resultDiv.textContent = `ERROR: ${data.message}\nDetails: ${data.error || 'No details'}`;
+        }
+      } catch (error) {
+        resultDiv.className = 'message error';
+        resultDiv.textContent = `NETWORK ERROR: ${error.message}`;
+      }
+    });
+
+    // Send test SMS
+    document.getElementById('sendTest').addEventListener('click', async () => {
+      const message = document.getElementById('testMessage').value.trim();
+      const phoneInput = document.getElementById('testPhone').value.trim();
+      const resultDiv = document.getElementById('sendResult');
+      
+      if (!message) {
+        alert('Please enter a message');
+        return;
+      }
+      // Parse comma-separated phone numbers into an array
+      if (!phoneInput) {
+        alert('Please enter at least one phone number');
+        return;
+      }
+
+      const phoneNumbers = phoneInput
+        .split(',')
+        .map(p => p.trim())
+        .filter(p => p.length > 0);
+
+      // Deduplicate
+      const uniquePhones = Array.from(new Set(phoneNumbers));
+
+      if (uniquePhones.length === 0) {
+        alert('Please enter at least one valid phone number');
+        return;
+      }
+      
+      resultDiv.style.display = 'block';
+      resultDiv.className = 'message info';
+      resultDiv.textContent = 'Sending...';
+      
+      try {
+        const response = await fetch('/sms/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+              message: message,
+              phone_numbers: uniquePhones
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          resultDiv.className = 'message success';
+          resultDiv.textContent = `SUCCESS: ${data.message}\n\nDetails:\n${JSON.stringify(data.results, null, 2)}`;
+        } else {
+          resultDiv.className = 'message error';
+          resultDiv.textContent = `ERROR: ${data.message}\n\nDetails:\n${JSON.stringify(data, null, 2)}`;
+        }
+      } catch (error) {
+        resultDiv.className = 'message error';
+        resultDiv.textContent = `NETWORK ERROR: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>

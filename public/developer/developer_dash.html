@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Dashboard - Fortishield CRM</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+          <div class="logo-text">Fortishield CRM</div>
+        </div>
+        
+        <nav class="nav">
+          <a href="developer_dash.html" class="active"><i class="fas fa-home"></i> Home</a>
+          <a href="view.html"><i class="fas fa-code-branch"></i> Projects</a>
+          <a href="tasks.html"><i class="fas fa-tasks"></i> Tasks</a>
+          <a href="../project_manager/pm_reports.html"><i class="fas fa-chart-bar"></i> Reports</a>
+        </nav>
+        
+        <div class="user-actions">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">3</span>
+          </button>
+          
+          <div class="user-profile">
+            <div class="avatar">JD</div>
+            <span>John Doe</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <div class="main-content">
+      <aside class="sidebar">
+        <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+        <ul>
+          <li><a href="developer_dash.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="view.html"><i class="fas fa-code-branch"></i> View Projects</a></li>
+          <li><a href="tasks.html"><i class="fas fa-clipboard-list"></i> Tasks</a></li>
+          <li><a href="view_customers.html"><i class="fas fa-users"></i> View Customers</a></li>
+          <li><a href="../project_manager/pm_reports.html"><i class="fas fa-file-alt"></i> Reports</a></li>
+          
+          <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+      </aside>
+      
+      <main class="dashboard">
+        <div class="welcome-banner">
+          <h1>Developer Dashboard</h1>
+          <p>Welcome to your development workspace. Manage projects, track tasks, and collaborate with your team.</p>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-title">ACTIVE PROJECTS</div>
+              <div class="stat-icon">
+                <i class="fas fa-code-branch"></i>
+              </div>
+            </div>
+            <div class="stat-value">not yet implemented
+</div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i> not implemented
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-title">PENDING TASKS</div>
+              <div class="stat-icon">
+                <i class="fas fa-tasks"></i>
+              </div>
+            </div>
+            <div class="stat-value">not implemented
+</div>
+            <div class="stat-change negative">
+              <i class="fas fa-arrow-up"></i> not implemented
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-title">REPORTS DUE</div>
+              <div class="stat-icon">
+                <i class="fas fa-chart-bar"></i>
+              </div>
+            </div>
+            <div class="stat-value">not implemented
+</div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-down"></i> from last week
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-title">CODE QUALITY</div>
+              <div class="stat-icon">
+                <i class="fas fa-code"></i>
+              </div>
+            </div>
+            <div class="stat-value">0%</div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i> from last month
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Quick Actions</div>
+          </div>
+          <div class="dashboard-content">
+            <div class="card">
+              <h2><i class="fas fa-laptop-code"></i> My Projects</h2>
+              <p>View and manage projects assigned to you. Track progress, update status, and collaborate with your team.</p>
+              <a href="view.html" class="btn btn-primary"><i class="fas fa-eye"></i> View Projects</a>
+            </div>
+            
+            <div class="card">
+              <h2><i class="fas fa-clipboard-list"></i> Tasks</h2>
+              <p>Check your daily tasks and assignments. Prioritize your work and mark tasks as completed.</p>
+              <a href="tasks.html" class="btn btn-primary"><i class="fas fa-tasks"></i> View Tasks</a>
+            </div>
+            
+            <div class="card">
+              <h2><i class="fas fa-file-alt"></i> Reports</h2>
+              <p>Access project reports and documentation. Generate performance reports and export data.</p>
+              <a href="../project_manager/pm_reports.html" class="btn btn-primary"><i class="fas fa-chart-pie"></i> View Reports</a>
+            </div>
+            
+            <div class="card">
+              <h2><i class="fas fa-users"></i> Customers</h2>
+              <p>View customer information and project requirements. Communicate with clients directly.</p>
+              <a href="view_customers.html" class="btn btn-primary"><i class="fas fa-users"></i> View Customers</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    
+    <footer>
+      <div class="footer-content">
+        <div class="copyright">© 2025 Fortishield Matrix CRM. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Contact Us</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Simple JavaScript for interactive elements
+    document.addEventListener('DOMContentLoaded', function() {
+      const notificationBtn = document.querySelector('.notification-btn');
+      if (notificationBtn) {
+        notificationBtn.addEventListener('click', function() {
+          alert('You have 3 unread notifications');
+        });
+      }
+      
+      const cards = document.querySelectorAll('.dashboard-content .card');
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.cursor = 'pointer';
+        });
+        
+        card.addEventListener('click', (e) => {
+          if (e.target.tagName !== 'A' && e.target.tagName !== 'I') {
+            const link = card.querySelector('a');
+            if (link) {
+              window.location.href = link.href;
+            }
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

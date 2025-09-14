@@ -1,0 +1,306 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 30px;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-weight: 700;
+    font-size: 32px;
+    position: relative;
+}
+
+h1:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    margin: 10px auto;
+    border-radius: 2px;
+}
+
+.actions {
+    margin-bottom: 25px;
+    text-align: right;
+}
+
+.btn {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+    font-size: 16px;
+}
+
+.btn:hover {
+    background: linear-gradient(90deg, #2980b9, #2573a7);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+}
+
+.btn.delete {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+}
+
+.btn.delete:hover {
+    background: linear-gradient(90deg, #c0392b, #a53125);
+    box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4);
+}
+
+.btn.update {
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
+    box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+}
+
+.btn.update:hover {
+    background: linear-gradient(90deg, #27ae60, #219653);
+    box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+th, td {
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background: linear-gradient(90deg, #34495e, #2c3e50);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f0f7ff;
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 8% auto;
+    padding: 35px;
+    border: none;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 650px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+    from {transform: translateY(-50px) scale(0.9); opacity: 0;}
+    to {transform: translateY(0) scale(1); opacity: 1;}
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    line-height: 1;
+}
+
+.close:hover,
+.close:focus {
+    color: #e74c3c;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e1e8ed;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+}
+
+.form-actions {
+    text-align: right;
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px solid #eee;
+}
+
+.form-actions button {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-left: 12px;
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+.form-actions button:hover {
+    background: linear-gradient(90deg, #2980b9, #2573a7);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+}
+
+.form-actions button:active {
+    transform: translateY(-1px);
+}
+
+.form-actions button.cancel {
+    background: linear-gradient(90deg, #95a5a6, #7f8c8d);
+    box-shadow: 0 4px 10px rgba(149, 165, 166, 0.3);
+}
+
+.form-actions button.cancel:hover {
+    background: linear-gradient(90deg, #7f8c8d, #6c7a7d);
+    box-shadow: 0 6px 15px rgba(149, 165, 166, 0.4);
+}
+
+.message {
+    padding: 18px 22px;
+    margin: 18px 0;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.message.success {
+    background: linear-gradient(90deg, #d4edda, #c3e6cb);
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background: linear-gradient(90deg, #f8d7da, #f5c6cb);
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+    font-style: italic;
+    font-size: 18px;
+}
+
+.chart-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    padding: 30px;
+    margin-bottom: 35px;
+    margin-top: 35px;
+    border: 1px solid #eee;
+}
+
+.chart-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #2c3e50;
+    text-align: center;
+    position: relative;
+}
+
+.chart-title:after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    margin: 10px auto;
+    border-radius: 2px;
+}
+
+.hidden {
+    display: none;
+}

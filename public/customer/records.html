@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Form - Fortishield CRM</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+      color: var(--light);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding: 2rem;
+    }
+    
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .header p {
+      color: var(--gray);
+    }
+    
+    .form-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      font-weight: 500;
+      color: var(--light);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .form-group label i {
+      color: var(--primary);
+      width: 20px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: var(--secondary);
+      color: var(--light);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .form-group small {
+      color: var(--gray);
+      font-size: 0.85rem;
+    }
+    
+    .form-group code {
+      background: var(--secondary);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    
+    .required::after {
+      content: " *";
+      color: var(--danger);
+    }
+    
+    button[type="submit"] {
+      padding: 0.75rem 1.5rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    button[type="submit"]:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    
+    .success-message {
+      text-align: center;
+      padding: 2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+    
+    .success-message i {
+      color: var(--success);
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .success-message h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .success-message p {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+    
+    .success-message button {
+      padding: 0.75rem 1.5rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0 auto;
+    }
+    
+    .success-message button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    
+    .error {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+    
+    .hint {
+      color: var(--gray);
+      font-size: 0.85rem;
+      font-style: italic;
+      margin-top: 0.25rem;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+      
+      .header {
+        padding: 1rem;
+      }
+      
+      .header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .form-container {
+        padding: 1.5rem;
+      }
+      
+      .form-group input,
+      .form-group textarea {
+        padding: 0.6rem 0.8rem;
+      }
+      
+      button[type="submit"] {
+        padding: 0.6rem 1.2rem;
+      }
+      
+      .success-message {
+        padding: 1.5rem;
+      }
+      
+      .success-message button {
+        padding: 0.6rem 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+          <div class="logo-text">Fortishield CRM</div>
+        </div>
+        
+        <nav class="nav">
+          <a href="customer_dash.html"><i class="fas fa-home"></i> Home</a>
+          <a href="records.html" class="active"><i class="fas fa-user-plus"></i> Records</a>
+          <a href="communications.html"><i class="fas fa-comments"></i> Communications</a>
+          <a href="trends.html"><i class="fas fa-chart-line"></i> Trends</a>
+        </nav>
+        
+        <div class="user-actions">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">3</span>
+          </button>
+          
+          <div class="user-profile">
+           
+        </div>
+      </div>
+    </header>
+    
+    <div class="main-content">
+      <aside class="sidebar">
+        <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+        <ul>
+          <li><a href="customer_dash.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="view.html"><i class="fas fa-users"></i> View Customers</a></li>
+          <li><a href="records.html"><i class="fas fa-user-plus"></i> Record Customers</a></li>
+          <li><a href="sms.html"><i class="fas fa-comment-alt"></i> Customers InTouch</a></li>
+          <li><a href="trends.html"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
+          <li><a href="sms.html"><i class="fas fa-sms"></i> Communications</a></li>
+          <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+      </aside>
+      
+      <main class="dashboard">
+        <div class="container">
+          <div class="header">
+            <h1>Add New Customer</h1>
+            <p>Fill in the customer details below</p>
+          </div>
+
+          <div class="form-container">
+            <form id="customerForm">
+              <div class="form-group">
+                <label for="username" class="required"><i class="fas fa-user"></i> Username</label>
+                <input type="text" id="username" placeholder="Enter username (3-20 characters)" required>
+                <div class="error" id="usernameError">Please enter a valid username (3-20 characters)</div>
+              </div>
+
+              <div class="form-group">
+                <label for="email" class="required"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="email" placeholder="Enter email address" required>
+                <div class="error" id="emailError">Please enter a valid email address</div>
+              </div>
+
+              <div class="form-group">
+                <label for="contacts" class="required"><i class="fas fa-phone"></i> Contacts</label>
+                <input type="text" id="contacts" placeholder="Enter phone number" required>
+                <div class="error" id="contactsError">Please enter a valid phone number</div>
+              </div>
+
+              <div class="form-group">
+                <label for="service" class="required"><i class="fas fa-concierge-bell"></i> Service</label>
+                <input type="text" id="service" placeholder="Enter service name" required>
+                <div class="error" id="serviceError">Please enter a service name</div>
+              </div>
+
+              <div class="form-group">
+                <label for="details" class="required"><i class="fas fa-info-circle"></i> Details</label>
+                <textarea id="details" placeholder="Enter service details" rows="4" required></textarea>
+                <div class="error" id="detailsError">Please provide service details</div>
+                <div class="hint">Describe the customer's requirements in detail</div>
+              </div>
+
+              <button type="submit"><i class="fas fa-user-plus"></i> Add Customer</button>
+            </form>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage">
+              <i class="fas fa-check-circle"></i>
+              <h2>Customer Added Successfully!</h2>
+              <p>The customer information has been saved to the system.</p>
+              <button type="button" onclick="resetForm()"><i class="fas fa-plus"></i> Add Another Customer</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    
+    <footer>
+      <div class="footer-content">
+        <div class="copyright">© 2023 Fortishield Matrix CRM. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Contact Us</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Form validation and submission handling
+    document.getElementById('customerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Validate all fields
+      const isValid = validateForm();
+
+      if (isValid) {
+        // Hide form and show success message
+        document.getElementById('customerForm').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+
+        console.log('Form data is valid. Ready to submit to server.');
+      }
+    });
+
+    function validateForm() {
+      let isValid = true;
+
+      // Validate username
+      const username = document.getElementById('username');
+      if (!username.value || username.value.length < 3 || username.value.length > 20) {
+        document.getElementById('usernameError').style.display = 'block';
+        username.focus();
+        isValid = false;
+      } else {
+        document.getElementById('usernameError').style.display = 'none';
+      }
+
+      // Validate email
+      const email = document.getElementById('email');
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email.value || !emailRegex.test(email.value)) {
+        document.getElementById('emailError').style.display = 'block';
+        if (isValid) email.focus();
+        isValid = false;
+      } else {
+        document.getElementById('emailError').style.display = 'none';
+      }
+
+      // Validate contacts
+      const contacts = document.getElementById('contacts');
+      const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
+      if (!contacts.value || !phoneRegex.test(contacts.value)) {
+        document.getElementById('contactsError').style.display = 'block';
+        if (isValid) contacts.focus();
+        isValid = false;
+      } else {
+        document.getElementById('contactsError').style.display = 'none';
+      }
+
+      // Validate service
+      const service = document.getElementById('service');
+      if (!service.value) {
+        document.getElementById('serviceError').style.display = 'block';
+        if (isValid) service.focus();
+        isValid = false;
+      } else {
+        document.getElementById('serviceError').style.display = 'none';
+      }
+
+      // Validate details
+      const details = document.getElementById('details');
+      if (!details.value) {
+        document.getElementById('detailsError').style.display = 'block';
+        if (isValid) details.focus();
+        isValid = false;
+      } else {
+        document.getElementById('detailsError').style.display = 'none';
+      }
+
+      return isValid;
+    }
+
+    function resetForm() {
+      // Reset the form
+      document.getElementById('customerForm').reset();
+      document.getElementById('successMessage').style.display = 'none';
+      document.getElementById('customerForm').style.display = 'block';
+    }
+
+    // Add real-time validation as users type
+    document.querySelectorAll('input, textarea').forEach(input => {
+      input.addEventListener('input', function() {
+        const errorElement = document.getElementById(this.id + 'Error');
+        if (errorElement) {
+          errorElement.style.display = 'none';
+        }
+      });
+    });
+  </script>
+
+  <!-- Keep reference to external JS -->
+  <script src="../js/customer.js"></script>
+</body>
+</html>

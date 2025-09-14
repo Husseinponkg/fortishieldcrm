@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer View</title>
+  
+</head>
+<body>
+    <div class="container">
+        <h1>Customer Management</h1>    
+        
+        <div class="actions">
+            <a href="/customer/register.html" class="btn">Add New Customer</a>
+        </div>
+        
+        <div id="messageContainer"></div>
+        
+        <table id="customersTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Contacts</th>
+                    <th>Service</th>
+                    <th>Details</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7" class="loading">Loading customers...</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Service Statistics Charts -->
+        <div class="chart-container">
+            <div class="chart-title">Service Distribution</div>
+            <canvas id="serviceChart"></canvas>
+            <div id="serviceChartMessage" class="loading">Loading data...</div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-title">Top 5 Services</div>
+            <canvas id="topServicesChart"></canvas>
+            <div id="topServicesChartMessage" class="loading">Loading data...</div>
+        </div>
+    </div>
+    
+    <!-- Update Customer Modal -->
+    <div id="updateModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Update Customer</h2>
+            <div id="updateMessageContainer"></div>
+            <form id="updateForm">
+                <input type="hidden" id="updateCustomerId" name="id">
+                <div class="form-group">
+                    <label for="updateUsername">Username:</label>
+                    <input type="text" id="updateUsername" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="updateEmail">Email:</label>
+                    <input type="email" id="updateEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="updateContacts">Contacts:</label>
+                    <input type="number" id="updateContacts" name="contacts" required>
+                </div>
+                <div class="form-group">
+                    <label for="updateService">Service:</label>
+                    <select id="updateService" name="service" required>
+                        <option value="">Select a service</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Mobile App">Mobile App</option>
+                        <option value="Consulting">Consulting</option>
+                        <option value="Design">Design</option>
+                        <option value="Marketing">Marketing</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="updateDetails">Details:</label>
+                    <textarea id="updateDetails" name="details" rows="4"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel" id="cancelUpdate">Cancel</button>
+                    <button type="submit">Update Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let customers = [];
+        let currentConversation = null;
+        
+        // DOM Elements
+        const customersList = document.getElementById('customersList');
+        const chatHeader = document.getElementById('chatHeader');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const noConversationMessage = document.getElementById('noConversationMessage');
+        const notificationBadge = document.getElementById('gmNotificationBadge');
+        
+        // Load customers when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadCustomers();
+            setupNotificationButton();
+        });
+        
+        // Load all customers
+        async function loadCustomers() {
+            try {
+                console.log('Fetching customers...');
+                const response = await fetch('/customer/');
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                customers = await response.json();
+                console.log('Received customers:', customers);
+                
+                // Group customers by service
+                const groupedCustomers = {};
+                customers.forEach(customer => {
+                    if (!groupedCustomers[customer.service]) {
+                        groupedCustomers[customer.service] = {
+                            service: customer.service,
+                            customers: [],
+                            count: 0
+                        };
+                    }
+                    groupedCustomers[customer.service].customers.push(customer);
+                    groupedCustomers[customer.service].count++;
+                });
+                
+                // Convert to array and sort by customer count
+                const customerList = Object.values(groupedCustomers).sort((a, b) => b.count - a.count);
+                
+                // Update notification badge
+                const totalCustomers = customers.length;
+                notificationBadge.textContent = totalCustomers > 0 ? totalCustomers : '0';
+                notificationBadge.style.display = totalCustomers > 0 ? 'flex' : 'none';
+                
+                // Display customers
+                displayCustomers(customers);
+                
+                // Also fetch service statistics
+                fetchServiceStatistics();
+            } catch (error) {
+                console.error('Error loading customers:', error);
+                customersList.innerHTML = `<div class="error">Error loading customers: ${error.message}</div>`;
+            }
+        }
+        
+        // Fetch service statistics from API
+        async function fetchServiceStatistics() {
+            try {
+                console.log('Fetching service statistics...');
+                const response = await fetch('/customer/service-statistics');
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Received service statistics:', data);
+                
+                // Update charts with real data
+                updateCharts(data);
+            } catch (error) {
+                console.error('Error fetching service statistics:', error);
+                // Show error message on charts
+                showMessage('serviceChartMessage', 'Error loading data', 'error');
+                showMessage('topServicesChartMessage', 'Error loading data', 'error');
+            }
+        }
+        
+        // Display customers in the table
+        function displayCustomers(customers) {
+            const tbody = document.querySelector('#customersTable tbody');
+            
+            if (!customers || customers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="loading">No customers found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            customers.forEach(customer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${customer.id}</td>
+                    <td>${customer.username}</td>
+                    <td>${customer.email}</td>
+                    <td>${customer.contacts}</td>
+                    <td>${customer.service}</td>
+                    <td>${customer.details || 'N/A'}</td>
+                    <td>
+                        <button class="btn update" onclick="openUpdateModal(${customer.id})">Update</button>
+                        <button class="btn delete" onclick="deleteCustomer(${customer.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Update charts with fetched data
+        function updateCharts(data) {
+            try {
+                console.log('Updating charts with data:', data);
+                
+                // Service Distribution Chart
+                const serviceCtx = document.getElementById('serviceChart').getContext('2d');
+                if (serviceChart) serviceChart.destroy();
+                
+                // Use real data if available, otherwise show message
+                if (data.serviceDistribution && data.serviceDistribution.length > 0) {
+                    const serviceData = data.serviceDistribution;
+                    
+                    // Hide message and show chart
+                    document.getElementById('serviceChartMessage').classList.add('hidden');
+                    document.getElementById('serviceChart').classList.remove('hidden');
+                    
+                    serviceChart = new Chart(serviceCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: serviceData.map(item => item.service),
+                            datasets: [{
+                                data: serviceData.map(item => item.count),
+                                backgroundColor: [
+                                    '#FF6384',
+                                    '#36A2EB',
+                                    '#FFCE56',
+                                    '#4BC0C0',
+                                    '#9966FF',
+                                    '#FF9F40'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Distribution of Services'
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    // Show message and hide chart
+                    document.getElementById('serviceChartMessage').classList.remove('hidden');
+                    document.getElementById('serviceChart').classList.add('hidden');
+                    document.getElementById('serviceChartMessage').textContent = 'No data available';
+                    document.getElementById('serviceChartMessage').className = 'loading';
+                }
+                
+                // Top Services Chart
+                const topServicesCtx = document.getElementById('topServicesChart').getContext('2d');
+                if (topServicesChart) topServicesChart.destroy();
+                
+                // Use real data if available, otherwise show message
+                if (data.topServices && data.topServices.length > 0) {
+                    const topServicesData = data.topServices;
+                    
+                    // Hide message and show chart
+                    document.getElementById('topServicesChartMessage').classList.add('hidden');
+                    document.getElementById('topServicesChart').classList.remove('hidden');
+                    
+                    topServicesChart = new Chart(topServicesCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: topServicesData.map(item => item.service),
+                            datasets: [{
+                                label: 'Number of Customers',
+                                data: topServicesData.map(item => item.count),
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Set up event listeners for sending messages
+            setupMessageSending(conversation[0].customer_id);
+        }
+        
+        // Set up message sending functionality
+        function setupMessageSending(customerId) {
+            const messageInput = document.getElementById('messageInput');
+            const sendMessageBtn = document.getElementById('sendMessageBtn');
+            
+            // Clear any existing event listeners
+            const newSendMessageBtn = sendMessageBtn.cloneNode(true);
+            sendMessageBtn.parentNode.replaceChild(newSendMessageBtn, sendMessageBtn);
+            
+            // Add event listener to send button
+            document.getElementById('sendMessageBtn').addEventListener('click', function() {
+                const message = messageInput.value.trim();
+                
+                if (message) {
+                    sendMessage(customerId, message);
+                    messageInput.value = '';
+                }
+            });
+            
+            // Allow sending with Enter key (but Shift+Enter for new line)
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const message = messageInput.value.trim();
+                    
+                    if (message) {
+                        sendMessage(customerId, message);
+                        messageInput.value = '';
+                    }
+                }
+            });
+        }
+        
+        // Send a new message
+        async function sendMessage(customerId, message) {
+            try {
+                const response = await fetch('/conversations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        customer_id: customerId,
+                        message: message,
+                        sender: 'general_manager',
+                        notification: 1 // Mark as unread for recipient
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to send message');
+                }
+                
+                // Reload the conversation to show the new message
+                await loadConversation(customerId);
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Error sending message: ' + error.message);
+            }
+        }
+        
+        // Mark messages as read
+        async function markMessagesAsRead(customerId) {
+            try {
+                // Find unread messages from this customer
+                const unreadMessages = conversations.filter(conv => 
+                    conv.customer_id == customerId && conv.notification === 1
+                );
+                
+                // Update each message to mark as read
+                for (const msg of unreadMessages) {
+                    await fetch(`/conversations/notification/${msg.id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ notification: 0 })
+                    });
+                }
+            } catch (error) {
+                console.error('Error marking messages as read:', error);
+            }
+        }
+        
+        // Setup notification button
+        function setupNotificationButton() {
+            notificationBtn.addEventListener('click', function() {
+                alert('Notifications clicked! In a real implementation, this would show a dropdown with unread messages.');
+                // In a real implementation, you would show a dropdown with unread messages
+            });
+        }
+    </script>
+</body>
+</html>

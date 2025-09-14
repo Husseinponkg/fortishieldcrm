@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Views</title>
+    <style>     * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0e17 0%, #111827 100%);
+            color: #f3f4f6;
+            min-height: 100vh;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Header styles */
+        .header {
+            text-align: center;
+            padding: 25px 20px;
+            margin-bottom: 30px;
+            background: rgba(17, 24, 39, 0.8);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid #374151;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #6366f1 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Navigation */
+        .nav-bar {
+            background: #1f2937;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .nav-bar nav {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-bar a {
+            color: #9ca3af;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-bar a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #f3f4f6;
+        }
+        
+        /* Main content */
+        .main-container {
+            display: flex;
+            gap: 30px;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1f2937;
+            border-radius: 12px;
+            padding: 20px;
+            height: fit-content;
+        }
+        
+        .sidebar h3 {
+            color: #f3f4f6;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #6366f1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar a {
+            color: #9ca3af;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar a:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: #f3f4f6;
+        }
+        
+        /* Content area */
+        .content {
+            flex: 1;
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #374151;
+        }
+        
+        .content h2 {
+            color: #f3f4f6;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Actions */
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #1f2937;
+            padding: 10px 15px;
+            border-radius: 6px;
+            width: 300px;
+        }
+        
+        .search-box i {
+            color: #9ca3af;
+            margin-right: 10px;
+        }
+        
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #f3f4f6;
+            width: 100%;
+            outline: none;
+        }
+        
+        .btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #4f46e5;
+        }
+        
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #374151;
+        }
+        
+        th {
+            background: #1f2937;
+            color: #f3f4f6;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #9ca3af;
+            font-style: italic;
+        }
+        
+        /* Message styles */
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-bar nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }</style>
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Customer Management</h1>
+        
+        <div class="actions">
+            
+        </div>
+        
+        <div id="messageContainer"></div>
+        
+        <table id="customersTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Contacts</th>
+                    <th>Service</th>
+                    <th>Details</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7" class="loading">Loading customers...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+   
+             
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let customers = [];
+        let updateModal = document.getElementById('updateModal');
+        let updateForm = document.getElementById('updateForm');
+        
+        // Fetch all customers from API
+        async function fetchCustomers() {
+            try {
+                console.log('Fetching customers...');
+                const response = await fetch('/customer/');
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Received customers:', data);
+                customers = data;
+                renderCustomers(data);
+            } catch (error) {
+                console.error('Error fetching customers:', error);
+                showMessage('messageContainer', 'Error loading customers: ' + error.message, 'error');
+                renderCustomers([]);
+            }
+        }
+        
+        // Render customers in the table
+        function renderCustomers(customers) {
+            const tbody = document.querySelector('#customersTable tbody');
+            
+            if (!customers || customers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="loading">No customers found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            customers.forEach(customer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${customer.id}</td>
+                    <td>${customer.username}</td>
+                    <td>${customer.email}</td>
+                    <td>${customer.contacts}</td>
+                    <td>${customer.service}</td>
+                    <td>${customer.details || 'N/A'}</td>
+                    
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Show message in container
+        function showMessage(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="message ${type}">${message}</div>`;
+            
+            // Auto-hide success messages after 3 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 3000);
+            }
+        }
+        
+ 
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, fetching customers...');
+            
+            // Fetch customers
+            fetchCustomers();
+            
+            // Refresh customers every 30 seconds
+            setInterval(fetchCustomers, 30000);
+        });
+    </script>
+</body>
+</html>
+</html>

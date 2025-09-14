@@ -1,0 +1,17 @@
+.env
+package.json
+node_modules/
+dist/
+.DS_Store
+.vscode/
+.idea/
+*.log
+*.tmp
+coverage/
+*.bak
+*.swp
+*.pid
+*.seed
+*.pid.lock
+*.sublime-project
+*.sublime-workspace

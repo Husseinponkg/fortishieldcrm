@@ -1,0 +1,41 @@
+{
+  "serviceDistribution": [
+    {
+      "service": "Mobile App",
+      "count": 2
+    },
+    {
+      "service": "api services",
+      "count": 1
+    }
+  ],
+  "customerGrowth": [
+    {
+      "date": "2025-09",
+      "count": 3,
+      "cumulative_count": 3
+    }
+  ],
+  "serviceGrowth": [
+    {
+      "date": "2025-09",
+      "service": "Mobile App",
+      "count": 2
+    },
+    {
+      "date": "2025-09",
+      "service": "api services",
+      "count": 1
+    }
+  ],
+  "topServices": [
+    {
+      "service": "Mobile App",
+      "count": 2
+    },
+    {
+      "service": "api services",
+      "count": 1
+    }
+  ]
+}

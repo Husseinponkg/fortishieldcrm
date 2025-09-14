@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Project Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <style>
+        .welcome-banner {
+            background: linear-gradient(120deg, var(--card-bg) 0%, var(--secondary) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-banner h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .welcome-banner p {
+            color: var(--gray);
+            max-width: 600px;
+        }
+        
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .project-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(99, 102, 241, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+        
+        .project-description {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .meta-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+        
+        .meta-value {
+            font-weight: 500;
+        }
+        
+        .project-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-not-started {
+            background: rgba(156, 163, 175, 0.2);
+            color: var(--gray);
+        }
+        
+        .status-in-progress {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        
+        .status-completed {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .status-on-hold {
+            background: rgba(239, 68, 0.2);
+            color: var(--danger);
+        }
+        
+        .project-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fas fa-project-diagram"></i></div>
+                    <div class="logo-text">Fortishield Matrix</div>
+                </div>
+                
+                <nav class="nav">
+                    <a href="pm_dash.html"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="pm_projects.html" class="active"><i class="fas fa-folder"></i> Projects</a>
+                    <a href="pm_team.html"><i class="fas fa-users"></i> Team</a>
+                    <a href="pm_reports.html"><i class="fas fa-chart-bar"></i> Reports</a>
+                    <a href="conversations.html"><i class="fas fa-comments"></i> Conversations</a>
+                </nav>
+                
+                <div class="user-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    
+                    <div class="user-profile">
+                        <div class="avatar">PM</div>
+                        <div>
+                            <div>Project Manager</div>
+                            <div style="font-size: 0.8rem; color: var(--gray);">Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <aside class="sidebar">
+                <h2><i class="fas fa-bolt"></i> Quick Links</h2>
+                <ul>
+                    <li><a href="view_projects.html"><i class="fas fa-folder-open"></i> View Projects</a></li>
+                    <li><a href="add_projects.html"><i class="fas fa-plus-circle"></i> Add New Project</a></li>
+                    <li><a href="pm_team.html"><i class="fas fa-user-cog"></i> Manage Team</a></li>
+                    <li><a href="pm_reports.html"><i class="fas fa-chart-pie"></i> Generate Reports</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+                </ul>
+            </aside>
+            
+            <main class="dashboard">
+                <div class="welcome-banner">
+                    <h1>Projects Management</h1>
+                    <p>Manage all your customer projects, track progress, and assign tasks to team members.</p>
+                    <p id="projectCount">Loading project count...</p>
+                </div>
+                
+                <div class="projects-grid" id="projectsContainer">
+                    <!-- Projects will be loaded here dynamically -->
+                    <p>Loading projects...</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/projects');
+                const projects = await response.json();
+                
+                // Update project count
+                const projectCountElement = document.getElementById('projectCount');
+                if (projectCountElement) {
+                    projectCountElement.textContent = `Total Projects: ${projects.length}`;
+                }
+                
+                const container = document.getElementById('projectsContainer');
+                container.innerHTML = '';
+                
+                if (projects.length === 0) {
+                    container.innerHTML = '<p>No projects found. <a href="add_projects.html" class="btn btn-primary">Add your first project</a></p>';
+                    return;
+                }
+                
+                projects.forEach(project => {
+                    const projectCard = document.createElement('div');
+                    projectCard.className = 'project-card';
+                    
+                    // Format dates
+                    const startDate = new Date(project.start_date).toLocaleDateString();
+                    const endDate = new Date(project.end_date).toLocaleDateString();
+                    
+                    // Status class
+                    let statusClass = 'status-not-started';
+                    if (project.status === 'in progress') statusClass = 'status-in-progress';
+                    if (project.status === 'completed') statusClass = 'status-completed';
+                    if (project.status === 'on hold') statusClass = 'status-on-hold';
+                    
+                    projectCard.innerHTML = `
+                        <div class="project-header">
+                            <h3 class="project-title">${project.title}</h3>
+                            <div class="project-icon">
+                                <i class="fas fa-folder"></i>
+                            </div>
+                        
+                        <p class="project-description">${project.description}</p>
+                        
+                        <div class="project-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Status</span>
+                                <span class="project-status ${statusClass}">${project.status}</span>
+                            </div>
+                            
+                            <div class="meta-item">
+                                <span class="meta-label">Start Date</span>
+                                <span class="meta-value">${startDate}</span>
+                            </div>
+                            
+                            <div class="meta-item">
+                                <span class="meta-label">End Date</span>
+                                <span class="meta-value">${endDate}</span>
+                            </div>
+                            
+                            <div class="meta-item">
+                                <span class="meta-label">Assigned To</span>
+                                <span class="meta-value">${project.assigned_to}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="project-actions">
+                            <a href="project_details.html?id=${project.id}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> View</a>
+                            <a href="edit_project.html?id=${project.id}" class="btn btn-outline btn-sm"><i class="fas fa-edit"></i> Edit</a>
+                        </div>
+                    `;
+                    
+                    container.appendChild(projectCard);
+                });
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+                document.getElementById('projectsContainer').innerHTML = '<p>Error loading projects. Please try again later.</p>';
+                // Also update the project count element to show error
+                const projectCountElement = document.getElementById('projectCount');
+                if (projectCountElement) {
+                    projectCountElement.textContent = 'Error loading project count';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

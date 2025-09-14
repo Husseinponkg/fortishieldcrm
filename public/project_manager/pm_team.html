@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Management - Fortishield CRM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <style>
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        .team-stats {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .members-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .members-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        .members-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+        
+        .members-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .role-manager {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+        }
+        
+        .role-developer {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+        
+        .error {
+            color: var(--danger);
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .team-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fas fa-project-diagram"></i></div>
+                    <div class="logo-text">Fortishield Matrix</div>
+                </div>
+                
+                <nav class="nav">
+                    <a href="pm_dash.html"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="pm_projects.html"><i class="fas fa-folder"></i> Projects</a>
+                    <a href="pm_team.html" class="active"><i class="fas fa-users"></i> Team</a>
+                    <a href="pm_reports.html"><i class="fas fa-chart-bar"></i> Reports</a>
+                    <a href="conversations.html"><i class="fas fa-comments"></i> Conversations</a>
+                </nav>
+                
+                <div class="user-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    
+                    <div class="user-profile">
+                        <div class="avatar">PM</div>
+                        <div>
+                            <div>Project Manager</div>
+                            <div style="font-size: 0.8rem; color: var(--gray);">Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <aside class="sidebar">
+                <h2><i class="fas fa-bolt"></i> Quick Links</h2>
+                <ul>
+                    <li><a href="view_projects.html"><i class="fas fa-folder-open"></i> View Projects</a></li>
+                    <li><a href="add_projects.html"><i class="fas fa-plus-circle"></i> Add New Project</a></li>
+                    <li><a href="pm_team.html"><i class="fas fa-user-cog"></i> Manage Team</a></li>
+                    <li><a href="pm_reports.html"><i class="fas fa-chart-pie"></i> Generate Reports</a></li>
+                    <li><a href="../index.html"><i class="fas fa-cog"></i>logout</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+                </ul>
+            </aside>
+            
+            <main class="dashboard">
+                <div class="page-header">
+                    <h1>Team Management</h1>
+                </div>
+                
+                <div class="team-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalMembers">0</div>
+                        <div class="stat-label">Total Members</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="managersCount">0</div>
+                        <div class="stat-label">Managers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="developersCount">0</div>
+                        <div class="stat-label">Developers</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Team Members</h2>
+                    </div>
+                    
+                    <div id="membersContainer">
+                        <div class="loading">Loading team members...</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/users');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch users');
+                }
+                
+                const users = await response.json();
+                
+                // Update stats
+                document.getElementById('totalMembers').textContent = users.length;
+                
+                const managers = users.filter(user => user.roles === 'project_manager' || user.roles === 'general_manager').length;
+                const developers = users.filter(user => user.roles === 'developer').length;
+                
+                document.getElementById('managersCount').textContent = managers;
+                document.getElementById('developersCount').textContent = developers;
+                
+                // Display users in table
+                const container = document.getElementById('membersContainer');
+                
+                if (users.length === 0) {
+                    container.innerHTML = '<div class="loading">No team members found.</div>';
+                    return;
+                }
+                
+                let tableHTML = `
+                    <table class="members-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                users.forEach(user => {
+                    // Format role for display
+                    let roleDisplay = user.roles;
+                    let roleClass = '';
+                    
+                    if (user.roles === 'project_manager') {
+                        roleDisplay = 'Project Manager';
+                        roleClass = 'role-manager';
+                    } else if (user.roles === 'general_manager') {
+                        roleDisplay = 'General Manager';
+                        roleClass = 'role-manager';
+                    } else if (user.roles === 'developer') {
+                        roleDisplay = 'Developer';
+                        roleClass = 'role-developer';
+                    }
+                    
+                    tableHTML += `
+                        <tr>
+                            <td>${user.username}</td>
+                            <td>${user.email}</td>
+                            <td><span class="role-badge ${roleClass}">${roleDisplay}</span></td>
+                        </tr>
+                    `;
+                });
+                
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+                
+                container.innerHTML = tableHTML;
+            } catch (error) {
+                console.error('Error fetching team members:', error);
+                document.getElementById('membersContainer').innerHTML = 
+                    `<div class="error">Error loading team members: ${error.message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>

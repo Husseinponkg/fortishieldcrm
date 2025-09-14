@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Project - Fortishield CRM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <style>
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        .form-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-title i {
+            color: var(--primary);
+        }
+        
+        #editProjectForm {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group label i {
+            color: var(--primary);
+            width: 20px;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .submit-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .submit-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+        
+        @media (max-width: 768px) {
+            #editProjectForm {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fas fa-project-diagram"></i></div>
+                    <div class="logo-text">Fortishield Matrix</div>
+                </div>
+                
+                <nav class="nav">
+                    <a href="pm_dash.html"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="pm_projects.html" class="active"><i class="fas fa-folder"></i> Projects</a>
+                    <a href="pm_team.html"><i class="fas fa-users"></i> Team</a>
+                    <a href="pm_reports.html"><i class="fas fa-chart-bar"></i> Reports</a>
+                    <a href="conversations.html"><i class="fas fa-comments"></i> Conversations</a>
+                </nav>
+                
+                <div class="user-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    
+                    <div class="user-profile">
+                        <div class="avatar">PM</div>
+                        <div>
+                            <div>Project Manager</div>
+                            <div style="font-size: 0.8rem; color: var(--gray);">Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <aside class="sidebar">
+                <h2><i class="fas fa-bolt"></i> Quick Links</h2>
+                <ul>
+                    <li><a href="view_projects.html"><i class="fas fa-folder-open"></i> View Projects</a></li>
+                    <li><a href="add_projects.html"><i class="fas fa-plus-circle"></i> Add New Project</a></li>
+                    <li><a href="pm_team.html"><i class="fas fa-user-cog"></i> Manage Team</a></li>
+                    <li><a href="pm_reports.html"><i class="fas fa-chart-pie"></i> Generate Reports</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+                </ul>
+            </aside>
+            
+            <main class="dashboard">
+                <div class="page-header">
+                    <h1>Edit Project</h1>
+                    <div>
+                        <a href="pm_projects.html" class="btn btn-outline">
+                            <i class="fas fa-arrow-left"></i> Back to Projects
+                        </a>
+                    </div>
+                
+                <div class="form-container">
+                    <h2 class="form-title"><i class="fas fa-edit"></i> Edit Project Details</h2>
+                    
+                    <div id="loadingMessage" class="loading">Loading project details...</div>
+                    
+                    <form id="editProjectForm" style="display: none;">
+                        <input type="hidden" id="projectId" name="id">
+                        
+                        <div class="form-group">
+                            <label for="title"><i class="fas fa-heading"></i> Project Title:</label>
+                            <input type="text" id="title" name="title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="status"><i class="fas fa-status"></i> Status:</label>
+                            <select id="status" name="status" required>
+                                <option value="not started">Not Started</option>
+                                <option value="in progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                                <option value="on hold">On Hold</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="assigned_to"><i class="fas fa-user"></i> Assigned To:</label>
+                            <input type="text" id="assigned_to" name="assigned_to" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="start_date"><i class="fas fa-calendar-start"></i> Start Date:</label>
+                            <input type="date" id="start_date" name="start_date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="end_date"><i class="fas fa-calendar-end"></i> End Date:</label>
+                            <input type="date" id="end_date" name="end_date" required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="description"><i class="fas fa-align-left"></i> Description:</label>
+                            <textarea id="description" name="description" required></textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="report_upload"><i class="fas fa-file-upload"></i> Report Attachment:</label>
+                            <input type="file" id="report_upload" name="report_upload" accept=".pdf,.doc,.docx,.txt">
+                            <div id="currentReport" style="margin-top: 0.5rem;"></div>
+                        </div>
+                        
+                        <div class="full-width">
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-save"></i> Update Project
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Get project ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id');
+            
+            if (!projectId) {
+                alert('No project ID specified');
+                window.location.href = 'pm_projects.html';
+                return;
+            }
+            
+            try {
+                // Fetch project details
+                const response = await fetch(`/projects/${projectId}`);
+                if (!response.ok) {
+                    throw new Error('Project not found');
+                }
+                
+                const project = await response.json();
+                
+                // Hide loading message and show form
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('editProjectForm').style.display = 'grid';
+                
+                // Populate form with project data
+                document.getElementById('projectId').value = project.id;
+                document.getElementById('title').value = project.title;
+                document.getElementById('status').value = project.status;
+                document.getElementById('assigned_to').value = project.assigned_to;
+                document.getElementById('start_date').value = project.start_date.split('T')[0];
+                document.getElementById('end_date').value = project.end_date.split('T')[0];
+                document.getElementById('description').value = project.description;
+                
+                // Show current report if exists
+                if (project.report_upload) {
+                    document.getElementById('currentReport').innerHTML = `
+                        <p>Current report: <a href="/uploads/${project.report_upload}" target="_blank">${project.report_upload}</a></p>
+                    `;
+                }
+                
+                // Set min date for end date to start date
+                document.getElementById('start_date').addEventListener('change', function() {
+                    document.getElementById('end_date').min = this.value;
+                });
+                
+                // Set initial min date for end date
+                document.getElementById('end_date').min = project.start_date.split('T')[0];
+                
+            } catch (error) {
+                console.error('Error fetching project:', error);
+                document.getElementById('loadingMessage').textContent = 'Error loading project details. Please try again.';
+            }
+            
+            // Handle form submission
+            document.getElementById('editProjectForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const projectId = formData.get('id');
+                
+                try {
+                    const response = await fetch(`/projects/${projectId}`, {
+                        method: 'PUT',
+                        body: formData
+                    });
+                    
+                    if (response.ok) {
+                        alert('Project updated successfully!');
+                        window.location.href = `project_details.html?id=${projectId}`;
+                    } else {
+                        const errorData = await response.json();
+                        alert('Error updating project: ' + errorData.message);
+                    }
+                } catch (error) {
+                    console.error('Error updating project:', error);
+                    alert('Error updating project. Please try again.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

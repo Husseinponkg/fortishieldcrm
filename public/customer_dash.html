@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fortishield Matrix CRM - Customer Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+          <div class="logo-text">Fortishield CRM</div>
+        </div>
+        
+        <nav class="nav">
+          <a href="customer_dash.html" class="active"><i class="fas fa-home"></i> Home</a>
+          <a href="view.html"><i class="fas fa-users"></i> Customers</a>
+          <a href="trends.html"><i class="fas fa-chart-line"></i> Analytics</a>
+          <a href="sms.html"><i class="fas fa-comments"></i> Communications</a>
+        </nav>
+        
+        <div class="user-actions">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">3</span>
+          </button>
+          
+          <div class="user-profile">
+            <div class="avatar">JD</div>
+            <span>John Doe</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <div class="main-content">
+      <aside class="sidebar">
+        <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+        <ul>
+          <li><a href="customer_dash.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="view.html"><i class="fas fa-users"></i> View Customers</a></li>
+          <li><a href="records.html"><i class="fas fa-user-plus"></i> Record Customers</a></li>
+          <li><a href="sms.html"><i class="fas fa-comment-alt"></i> Customers InTouch</a></li>
+          <li><a href="trends.html"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
+          <li><a href="sms.html"><i class="fas fa-sms"></i> Communications</a></li>
+          <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+      </aside>
+      
+      <main class="dashboard">
+        <div class="welcome-banner">
+          <h1>Customer Dashboard</h1>
+          <p>Manage your customer relationships effectively with our comprehensive CRM solution. Track interactions, analyze trends, and improve customer satisfaction.</p>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-title">TOTAL CUSTOMERS</div>
+              <div class="stat-icon">
+                <i class="fas fa-users"></i>
+              </div>
+            </div>
+            <div class="stat-value">1,248</div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i> 12.5% from last month
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-title">ACTIVE CUSTOMERS</div>
+              <div class="stat-icon">
+                <i class="fas fa-user-check"></i>
+              </div>
+            <div class="stat-value">892</div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i> 5.2% from last month
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-title">CUSTOMER SATISFACTION</div>
+              <div class="stat-icon">
+                <i class="fas fa-star"></i>
+              </div>
+            <div class="stat-value">94.3%</div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i> 2.1% from last month
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-title">MESSAGES SENT</div>
+              <div class="stat-icon">
+                <i class="fas fa-comments"></i>
+              </div>
+            </div>
+            <div class="stat-value">3,482</div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i> 18.7% from last month
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Recent Activities</div>
+            <a href="#" class="view-all">View All</a>
+          </div>
+          <div class="card-content">
+            <p>Customer activity feed will be displayed here.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+    
+    <footer>
+      <div class="footer-content">
+        <div class="copyright">© 2023 Fortishield Matrix CRM. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Contact Us</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Simple JavaScript for interactive elements
+    document.addEventListener('DOMContentLoaded', function() {
+      const notificationBtn = document.querySelector('.notification-btn');
+      if (notificationBtn) {
+        notificationBtn.addEventListener('click', function() {
+          alert('You have 3 unread notifications');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
