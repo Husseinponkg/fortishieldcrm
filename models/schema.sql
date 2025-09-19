@@ -1,6 +1,6 @@
-create database crm;
+create database defaultdb;
 
-use crm;
+use defaultdb;
 
 
 CREATE table users(
