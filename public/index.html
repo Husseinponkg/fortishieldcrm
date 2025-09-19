@@ -5,213 +5,126 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fortishield MATRIX CRM - Login</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="css/main.css">
   <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
-    
+
+    body {
+      background: #000; /* Black background */
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
     .app-container {
       width: 100%;
-      max-width: 1200px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    /* Header Styles */
-    .header {
+      max-width: 420px;
+      background: #111; /* Dark gray container */
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
       text-align: center;
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      width: 100%;
-      max-width: 600px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
-    
-    .logo {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
+
+    /* Header */
+    .header img.logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%; /* Makes the logo round */
       object-fit: cover;
-      border: 3px solid var(--primary);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      margin-bottom: 1rem;
+      margin-bottom: 15px;
+      border: 3px solid #34abda; /* Optional: glowing border */
+      box-shadow: 0 0 12px rgba(52, 171, 218, 0.7);
     }
-    
+
     .header h1 {
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 8px;
     }
-    
+
     .header p {
-      color: var(--gray);
-      font-size: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-bottom: 20px;
     }
-    
-    /* Login Form */
-    .container {
+
+    /* Form */
+    .login-form .form-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .login-form label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: #ddd;
+    }
+
+    .login-form input {
       width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .login-form {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-    
-    #loginForm {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    
-    .form-group label i {
-      color: var(--primary);
-      width: 20px;
-      text-align: center;
-    }
-    
-    button[type="submit"] {
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
+      padding: 12px;
       border: none;
-      background: var(--primary);
-      color: white;
-      font-weight: 600;
+      border-radius: 10px;
+      background: #1c1c1c;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.3s ease;
+    }
+
+    .login-form input:focus {
+      background: #222;
+      box-shadow: 0 0 6px #34abda;
+    }
+
+    /* Button */
+    .login-form button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #34abda73, #43afe9);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
       font-size: 1rem;
       cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
+      font-weight: bold;
+      transition: 0.3s ease;
+      margin-top: 10px;
     }
-    
-    button[type="submit"]:hover {
-      background: var(--primary-hover);
-      transform: translateY(-2px);
+
+    .login-form button:hover {
+      background: linear-gradient(135deg, #4f46e5, #3730a3);
+      transform: scale(1.02);
     }
-    
+
+    /* Register link */
     .register-link {
-      text-align: center;
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--card-border);
+      margin-top: 18px;
     }
-    
+
     .register-link a {
-      color: var(--primary);
+      color: #34abda;
       text-decoration: none;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: color 0.3s ease;
+      font-size: 0.9rem;
     }
-    
+
     .register-link a:hover {
-      color: var(--primary-hover);
       text-decoration: underline;
     }
-    
-    /* Form Validation Styles */
-    .form-group.error input {
-      border-color: var(--danger);
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
-    }
-    
-    .error-message {
-      color: var(--danger);
-      font-size: 0.85rem;
-      margin-top: 0.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      body {
-        padding: 1rem;
-      }
-      
-      .header {
-        padding: 1rem;
-      }
-      
-      .header h1 {
-        font-size: 1.5rem;
-      }
-      
-      .login-form {
-        padding: 1.5rem;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .header h1 {
-        font-size: 1.3rem;
-      }
-      
-      .logo {
-        width: 80px;
-        height: 80px;
-      }
-      
-      .login-form {
-        padding: 1rem;
-      }
-      
-      .form-group input {
-        padding: 0.6rem 0.8rem;
-      }
-      
-      button[type="submit"] {
-        padding: 0.6rem 1.2rem;
-      }
-    }
-    
-    /* Animation */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .login-form {
-      animation: fadeIn 0.5s ease-out;
-    }
-    
-    .form-group {
-      animation: fadeIn 0.5s ease-out;
-      animation-fill-mode: both;
-    }
-    
-    .form-group:nth-child(1) { animation-delay: 0.1s; }
-    .form-group:nth-child(2) { animation-delay: 0.2s; }
-    .form-group:nth-child(3) { animation-delay: 0.3s; }
   </style>
 </head>
 <body>
   <div class="app-container">
     <div class="header">
-  <center>    <img src="../images/logo.png" alt="Fortishield Logo" class="logo"></center>
+      <img src="../images/logo.png" alt="Fortishield Logo" class="logo">
       <h1>Fortishield MATRIX CRM Login</h1>
       <p>Access your account to continue</p>
     </div>

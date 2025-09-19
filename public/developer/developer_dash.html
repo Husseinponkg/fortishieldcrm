@@ -5,7 +5,406 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Developer Dashboard - Fortishield CRM</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/main.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- ======================
+       Fortishield Neon Theme
+       ====================== -->
+  <style>
+    /* Variables */
+    :root {
+      --primary: #00f6ff;   /* Neon Cyan */
+      --primary-hover: #00c6d6;
+      --secondary: #131313;
+      --dark: #0a0a0a;
+      --darker: #000000;
+      --light: #e5e5e5;
+      --gray: #9ca3af;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --glass: rgba(255,255,255,0.05);
+      --border-glow: 0 0 12px rgba(0, 246, 255, 0.6);
+    }
+
+    /* Reset & Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      background: var(--secondary); /* Solid dark background for better HCI */
+      color: var(--light);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ===== Header ===== */
+    header {
+      padding: 1rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: var(--darker);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      font-size: 1.8rem;
+      color: var(--primary);
+      text-shadow: var(--border-glow);
+    }
+
+    .logo-text {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    nav {
+      display: flex;
+      gap: 1.2rem;
+      flex: 0 1 auto;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    nav a {
+      color: var(--gray);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--primary);
+      background: var(--glass);
+      box-shadow: var(--border-glow);
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .notification-btn {
+      background: none;
+      border: none;
+      color: var(--gray);
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .notification-badge {
+      background: var(--danger);
+      color: white;
+      font-size: 0.7rem;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      box-shadow: 0 0 8px rgba(239, 68, 68, 0.7);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .user-profile .avatar {
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: var(--dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* ===== Layout ===== */
+    .main-content {
+      display: flex;
+      max-width: 1400px;
+      margin: 2rem auto;
+      gap: 2rem;
+      padding: 0 2rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: var(--secondary);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 0 25px rgba(255,255,255,0.05);
+    }
+
+    .sidebar h2 {
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 0.7rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: var(--glass);
+      color: var(--primary);
+      box-shadow: var(--border-glow);
+    }
+
+    /* ===== Dashboard Content ===== */
+    .dashboard {
+      flex: 1;
+      padding: 2rem;
+      background: var(--secondary);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    }
+
+    .welcome-banner h1 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .welcome-banner p {
+      color: var(--light); /* Light for visibility */
+      margin-bottom: 2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--secondary);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: var(--border-glow);
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .stat-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--light); /* Light for visibility */
+    }
+
+    .stat-icon {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--light); /* Light for visibility */
+    }
+
+    .stat-change {
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      color: var(--light); /* Light for visibility */
+    }
+
+    .stat-change.positive i {
+      color: var(--success);
+    }
+
+    .stat-change.negative i {
+      color: var(--danger);
+    }
+
+    .card {
+      background: var(--secondary);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: var(--border-glow);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .dashboard-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .dashboard-content .card {
+      transition: transform 0.3s ease;
+    }
+
+    .dashboard-content .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .dashboard-content .card h2 {
+      font-size: 1.2rem;
+      color: var(--light); /* Light for visibility */
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-content .card p {
+      color: var(--light); /* Light for visibility */
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #000000; /* Black for visibility */
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--border-glow);
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      text-align: center;
+      padding: 1.2rem;
+      background: var(--dark);
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    footer p {
+      color: var(--gray);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 1024px) {
+      .main-content {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+      }
+      .header-content {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .nav {
+        margin: 0;
+        flex-basis: 100%;
+        justify-content: center;
+      }
+      .user-actions {
+        order: 3;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem;
+      }
+      
+      .header-content {
+        gap: 1rem;
+      }
+      
+      .dashboard {
+        padding: 1rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .dashboard-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .btn {
+        padding: 0.6rem 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="app-container">
@@ -46,7 +445,6 @@
           <li><a href="tasks.html"><i class="fas fa-clipboard-list"></i> Tasks</a></li>
           <li><a href="view_customers.html"><i class="fas fa-users"></i> View Customers</a></li>
           <li><a href="../project_manager/pm_reports.html"><i class="fas fa-file-alt"></i> Reports</a></li>
-          
           <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
       </aside>
@@ -65,10 +463,9 @@
                 <i class="fas fa-code-branch"></i>
               </div>
             </div>
-            <div class="stat-value">not yet implemented
-</div>
+            <div class="stat-value">5</div>
             <div class="stat-change positive">
-              <i class="fas fa-arrow-up"></i> not implemented
+              <i class="fas fa-arrow-up"></i> +2 from last week
             </div>
           </div>
           
@@ -79,10 +476,9 @@
                 <i class="fas fa-tasks"></i>
               </div>
             </div>
-            <div class="stat-value">not implemented
-</div>
+            <div class="stat-value">12</div>
             <div class="stat-change negative">
-              <i class="fas fa-arrow-up"></i> not implemented
+              <i class="fas fa-arrow-up"></i> +3 from yesterday
             </div>
           </div>
           
@@ -93,10 +489,9 @@
                 <i class="fas fa-chart-bar"></i>
               </div>
             </div>
-            <div class="stat-value">not implemented
-</div>
+            <div class="stat-value">3</div>
             <div class="stat-change positive">
-              <i class="fas fa-arrow-down"></i> from last week
+              <i class="fas fa-arrow-down"></i> -1 from last week
             </div>
           </div>
           
@@ -107,9 +502,9 @@
                 <i class="fas fa-code"></i>
               </div>
             </div>
-            <div class="stat-value">0%</div>
+            <div class="stat-value">85%</div>
             <div class="stat-change positive">
-              <i class="fas fa-arrow-up"></i> from last month
+              <i class="fas fa-arrow-up"></i> +5% from last month
             </div>
           </div>
         </div>
@@ -122,25 +517,25 @@
             <div class="card">
               <h2><i class="fas fa-laptop-code"></i> My Projects</h2>
               <p>View and manage projects assigned to you. Track progress, update status, and collaborate with your team.</p>
-              <a href="view.html" class="btn btn-primary"><i class="fas fa-eye"></i> View Projects</a>
+              <a href="view.html" class="btn"><i class="fas fa-eye"></i> View Projects</a>
             </div>
             
             <div class="card">
               <h2><i class="fas fa-clipboard-list"></i> Tasks</h2>
               <p>Check your daily tasks and assignments. Prioritize your work and mark tasks as completed.</p>
-              <a href="tasks.html" class="btn btn-primary"><i class="fas fa-tasks"></i> View Tasks</a>
+              <a href="tasks.html" class="btn"><i class="fas fa-tasks"></i> View Tasks</a>
             </div>
             
             <div class="card">
               <h2><i class="fas fa-file-alt"></i> Reports</h2>
               <p>Access project reports and documentation. Generate performance reports and export data.</p>
-              <a href="../project_manager/pm_reports.html" class="btn btn-primary"><i class="fas fa-chart-pie"></i> View Reports</a>
+              <a href="../project_manager/pm_reports.html" class="btn"><i class="fas fa-chart-pie"></i> View Reports</a>
             </div>
             
             <div class="card">
               <h2><i class="fas fa-users"></i> Customers</h2>
               <p>View customer information and project requirements. Communicate with clients directly.</p>
-              <a href="view_customers.html" class="btn btn-primary"><i class="fas fa-users"></i> View Customers</a>
+              <a href="view_customers.html" class="btn"><i class="fas fa-users"></i> View Customers</a>
             </div>
           </div>
         </div>

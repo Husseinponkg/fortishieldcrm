@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #00f6ff;   /* Neon Cyan */
+            --primary-hover: #00c6d6;
+            --secondary: #131313;
+            --dark: #0a0a0a;
+            --darker: #000000;
+            --light: #e5e5e5;
+            --gray: #9ca3af;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --glass: rgba(255,255,255,0.05);
+            --border-glow: 0 0 12px rgba(0, 246, 255, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: var(--darker);
+            box-shadow: inset 0 -1px 0 rgba(255,255,255,0.1);
+        }
+        .header h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header div {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .header span {
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: var(--light);
+        }
+        .btn-danger:hover {
+            background: var(--primary);
+            color: var(--dark);
+            box-shadow: var(--border-glow);
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+        .btn-warning:hover {
+            background: var(--primary);
+            color: var(--dark);
+            box-shadow: var(--border-glow);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: inset 0 0 25px rgba(255,255,255,0.05);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar li {
+            padding: 0.75rem;
+            color: var(--gray);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .sidebar li:hover,
+        .sidebar li.active {
+            background: var(--glass);
+            color: var(--primary);
+            box-shadow: var(--border-glow);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 270px;
+            padding: 2rem;
+        }
+        .card {
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 2rem;
+            box-shadow: 0 0 25px rgba(0,0,0,0.6);
+        }
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        /* Diagnostics and Results */
+        .diagnostics-result {
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+            white-space: pre-wrap;
+            font-family: monospace;
+            color: var(--light);
+        }
+        .status-ok {
+            color: var(--success);
+        }
+        .status-warning {
+            color: var(--warning);
+        }
+        .status-error {
+            color: var(--danger);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: var(--glass);
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-tools"></i> Troubleshooting</h1>
+        <div>
+            <span id="admin-username"><i class="fas fa-user"></i> Admin</span> | 
+            <a href="#" id="logout-btn" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <ul>
+            <li data-page="dashboard"><i class="fas fa-home"></i> Dashboard</li>
+            <li data-page="users"><i class="fas fa-users"></i> User Management</li>
+            <li data-page="activities"><i class="fas fa-chart-line"></i> Activity Monitoring</li>
+            <li data-page="logs"><i class="fas fa-file-alt"></i> System Logs</li>
+            <li class="active" data-page="troubleshoot"><i class="fas fa-tools"></i> Troubleshooting</li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <div class="card">
+            <h3><i class="fas fa-stethoscope"></i> System Diagnostics</h3>
+            <p>Run system diagnostics to check the health of your CRM system.</p>
+            <button id="run-diagnostics-btn" class="btn"><i class="fas fa-play"></i> Run Diagnostics</button>
+            <div id="diagnostics-results" style="display: none;">
+                <h4>Results:</h4>
+                <div id="diagnostics-output" class="diagnostics-result"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3><i class="fas fa-heartbeat"></i> System Health Check</h3>
+            <div id="health-check-results">
+                <p>Click "Check System Health" to run a comprehensive system check.</p>
+            </div>
+            <button id="check-health-btn" class="btn"><i class="fas fa-check-circle"></i> Check System Health</button>
+        </div>
+        
+        <div class="card">
+            <h3><i class="fas fa-wrench"></i> System Maintenance</h3>
+            <p>Perform system maintenance tasks to keep your CRM running smoothly.</p>
+            <div class="action-buttons">
+                <button class="btn btn-warning" id="restart-services-btn"><i class="fas fa-sync"></i> Restart Services</button>
+                <button class="btn btn-danger" id="reset-system-btn"><i class="fas fa-undo"></i> Reset System</button>
+                <button class="btn" id="backup-system-btn"><i class="fas fa-download"></i> Backup System</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3><i class="fas fa-tachometer-alt"></i> Performance Metrics</h3>
+            <div id="performance-metrics">
+                <p>Click "Refresh Metrics" to view current system performance.</p>
+            </div>
+            <button id="refresh-metrics-btn" class="btn"><i class="fas fa-sync-alt"></i> Refresh Metrics</button>
+        </div>
+    </div>
+
+    <script>
+        // Page navigation
+        document.querySelectorAll('.sidebar ul li').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar ul li').forEach(li => li.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.getAttribute('data-page');
+                const routes = {
+                    dashboard: 'main_dashboard.html',
+                    users: 'user_management.html',
+                    activities: 'activity_monitoring.html',
+                    logs: 'system_logs.html',
+                    troubleshoot: 'troubleshooting.html'
+                };
+                if (routes[page]) {
+                    window.location.href = routes[page];
+                }
+            });
+        });
+
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            // Remove any stored admin data
+            localStorage.removeItem('adminToken');
+            window.location.href = '../index.html';
+        });
+
+        // Run diagnostics
+        document.getElementById('run-diagnostics-btn').addEventListener('click', async function() {
+            const output = document.getElementById('diagnostics-output');
+            document.getElementById('diagnostics-results').style.display = 'block';
+            output.textContent = 'Running diagnostics...\n\nPlease wait...';
+            
+            try {
+                const response = await fetch('/admin/troubleshoot-system');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.success) {
+                    output.textContent = JSON.stringify(data.diagnostics, null, 2);
+                } else {
+                    output.textContent = 'Error running diagnostics: ' + (data.message || 'Unknown error');
+                }
+            } catch (error) {
+                console.error('Error running diagnostics:', error);
+                output.textContent = 'Error running diagnostics: ' + error.message + '. Please try again later.';
+            }
+        });
+
+        // Check system health
+        document.getElementById('check-health-btn').addEventListener('click', async function() {
+            const healthCheckResults = document.getElementById('health-check-results');
+            healthCheckResults.innerHTML = '<p>Checking system health...</p>';
+            
+            try {
+                const response = await fetch('/admin/troubleshoot-system');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.success) {
+                    healthCheckResults.innerHTML = `
+                        <div>
+                            <h4><i class="fas fa-database"></i> Database Connection: <span class="status-${data.diagnostics.database === 'connected' ? 'ok' : 'error'}">${data.diagnostics.database === 'connected' ? 'OK' : 'ERROR'}</span></h4>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: ${data.diagnostics.database === 'connected' ? '100%' : '0%'}"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4><i class="fas fa-server"></i> Server Status: <span class="status-${data.diagnostics.server === 'running' ? 'ok' : 'error'}">${data.diagnostics.server === 'running' ? 'OK' : 'ERROR'}</span></h4>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: ${data.diagnostics.server === 'running' ? '100%' : '0%'}"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4><i class="fas fa-memory"></i> Memory Usage: <span class="status-${data.diagnostics.memoryUsage?.heapUsed / data.diagnostics.memoryUsage?.heapTotal < 0.8 ? 'ok' : 'warning'}">${data.diagnostics.memoryUsage ? Math.round((data.diagnostics.memoryUsage.heapUsed / data.diagnostics.memoryUsage.heapTotal) * 100) : 'N/A'}%</span></h4>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: ${data.diagnostics.memoryUsage ? Math.round((data.diagnostics.memoryUsage.heapUsed / data.diagnostics.memoryUsage.heapTotal) * 100) : 0}%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4><i class="fas fa-clock"></i> Uptime: <span class="status-ok">${data.diagnostics.uptime ? Math.round(data.diagnostics.uptime / 3600) : 'N/A'} hours</span></h4>
+                        </div>
+                    `;
+                } else {
+                    healthCheckResults.innerHTML = `<p style="color: #ef4444;">Error checking system health: ${data.message || 'Unknown error'}. Please try again later.</p>`;
+                }
+            } catch (error) {
+                console.error('Error checking system health:', error);
+                healthCheckResults.innerHTML = `<p style="color: #ef4444;">Error checking system health: ${error.message}. Please try again later.</p>`;
+            }
+        });
+
+        // Restart services
+        document.getElementById('restart-services-btn').addEventListener('click', async function() {
+            if (!confirm('Are you sure you want to restart all services? This may temporarily interrupt system operations.')) return;
+            try {
+                const response = await fetch('/admin/restart-services', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('Services restart initiated. This may take a few moments.');
+                } else {
+                    alert('Error restarting services: ' + (data.message || 'Unknown error') + '. Please try again later.');
+                }
+            } catch (error) {
+                console.error('Error restarting services:', error);
+                alert('Error restarting services: ' + error.message + '. Please try again later.');
+            }
+        });
+
+        // Reset system
+        document.getElementById('reset-system-btn').addEventListener('click', async function() {
+            if (!confirm('Are you sure you want to reset the system? This will clear all temporary data and restart services.')) return;
+            try {
+                const response = await fetch('/admin/reset-system', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('System reset initiated. This may take several minutes.');
+                } else {
+                    alert('Error resetting system: ' + (data.message || 'Unknown error') + '. Please try again later.');
+                }
+            } catch (error) {
+                console.error('Error resetting system:', error);
+                alert('Error resetting system: ' + error.message + '. Please try again later.');
+            }
+        });
+
+        // Backup system
+        document.getElementById('backup-system-btn').addEventListener('click', async function() {
+            try {
+                const response = await fetch('/admin/backup-system', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('System backup initiated. You will be notified when the backup is complete.');
+                } else {
+                    alert('Error initiating backup: ' + (data.message || 'Unknown error') + '. Please try again later.');
+                }
+            } catch (error) {
+                console.error('Error initiating backup:', error);
+                alert('Error initiating backup: ' + error.message + '. Please try again later.');
+            }
+        });
+
+        // Refresh metrics
+        document.getElementById('refresh-metrics-btn').addEventListener('click', async function() {
+            const performanceMetrics = document.getElementById('performance-metrics');
+            performanceMetrics.innerHTML = '<p>Refreshing metrics...</p>';
+            
+            try {
+                const response = await fetch('/admin/troubleshoot-system');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.success) {
+                    performanceMetrics.innerHTML = `
+                        <div>
+                            <h4><i class="fas fa-memory"></i> Memory Usage: <span class="status-${data.diagnostics.memoryUsage?.heapUsed / data.diagnostics.memoryUsage?.heapTotal < 0.8 ? 'ok' : 'warning'}">${data.diagnostics.memoryUsage ? Math.round((data.diagnostics.memoryUsage.heapUsed / data.diagnostics.memoryUsage.heapTotal) * 100) : 'N/A'}%</span></h4>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: ${data.diagnostics.memoryUsage ? Math.round((data.diagnostics.memoryUsage.heapUsed / data.diagnostics.memoryUsage.heapTotal) * 100) : 0}%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4><i class="fas fa-clock"></i> Uptime: <span class="status-ok">${data.diagnostics.uptime ? Math.round(data.diagnostics.uptime / 3600) : 'N/A'} hours</span></h4>
+                        </div>
+                        <div>
+                            <h4><i class="fas fa-users"></i> User Count: <span class="status-ok">${data.diagnostics.userCount ?? 'N/A'}</span></h4>
+                        </div>
+                        <div>
+                            <h4><i class="fas fa-user-friends"></i> Customer Count: <span class="status-ok">${data.diagnostics.customerCount ?? 'N/A'}</span></h4>
+                        </div>
+                        <div>
+                            <h4><i class="fas fa-tasks"></i> Activity Count: <span class="status-ok">${data.diagnostics.activityCount ?? 'N/A'}</span></h4>
+                        </div>
+                        <div>
+                            <h4><i class="fas fa-project-diagram"></i> Project Count: <span class="status-ok">${data.diagnostics.projectCount ?? 'N/A'}</span></h4>
+                        </div>
+                        <div>
+                            <h4><i class="fas fa-handshake"></i> Deal Count: <span class="status-ok">${data.diagnostics.dealCount ?? 'N/A'}</span></h4>
+                        </div>
+                    `;
+                } else {
+                    performanceMetrics.innerHTML = `<p style="color: #ef4444;">Error refreshing metrics: ${data.message || 'Unknown error'}. Please try again later.</p>`;
+                }
+            } catch (error) {
+                console.error('Error refreshing metrics:', error);
+                performanceMetrics.innerHTML = `<p style="color: #ef4444;">Error refreshing metrics: ${error.message}. Please try again later.</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

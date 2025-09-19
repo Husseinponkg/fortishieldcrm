@@ -7,101 +7,182 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../css/main.css">
   <style>
-    /* Additional styles for task-specific elements */
-    .task-item {
-      padding: 1rem;
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      background: var(--secondary);
-    }
-    
-    .task-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-    
-    .task-status {
-      padding: 0.25rem 0.5rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      text-transform: capitalize;
-    }
-    
-    .status-pending {
-      background: var(--warning);
-      color: #fff;
-    }
-    
-    .status-completed {
-      background: var(--success);
-      color: #fff;
-    }
-    
-    .status-not-completed {
-      background: var(--danger);
-      color: #fff;
-    }
-    
-    .task-details {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
-      font-size: 0.9rem;
-    }
-    
-    .task-actions {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-    
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 100;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.6);
-      padding-top: 60px;
-    }
-    
-    .modal-content {
-      background-color: var(--card-bg);
-      margin: auto;
-      padding: 20px;
-      border: 1px solid var(--card-border);
-      width: 90%;
-      max-width: 500px;
-      border-radius: 12px;
-      color: var(--light);
-    }
-    
-    .close {
-      color: var(--gray);
-      float: right;
-      font-size: 24px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    
-    .close:hover {
-      color: var(--danger);
-    }
-    
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
- </style>
+  :root {
+    --primary: #00f6ff;   /* Neon Cyan */
+    --primary-hover: #00c6d6;
+    --secondary: #131313;
+    --dark: #0a0a0a;
+    --darker: #000000;
+    --light: #e5e5e5;
+    --gray: #9ca3af;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --glass: rgba(255,255,255,0.05);
+    --border-glow: 0 0 12px rgba(0, 246, 255, 0.6);
+    --card-border: rgba(255,255,255,0.08);
+    --card-bg: var(--secondary);
+  }
+
+  body {
+    background: linear-gradient(135deg, var(--darker), var(--dark));
+    color: var(--light);
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  header {
+    background: var(--darker);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.1);
+  }
+  .logo-icon {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+  }
+  .logo-text {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--primary);
+  }
+
+  nav a {
+    color: var(--gray);
+    text-decoration: none;
+    margin: 0 0.8rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  nav a:hover,
+  nav a.active {
+    background: var(--glass);
+    color: var(--primary);
+    box-shadow: var(--border-glow);
+  }
+
+  .sidebar {
+    background: var(--secondary);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    box-shadow: inset 0 0 25px rgba(255,255,255,0.05);
+    min-width: 230px;
+  }
+  .sidebar h2 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+  }
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  .sidebar ul li a {
+    display: block;
+    color: var(--gray);
+    padding: 0.7rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s;
+  }
+  .sidebar ul li a:hover,
+  .sidebar ul li a.active {
+    background: var(--glass);
+    color: var(--primary);
+    box-shadow: var(--border-glow);
+  }
+
+  .dashboard {
+    flex: 1;
+    padding: 2rem;
+    background: var(--secondary);
+    border-radius: 14px;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    margin: 1rem;
+  }
+
+  .welcome-banner h1 {
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+  }
+  .welcome-banner p {
+    color: var(--gray);
+  }
+
+  .card {
+    background: var(--dark);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    box-shadow: var(--border-glow);
+  }
+  .card-header {
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  /* Task items */
+  .task-item {
+    background: var(--glass);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+  }
+  .task-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--border-glow);
+  }
+  .task-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+  .task-header h4 {
+    margin: 0;
+    color: var(--light);
+  }
+  .task-status {
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  .status-pending { background: var(--warning); color: #fff; }
+  .status-completed { background: var(--success); color: #fff; }
+  .status-not-completed { background: var(--danger); color: #fff; }
+
+  .task-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin-bottom: 0.5rem;
+  }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    background: var(--dark);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    color: var(--gray);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--primary); margin: 0 0.5rem; }
+</style>
+
 </head>
 <body>
  <div class="app-container">
@@ -126,8 +207,8 @@
           </button>
           
           <div class="user-profile">
-            <div class="avatar">JD</div>
-            <span>John Doe</span>
+            <div class="avatar"></div>
+            <span></span>
           </div>
         </div>
       </div>

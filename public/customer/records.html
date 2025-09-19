@@ -5,200 +5,369 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Customer Form - Fortishield CRM</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/main.css">
+
+  <!-- ======================
+       Fortishield Neon Theme
+       ====================== -->
   <style>
+    /* Variables */
+    :root {
+      --primary: #00f6ff;   /* Neon Cyan */
+      --primary-hover: #00c6d6;
+      --secondary: #131313;
+      --dark: #0a0a0a;
+      --darker: #000000;
+      --light: #e5e5e5;
+      --gray: #9ca3af;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --glass: rgba(255,255,255,0.05);
+      --border-glow: 0 0 12px rgba(0, 246, 255, 0.6);
+    }
+
+    /* Reset & Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
+
     body {
-      background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+      background: linear-gradient(135deg, var(--darker), var(--dark));
       color: var(--light);
       min-height: 100vh;
       line-height: 1.6;
-      padding: 2rem;
     }
-    
-    .app-container {
+
+    /* ===== Header ===== */
+    header {
+      padding: 1rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: var(--darker);
       display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      max-width: 1400px;
-      margin: 0 auto;
+      align-items: center;
+      justify-content: space-between;
     }
-    
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      width: 100%;
+      justify-content: space-between;
     }
-    
-    .header {
-      text-align: center;
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
-    
-    .header h1 {
+
+    .logo-icon {
       font-size: 1.8rem;
-      margin-bottom: 0.5rem;
+      color: var(--primary);
+      text-shadow: var(--border-glow);
     }
-    
-    .header p {
-      color: var(--gray);
+
+    .logo-text {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
     }
-    
-    .form-container {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-    
-    .form-group {
+
+    nav {
       display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      gap: 1.2rem;
+      flex: 0 1 auto; /* Prevent nav from growing to fill space */
+      justify-content: center; /* Center the nav links */
+      margin: 0 auto; /* Center the nav container */
     }
-    
-    .form-group label {
+
+    nav a {
+      color: var(--gray);
+      text-decoration: none;
       font-weight: 500;
-      color: var(--light);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--primary);
+      background: var(--glass);
+      box-shadow: var(--border-glow);
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .notification-btn {
+      background: none;
+      border: none;
+      color: var(--gray);
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .notification-badge {
+      background: var(--danger);
+      color: white;
+      font-size: 0.7rem;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      box-shadow: 0 0 8px rgba(239, 68, 68, 0.7);
+    }
+
+    .user-profile {
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
-    
+
+    /* ===== Layout ===== */
+    .main-content {
+      display: flex;
+      max-width: 1400px;
+      margin: 2rem auto;
+      gap: 2rem;
+      padding: 0 2rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: var(--secondary);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 0 25px rgba(255,255,255,0.05);
+    }
+
+    .sidebar h2 {
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 0.7rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: var(--glass);
+      color: var(--primary);
+      box-shadow: var(--border-glow);
+    }
+
+    /* ===== Dashboard Content ===== */
+    .dashboard {
+      flex: 1;
+      padding: 2rem;
+      background: var(--secondary);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    }
+
+    .dashboard h1 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard p {
+      color: var(--gray);
+      margin-bottom: 2rem;
+    }
+
+    /* ===== Form Styling ===== */
+    .form-container {
+      background: var(--secondary);
+      padding: 2rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: var(--border-glow);
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     .form-group label i {
       color: var(--primary);
       width: 20px;
     }
-    
+
     .form-group input,
+    .form-group select,
     .form-group textarea {
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      border: 1px solid var(--card-border);
-      background: var(--secondary);
+      width: 100%;
+      padding: 0.6rem;
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
       color: var(--light);
-      font-size: 1rem;
+      font-size: 0.95rem;
       transition: all 0.3s ease;
     }
-    
+
     .form-group input:focus,
+    .form-group select:focus,
     .form-group textarea:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      box-shadow: var(--border-glow);
     }
-    
+
     .form-group textarea {
-      min-height: 120px;
       resize: vertical;
+      min-height: 120px;
     }
-    
-    .form-group small {
-      color: var(--gray);
-      font-size: 0.85rem;
-    }
-    
-    .form-group code {
-      background: var(--secondary);
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-family: monospace;
-    }
-    
+
     .required::after {
       content: " *";
       color: var(--danger);
     }
-    
-    button[type="submit"] {
-      padding: 0.75rem 1.5rem;
+
+    .btn {
       background: var(--primary);
-      color: white;
+      color: var(--dark);
       border: none;
       border-radius: 8px;
+      padding: 0.6rem 1.2rem;
       font-weight: 600;
-      font-size: 1rem;
       cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
+      box-shadow: var(--border-glow);
+      transition: all 0.3s;
+      display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      margin-top: 1rem;
     }
-    
-    button[type="submit"]:hover {
+
+    .btn:hover {
       background: var(--primary-hover);
       transform: translateY(-2px);
     }
-    
-    .success-message {
-      text-align: center;
-      padding: 2rem;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      display: none;
-    }
-    
-    .success-message i {
-      color: var(--success);
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-    
-    .success-message h2 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .success-message p {
-      color: var(--gray);
-      margin-bottom: 1.5rem;
-    }
-    
-    .success-message button {
-      padding: 0.75rem 1.5rem;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin: 0 auto;
-    }
-    
-    .success-message button:hover {
-      background: var(--primary-hover);
-      transform: translateY(-2px);
-    }
-    
+
     .error {
       color: var(--danger);
       font-size: 0.85rem;
       margin-top: 0.25rem;
       display: none;
     }
-    
+
     .hint {
       color: var(--gray);
       font-size: 0.85rem;
       font-style: italic;
       margin-top: 0.25rem;
     }
-    
+
+    .success-message {
+      text-align: center;
+      padding: 2rem;
+      background: var(--secondary);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      box-shadow: var(--border-glow);
+      display: none;
+    }
+
+    .success-message i {
+      color: var(--success);
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-message h2 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .success-message p {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      text-align: center;
+      padding: 1.2rem;
+      background: var(--dark);
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    footer p {
+      color: var(--gray);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 1024px) {
+      .main-content {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+      }
+      .header-content {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .nav {
+        margin: 0;
+        flex-basis: 100%;
+        justify-content: center;
+      }
+      .user-actions {
+        order: 3;
+      }
+    }
+
     @media (max-width: 768px) {
       body {
         padding: 1rem;
@@ -225,7 +394,7 @@
         padding: 0.6rem 0.8rem;
       }
       
-      button[type="submit"] {
+      .btn {
         padding: 0.6rem 1.2rem;
       }
       
@@ -263,6 +432,7 @@
           
           <div class="user-profile">
            
+          </div>
         </div>
       </div>
     </header>
@@ -273,10 +443,9 @@
         <ul>
           <li><a href="customer_dash.html"><i class="fas fa-home"></i> Home</a></li>
           <li><a href="view.html"><i class="fas fa-users"></i> View Customers</a></li>
-          <li><a href="records.html"><i class="fas fa-user-plus"></i> Record Customers</a></li>
-          <li><a href="sms.html"><i class="fas fa-comment-alt"></i> Customers InTouch</a></li>
+          <li><a href="records.html" class="active"><i class="fas fa-user-plus"></i> Record Customers</a></li>
+          <li><a href="communications.html"><i class="fas fa-comment-alt"></i> Customers InTouch</a></li>
           <li><a href="trends.html"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
-          <li><a href="sms.html"><i class="fas fa-sms"></i> Communications</a></li>
           <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
       </aside>
@@ -292,36 +461,36 @@
             <form id="customerForm">
               <div class="form-group">
                 <label for="username" class="required"><i class="fas fa-user"></i> Username</label>
-                <input type="text" id="username" placeholder="Enter username (3-20 characters)" required>
+                <input type="text" id="username" name="username" placeholder="Enter username (3-20 characters)" required>
                 <div class="error" id="usernameError">Please enter a valid username (3-20 characters)</div>
               </div>
 
               <div class="form-group">
                 <label for="email" class="required"><i class="fas fa-envelope"></i> Email</label>
-                <input type="email" id="email" placeholder="Enter email address" required>
+                <input type="email" id="email" name="email" placeholder="Enter email address" required>
                 <div class="error" id="emailError">Please enter a valid email address</div>
               </div>
 
               <div class="form-group">
                 <label for="contacts" class="required"><i class="fas fa-phone"></i> Contacts</label>
-                <input type="text" id="contacts" placeholder="Enter phone number" required>
+                <input type="text" id="contacts" name="contacts" placeholder="Enter phone number" required>
                 <div class="error" id="contactsError">Please enter a valid phone number</div>
               </div>
 
               <div class="form-group">
                 <label for="service" class="required"><i class="fas fa-concierge-bell"></i> Service</label>
-                <input type="text" id="service" placeholder="Enter service name" required>
+                <input type="text" id="service" name="service" placeholder="Enter service name" required>
                 <div class="error" id="serviceError">Please enter a service name</div>
               </div>
 
               <div class="form-group">
                 <label for="details" class="required"><i class="fas fa-info-circle"></i> Details</label>
-                <textarea id="details" placeholder="Enter service details" rows="4" required></textarea>
+                <textarea id="details" name="details" placeholder="Enter service details" rows="4" required></textarea>
                 <div class="error" id="detailsError">Please provide service details</div>
                 <div class="hint">Describe the customer's requirements in detail</div>
               </div>
 
-              <button type="submit"><i class="fas fa-user-plus"></i> Add Customer</button>
+              <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Add Customer</button>
             </form>
 
             <!-- Success Message -->
@@ -329,7 +498,7 @@
               <i class="fas fa-check-circle"></i>
               <h2>Customer Added Successfully!</h2>
               <p>The customer information has been saved to the system.</p>
-              <button type="button" onclick="resetForm()"><i class="fas fa-plus"></i> Add Another Customer</button>
+              <button type="button" class="btn" onclick="resetForm()"><i class="fas fa-plus"></i> Add Another Customer</button>
             </div>
           </div>
         </div>
@@ -350,18 +519,41 @@
 
   <script>
     // Form validation and submission handling
-    document.getElementById('customerForm').addEventListener('submit', function(e) {
+    document.getElementById('customerForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
       // Validate all fields
       const isValid = validateForm();
 
       if (isValid) {
-        // Hide form and show success message
-        document.getElementById('customerForm').style.display = 'none';
-        document.getElementById('successMessage').style.display = 'block';
+        const formData = new FormData(this);
+        const customerData = Object.fromEntries(formData.entries());
 
-        console.log('Form data is valid. Ready to submit to server.');
+        try {
+          console.log('Submitting customer data:', customerData);
+          const response = await fetch('/customer/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(customerData)
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          console.log('Success:', result);
+
+          // Hide form and show success message
+          document.getElementById('customerForm').style.display = 'none';
+          document.getElementById('successMessage').style.display = 'block';
+
+        } catch (error) {
+          console.error('Error submitting form:', error);
+          alert('Error adding customer: ' + error.message);
+        }
       }
     });
 
@@ -412,7 +604,7 @@
 
       // Validate details
       const details = document.getElementById('details');
-      if (!details.value) {
+      if (!details.value || details.value.trim().length < 10) {
         document.getElementById('detailsError').style.display = 'block';
         if (isValid) details.focus();
         isValid = false;
@@ -428,6 +620,11 @@
       document.getElementById('customerForm').reset();
       document.getElementById('successMessage').style.display = 'none';
       document.getElementById('customerForm').style.display = 'block';
+
+      // Clear any error messages
+      document.querySelectorAll('.error').forEach(error => {
+        error.style.display = 'none';
+      });
     }
 
     // Add real-time validation as users type
@@ -439,9 +636,11 @@
         }
       });
     });
-  </script>
 
-  <!-- Keep reference to external JS -->
-  <script src="../js/customer.js"></script>
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Any initialization code here
+    });
+  </script>
 </body>
 </html>

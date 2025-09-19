@@ -269,7 +269,8 @@ const getServiceStatistics = async (req, res) => {
         const growthSql = `
             SELECT
                 DATE_FORMAT(created_at, '%Y-%m') as date,
-                COUNT(*) as count
+                COUNT(*) as count,
+                SUM(COUNT(*)) OVER (ORDER BY DATE_FORMAT(created_at, '%Y-%m')) as cumulative_count
             FROM customers
             GROUP BY DATE_FORMAT(created_at, '%Y-%m')
             ORDER BY date
@@ -327,7 +328,8 @@ const getTrendsData = async (req, res) => {
         const growthSql = `
             SELECT
                 DATE_FORMAT(created_at, '%Y-%m') as date,
-                COUNT(*) as count
+                COUNT(*) as count,
+                SUM(COUNT(*)) OVER (ORDER BY DATE_FORMAT(created_at, '%Y-%m')) as cumulative_count
             FROM customers
             GROUP BY DATE_FORMAT(created_at, '%Y-%m')
             ORDER BY date
@@ -341,6 +343,25 @@ const getTrendsData = async (req, res) => {
             growthRows = [];
         }
         
+        
+        // Get customer growth by service over time
+        const serviceGrowthSql = `
+            SELECT
+                DATE_FORMAT(created_at, '%Y-%m') as date,
+                service,
+                COUNT(*) as count
+            FROM customers
+            GROUP BY DATE_FORMAT(created_at, '%Y-%m'), service
+            ORDER BY date, service
+        `;
+        let serviceGrowthRows = [];
+        try {
+            [serviceGrowthRows] = await db.execute(serviceGrowthSql);
+            console.log('Service growth:', serviceGrowthRows);
+        } catch (error) {
+            console.error('Error fetching service growth:', error);
+            serviceGrowthRows = [];
+        }
         // Get top services
         const topServicesSql = `SELECT service, COUNT(*) as count FROM customers GROUP BY service ORDER BY count DESC LIMIT 5`;
         let topServicesRows = [];
@@ -355,7 +376,8 @@ const getTrendsData = async (req, res) => {
         res.status(200).json({
             serviceDistribution: serviceRows,
             customerGrowth: growthRows,
-            topServices: topServicesRows
+            topServices: topServicesRows,
+            serviceGrowth: serviceGrowthRows
         });
     } catch (error) {
         console.error('Error fetching trends data:', error);

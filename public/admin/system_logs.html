@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Logs - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #00f6ff;   /* Neon Cyan */
+            --primary-hover: #00c6d6;
+            --secondary: #131313;
+            --dark: #0a0a0a;
+            --darker: #000000;
+            --light: #e5e5e5;
+            --gray: #9ca3af;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --glass: rgba(255,255,255,0.05);
+            --border-glow: 0 0 12px rgba(0, 246, 255, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: var(--darker);
+            box-shadow: inset 0 -1px 0 rgba(255,255,255,0.1);
+        }
+        .header h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header div {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .header span {
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: var(--light);
+        }
+        .btn-danger:hover {
+            background: var(--primary);
+            color: var(--dark);
+            box-shadow: var(--border-glow);
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+        .btn-warning:hover {
+            background: var(--primary);
+            color: var(--dark);
+            box-shadow: var(--border-glow);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: inset 0 0 25px rgba(255,255,255,0.05);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar li {
+            padding: 0.75rem;
+            color: var(--gray);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .sidebar li:hover,
+        .sidebar li.active {
+            background: var(--glass);
+            color: var(--primary);
+            box-shadow: var(--border-glow);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 270px;
+            padding: 2rem;
+        }
+        .card {
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 2rem;
+            box-shadow: 0 0 25px rgba(0,0,0,0.6);
+        }
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        th {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        td {
+            color: var(--gray);
+        }
+        .log-level-info {
+            color: var(--success);
+        }
+        .log-level-warning {
+            color: var(--warning);
+        }
+        .log-level-error {
+            color: var(--danger);
+        }
+        .log-message {
+            word-break: break-all;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: flex-end;
+        }
+        .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .form-group label {
+            display: block;
+            color: var(--light);
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--glass);
+            color: var(--light);
+            font-size: 0.9rem;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: var(--border-glow);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-file-alt"></i> System Logs</h1>
+        <div>
+            <span id="admin-username"><i class="fas fa-user"></i> Admin</span> | 
+            <a href="#" id="logout-btn" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <ul>
+            <li data-page="dashboard"><i class="fas fa-home"></i> Dashboard</li>
+            <li data-page="users"><i class="fas fa-users"></i> User Management</li>
+            <li data-page="activities"><i class="fas fa-chart-line"></i> Activity Monitoring</li>
+            <li class="active" data-page="logs"><i class="fas fa-file-alt"></i> System Logs</li>
+            <li data-page="troubleshoot"><i class="fas fa-tools"></i> Troubleshooting</li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <div class="card">
+            <h3><i class="fas fa-filter"></i> Log Filters</h3>
+            <div class="filter-section">
+                <div class="form-group">
+                    <label for="filter-level"><i class="fas fa-exclamation-circle"></i> Log Level</label>
+                    <select id="filter-level" class="form-control">
+                        <option value="">All Levels</option>
+                        <option value="info">Info</option>
+                        <option value="warning">Warning</option>
+                        <option value="error">Error</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-date"><i class="fas fa-calendar-alt"></i> Date</label>
+                    <input type="date" id="filter-date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <button class="btn" id="apply-filters"><i class="fas fa-check"></i> Apply Filters</button>
+                    <button class="btn btn-warning" id="clear-filters"><i class="fas fa-times"></i> Clear</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3><i class="fas fa-list"></i> Recent Logs</h3>
+            <div style="margin-bottom: 1rem;">
+                <button id="clear-logs-btn" class="btn btn-danger"><i class="fas fa-trash"></i> Clear Logs</button>
+                <button id="refresh-logs-btn" class="btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Level</th>
+                        <th>Message</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="logs-table">
+                    <tr>
+                        <td colspan="4" style="text-align: center;">Loading logs...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Page navigation
+        document.querySelectorAll('.sidebar ul li').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar ul li').forEach(li => li.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.getAttribute('data-page');
+                const routes = {
+                    dashboard: 'main_dashboard.html',
+                    users: 'user_management.html',
+                    activities: 'activity_monitoring.html',
+                    logs: 'system_logs.html',
+                    troubleshoot: 'troubleshooting.html'
+                };
+                if (routes[page]) {
+                    window.location.href = routes[page];
+                }
+            });
+        });
+
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            // Remove any stored admin data
+            localStorage.removeItem('adminToken');
+            window.location.href = '../index.html';
+        });
+
+        // Fetch logs with optional filters
+        async function fetchLogs(filters = {}) {
+            const logsTable = document.getElementById('logs-table');
+            logsTable.innerHTML = '<tr><td colspan="4" style="text-align: center;">Loading logs...</td></tr>';
+            
+            try {
+                const query = new URLSearchParams(filters).toString();
+                const response = await fetch(`/admin/get-system-logs${query ? `?${query}` : ''}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.success && data.logs?.length) {
+                    logsTable.innerHTML = data.logs.map(log => `
+                        <tr>
+                            <td>${log.id}</td>
+                            <td><span class="log-level-${log.level}">${log.level.toUpperCase()}</span></td>
+                            <td class="log-message">${log.message}</td>
+                            <td>${new Date(log.timestamp).toLocaleString()}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    logsTable.innerHTML = `<tr><td colspan="4" style="text-align: center;">${data.message || 'No logs found'}</td></tr>`;
+                }
+            } catch (error) {
+                console.error('Error fetching logs:', error);
+                logsTable.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #ef4444;">Error loading logs: ${error.message}. Please try again later.</td></tr>`;
+            }
+        }
+
+        // Apply filters
+        document.getElementById('apply-filters').addEventListener('click', function() {
+            const filters = {};
+            const level = document.getElementById('filter-level').value;
+            const date = document.getElementById('filter-date').value;
+            if (level) filters.level = level;
+            if (date) filters.date = date;
+            fetchLogs(filters);
+        });
+
+        // Clear filters
+        document.getElementById('clear-filters').addEventListener('click', function() {
+            document.getElementById('filter-level').value = '';
+            document.getElementById('filter-date').value = '';
+            fetchLogs();
+        });
+
+        // Clear logs
+        document.getElementById('clear-logs-btn').addEventListener('click', async function() {
+            if (!confirm('Are you sure you want to clear all logs? This action cannot be undone.')) return;
+            
+            try {
+                const response = await fetch('/admin/clear-logs', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('Logs cleared successfully!');
+                    fetchLogs();
+                } else {
+                    alert('Error clearing logs: ' + (data.message || 'Unknown error') + '. Please try again later.');
+                }
+            } catch (error) {
+                console.error('Error clearing logs:', error);
+                alert('Error clearing logs: ' + error.message + '. Please try again later.');
+            }
+        });
+
+        // Refresh logs
+        document.getElementById('refresh-logs-btn').addEventListener('click', function() {
+            fetchLogs();
+        });
+
+        // Initialize with logs
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchLogs();
+        });
+    </script>
+</body>
+</html>

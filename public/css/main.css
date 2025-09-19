@@ -1,6 +1,6 @@
 :root {
-    --primary: #6366f1;
-    --primary-hover: #4f46e5;
+    --primary: #000000;
+    --primary-hover: #000000;
     --secondary: #1f2937;
     --dark: #111827;
     --darker: #0a0e17;
@@ -66,7 +66,7 @@ header {
 .logo-text {
     font-size: 1.5rem;
     font-weight: 700;
-    background: linear-gradient(90deg, var(--primary) 0%, #818cf8 100%);
+    background: linear-gradient(90deg, var(--primary) 0%, #000000 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -148,7 +148,7 @@ header {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(45deg, var(--primary), #818cf8);
+    background: linear-gradient(45deg, var(--primary), #151619);
     display: flex;
     align-items: center;
     justify-content: center;

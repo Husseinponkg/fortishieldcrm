@@ -39,9 +39,10 @@ foreign key(customer_id) references customers(id) on delete cascade
 );
 CREATE table admin(
     admin_id int primary key auto_increment,
-    users_id int,
+    users_id int NULL,
     username varchar(100),
     password varchar(100),
+    role ENUM('admin')default 'admin',
     foreign key(users_id) references users(id)
 
 );
@@ -164,4 +165,14 @@ CREATE table developers(
     password varchar(100),
     contacts varchar(50),
     foreign key (id) references users(id) on delete cascade
+);
+
+CREATE table system_logs(
+    id int primary key auto_increment,
+    level ENUM('info', 'warning', 'error') NOT NULL,
+    message TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id int NULL,
+    ip_address varchar(45) NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );

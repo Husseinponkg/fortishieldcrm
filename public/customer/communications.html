@@ -8,44 +8,153 @@
   <link rel="stylesheet" href="../css/main.css">
   <style>
     /* Additional styles specific to SMS functionality */
-    .message {
+
+  :root {
+    --primary: #00f6ff;   /* Neon Cyan */
+    --primary-hover: #00c6d6;
+    --secondary: #131313;
+    --dark: #0a0a0a;
+    --darker: #000000;
+    --light: #e5e5e5;
+    --gray: #9ca3af;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --glass: rgba(255,255,255,  0.05);
+    --border-glow: 0 0 12px rgba(0, 246, 255, 0.6);
+  }
+
+  /* Body */
+  body {
+    background: linear-gradient(135deg, var(--darker), var(--dark));
+    color: var(--light);
+    font-family: "Inter", sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Buttons */
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: var(--dark);
+    box-shadow: var(--border-glow);
+  }
+  .btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+  }
+
+  /* Cards */
+  .card {
+    background: var(--secondary);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: inset 0 0 25px rgba(255,255,255,0.05);
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+  .card:hover {
+    box-shadow: var(--border-glow);
+  }
+  .card-header {
+    margin-bottom: 1rem;
+  }
+  .card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Form Controls */
+  .form-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  label {
+    font-weight: 500;
+    color: var(--light);
+  }
+  input.form-control,
+  textarea.form-control {
+    background: var(--dark);
+    color: var(--light);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    font-family: monospace;
+    resize: vertical;
+    transition: all 0.3s ease;
+  }
+  input.form-control:focus,
+  textarea.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: var(--border-glow);
+  }
+
+  /* Messages */
+  .message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    box-shadow: inset 0 0 12px rgba(0,246,255,0.2);
+  }
+  .message.info {
+    background: rgba(0, 246, 255, 0.1);
+    border: 1px solid rgba(0, 246, 255, 0.3);
+    color: var(--primary);
+  }
+  .message.success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--success);
+  }
+  .message.error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: var(--danger);
+  }
+
+  /* Small Text */
+  small {
+    color: var(--gray);
+    font-size: 0.85rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .card {
       padding: 1rem;
-      border-radius: 8px;
-      margin-top: 1rem;
-      font-family: monospace;
-      white-space: pre-wrap;
-      word-break: break-word;
     }
-    
-    .message.info {
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: #93c5fd;
+    .btn {
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
     }
-    
-    .message.success {
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #6ee7b7;
+    .card-title {
+      font-size: 1rem;
     }
-    
-    .message.error {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #fca5a5;
-    }
-    
-    code {
-      background: var(--secondary);
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-family: monospace;
-    }
-    
-    small {
-      color: var(--gray);
-      font-size: 0.85rem;
-    }
+  }
+</style>
+
   </style>
 </head>
 <body>
@@ -70,7 +179,10 @@
             <span class="notification-badge">3</span>
           </button>
           
-        
+          <div class="user-profile">
+            <div class="avatar"></div>
+            <span></span>
+          </div>
         </div>
       </div>
     </header>

@@ -1,18 +1,16 @@
-const twilio = require("twilio");
+const axios = require("axios");
 require("dotenv").config();
 
-// Test Twilio configuration
-console.log("Testing Twilio Configuration...");
-console.log("Twilio SID:", process.env.TWILIO_SID ? "SET" : "NOT SET");
-console.log("Twilio Auth:", process.env.TWILIO_AUTH ? "SET" : "NOT SET");
-console.log("Twilio Phone:", process.env.TWILIO_PHONE);
+// Test Beem Africa configuration
+console.log("Testing Beem Africa Configuration...");
+console.log("BEEM_API_KEY:", process.env.BEEM_API_KEY ? "SET" : "NOT SET");
+console.log("BEEM_SECRET:", process.env.BEEM_SECRET ? "SET" : "NOT SET");
+console.log("BEEM_SENDER_ID:", process.env.BEEM_SENDER_ID);
 
-if (!process.env.TWILIO_SID || !process.env.TWILIO_AUTH) {
-  console.error("Twilio credentials are not set in environment variables");
+if (!process.env.BEEM_API_KEY || !process.env.BEEM_SECRET) {
+  console.error("Beem Africa credentials are not set in environment variables");
   process.exit(1);
 }
-
-const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH);
 
 // Test phone number formatting function
 const formatPhoneNumber = (number) => {
@@ -61,15 +59,27 @@ testNumbers.forEach(num => {
   console.log(`${num} -> ${formatPhoneNumber(num)}`);
 });
 
-// Test Twilio API connection
-console.log("\nTesting Twilio API Connection...");
-client.messages.list({limit: 1})
-  .then(messages => {
-    console.log("Twilio API Connection Successful!");
-    console.log(`Found ${messages.length} recent messages`);
-  })
-  .catch(error => {
-    console.error("Twilio API Connection Failed:", error.message);
-    console.error("Error code:", error.code);
-    console.error("Error status:", error.status);
-  });
+// Test Beem Africa API connection
+console.log("\nTesting Beem Africa API Connection...");
+const testBeemConnection = async () => {
+  try {
+    // Test balance check endpoint
+    const response = await axios.get('https://apisms.beem.africa/v1/balance', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${Buffer.from(`${process.env.BEEM_API_KEY}:${process.env.BEM_SECRET}`).toString('base64')}`,
+      },
+    });
+    
+    console.log("Beem Africa API Connection Successful!");
+    console.log("Account balance:", response.data.balance);
+  } catch (error) {
+    console.error("Beem Africa API Connection Failed:", error.message);
+    if (error.response) {
+      console.error("Error status:", error.response.status);
+      console.error("Error data:", error.response.data);
+    }
+  }
+};
+
+testBeemConnection();

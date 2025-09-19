@@ -1,1275 +1,710 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortishield Matrix CRM - Deals Management</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --secondary: #1f2937;
-            --dark: #111827;
-            --darker: #0a0e17;
-            --light: #f3f4f6;
-            --gray: #9ca3af;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --card-bg: #1e293b;
-            --card-border: #374151;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
-            color: var(--light);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Header Styles */
-        header {
-            background-color: rgba(17, 24, 39, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            border-bottom: 1px solid var(--card-border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        header img {
-            max-width: 150px;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        header h1 {
-            font-size: 1.8rem;
-            margin: 0.5rem 0;
-        }
-
-        header p {
-            font-size: 1rem;
-            color: var(--gray);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* Navigation */
-        nav {
-            background: var(--secondary);
-            padding: 1rem;
-            margin: 1rem auto;
-            max-width: 1400px;
-        }
-
-        nav ul {
-            display: flex;
-            gap: 1.5rem;
-            list-style: none;
-            justify-content: center;
-        }
-
-        nav ul li a {
-            color: var(--gray);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        nav ul li a:hover, nav ul li a.active {
-            color: var(--light);
-        }
-
-        nav ul li a.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary);
-            border-radius: 2px;
-        }
-
-        nav ul li a:focus {
-            outline: 2px solid var(--primary);
-            outline-offset: 2px;
-        }
-
-        /* Main Content */
-        .main-content {
-            display: flex;
-            flex: 1;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 2rem;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            flex-shrink: 0;
-            background: var(--secondary);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-right: 2rem;
-            height: fit-content;
-        }
-
-        .sidebar h3 {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            color: var(--light);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .sidebar h3 i {
-            color: var(--primary);
-        }
-
-        .sidebar ul {
-            list-style: none;
-        }
-
-        .sidebar li {
-            margin-bottom: 0.75rem;
-        }
-
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--gray);
-            text-decoration: none;
-            padding: 0.75rem;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .sidebar a:hover, .sidebar a:focus, .sidebar a.active {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--light);
-        }
-
-        .sidebar a:focus {
-            outline: 2px solid var(--primary);
-            outline-offset: 2px;
-        }
-
-        .sidebar a i {
-            width: 20px;
-            text-align: center;
-        }
-
-        /* Dashboard Content */
-        .dashboard {
-            flex: 1;
-        }
-
-        .dashboard h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--light);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Notification */
-        .notification {
-            display: none;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 500;
-            color: var(--light);
-        }
-
-        .notification.success {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid var(--success);
-        }
-
-        .notification.error {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid var(--danger);
-        }
-
-        /* Stats Container */
-        .stats-container {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--secondary);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .stat-card h3 {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-            color: var(--gray);
-        }
-
-        .stat-card .value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--light);
-        }
-
-        .pipeline-stage {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .pipeline-stage h3 {
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--light);
-        }
-
-        .pipeline-count {
-            background: var(--primary);
-            color: white;
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            font-weight: 500;
-            font-size: 0.85rem;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid var(--card-border);
-            margin-bottom: 1.5rem;
-        }
-
-        .tab {
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            background: var(--secondary);
-            border: 1px solid var(--card-border);
-            border-bottom: none;
-            border-radius: 8px 8px 0 0;
-            margin-right: 0.5rem;
-            font-weight: 500;
-            color: var(--gray);
-            transition: all 0.3s ease;
-        }
-
-        .tab.active {
-            background: var(--primary);
-            color: var(--light);
-            border-color: var(--primary);
-        }
-
-        .tab:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--light);
-        }
-
-        .tab:focus {
-            outline: 2px solid var(--primary);
-            outline-offset: 2px;
-        }
-
-        /* Tab Content */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Actions */
-        .actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 1.5rem;
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: background 0.3s;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-hover);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 1px solid var(--card-border);
-            color: var(--gray);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--light);
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-
-        /* Deals Table */
-        #dealsTable {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--card-border);
-        }
-
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--card-border);
-        }
-
-        th {
-            background: var(--secondary);
-            font-weight: 500;
-            color: var(--light);
-        }
-
-        tr:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .stage-badge {
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: white;
-        }
-
-        .stage-prospect {
-            background: var(--primary);
-        }
-
-        .stage-qualification {
-            background: #9b59b6;
-        }
-
-        .stage-proposal {
-            background: var(--warning);
-        }
-
-        .stage-negotiation {
-            background: #e67e22;
-        }
-
-        .stage-closed_won {
-            background: var(--success);
-        }
-
-        .stage-closed_lost {
-            background: var(--danger);
-        }
-
-        .action-btn {
-            padding: 0.35rem 0.75rem;
-            font-size: 0.85rem;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: var(--gray);
-            font-style: italic;
-        }
-
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--gray);
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            background: var(--secondary);
-            color: var(--light);
-            font-size: 1rem;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: 2px solid var(--primary);
-            outline-offset: 2px;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: flex-end;
-            margin-top: 1.5rem;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark);
-            padding: 1.5rem 2rem;
-            border-top: 1px solid var(--card-border);
-            margin-top: auto;
-            text-align: center;
-        }
-
-        footer p {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .main-content {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                margin-right: 0;
-                margin-bottom: 2rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            header img {
-                max-width: 120px;
-            }
-
-            nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .tabs {
-                flex-direction: column;
-            }
-
-            .tab {
-                border-radius: 8px;
-                margin-bottom: 0.5rem;
-            }
-
-            .actions {
-                justify-content: center;
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header {
-                padding: 1rem;
-            }
-
-            .main-content {
-                padding: 1rem;
-            }
-
-            .stat-card,
-            .pipeline-stage {
-                padding: 1rem;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fortishield Matrix CRM - Deals Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    :root{
+      --primary:#00f6ff;
+      --primary-hover:#00c6d6;
+      --secondary:#131313;
+      --dark:#0a0a0a;
+      --darker:#000000;
+      --light:#e5e5e5;
+      --gray:#9ca3af;
+      --success:#10b981;
+      --warning:#f59e0b;
+      --danger:#ef4444;
+      --glass:rgba(255,255,255,0.04);
+      --border-glow:0 0 12px rgba(0,246,255,0.45);
+      --card-padding:1.25rem;
+      --radius:12px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;font-family:"Inter",sans-serif}
+    body{
+      min-height:100vh;
+      background:linear-gradient(135deg,var(--darker),var(--dark));
+      color:var(--light);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding-bottom:3rem;
+      overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    /* Header */
+    header{
+      background:var(--darker);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      padding:1rem 2rem;
+    }
+    .header-inner{
+      max-width:1400px;
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      gap:1rem;
+      justify-content:space-between;
+    }
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:1rem;
+    }
+    .logo-img{
+      width:56px;
+      height:56px;
+      border-radius:50%;
+      border:3px solid var(--primary);
+      box-shadow:var(--border-glow);
+      object-fit:cover;
+    }
+    .logo-text{
+      display:flex;
+      flex-direction:column;
+    }
+    .logo-title{font-size:1.15rem;font-weight:800;color:var(--primary);letter-spacing:0.6px}
+    .logo-sub{color:var(--gray);font-size:0.85rem}
+
+    /* Navigation */
+    nav{
+      background:var(--dark);
+      padding:0.6rem 1rem;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .nav-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:center}
+    .nav-list{display:flex;gap:1rem;list-style:none;padding:0;margin:0}
+    .nav-list a{
+      color:var(--gray);text-decoration:none;padding:0.5rem 0.9rem;border-radius:8px;font-weight:600;display:inline-flex;gap:0.6rem;align-items:center;
+      transition:all .18s ease;
+    }
+    .nav-list a:hover,.nav-list a.active{color:var(--primary);background:var(--glass);box-shadow:var(--border-glow)}
+
+    /* Layout */
+    .main-container{
+      max-width:1400px;
+      margin:1.5rem auto;
+      padding:0 1rem;
+      display:flex;
+      gap:1.5rem;
+      align-items:flex-start;
+    }
+
+    /* Sidebar */
+    .sidebar{
+      width:250px;
+      background:var(--secondary);
+      padding:1.25rem;
+      border-radius:var(--radius);
+      border:1px solid rgba(255,255,255,0.05);
+      box-shadow:inset 0 0 25px rgba(255,255,255,0.02);
+    }
+    .sidebar h3{color:var(--primary);margin-bottom:1rem;font-size:1.05rem}
+    .sidebar ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.35rem}
+    .sidebar a{color:var(--gray);text-decoration:none;padding:0.65rem;border-radius:8px;display:flex;gap:0.8rem;align-items:center}
+    .sidebar a.active, .sidebar a:hover{background:var(--glass);color:var(--primary);box-shadow:var(--border-glow)}
+
+    /* Content / Dashboard area */
+    .content{
+      flex:1;
+      background:var(--secondary);
+      padding:1.25rem;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.05);
+      box-shadow:0 8px 30px rgba(0,0,0,0.6);
+      min-width:0;
+    }
+    .content h2{color:var(--primary);margin-bottom:0.5rem;font-size:1.25rem}
+    .content p{color:var(--gray);margin-bottom:1rem}
+
+    /* Top stats */
+    .stats{
+      display:flex;
+      gap:1rem;
+      align-items:stretch;
+      margin-bottom:1rem;
+      flex-wrap:wrap;
+    }
+    .stat-card{
+      background:var(--dark);
+      padding:var(--card-padding);
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.04);
+      min-width:160px;
+      flex:1 1 180px;
+    }
+    .stat-card h3{font-size:0.95rem;color:var(--light);margin-bottom:0.35rem}
+    .stat-value{font-size:1.4rem;color:var(--primary);font-weight:800}
+    .stat-label{color:var(--gray);font-size:0.85rem}
+
+    /* Pipeline */
+    .pipeline{
+      display:flex;
+      gap:0.75rem;
+      margin:0.75rem 0 1.25rem 0;
+      flex-wrap:wrap;
+    }
+    .pipeline-stage{
+      background:var(--dark);
+      padding:0.65rem 0.9rem;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.04);
+      min-width:120px;
+      text-align:center;
+    }
+    .pipeline-stage h4{margin:0;font-size:0.9rem;color:var(--gray)}
+    .pipeline-count{font-size:1.05rem;color:var(--primary);font-weight:700;margin-top:0.45rem}
+
+    /* Tabs */
+    .tabs{display:flex;gap:0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);margin-bottom:1rem}
+    .tab{padding:0.5rem 0.9rem;cursor:pointer;color:var(--gray);border-radius:8px}
+    .tab.active{background:var(--glass);color:var(--primary);box-shadow:var(--border-glow)}
+
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+
+    /* Controls */
+    .btn{display:inline-flex;gap:0.5rem;align-items:center;padding:0.5rem 0.8rem;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+    .btn-primary{background:linear-gradient(180deg,var(--primary),var(--primary-hover));color:#000}
+    .btn-secondary{background:transparent;color:var(--gray);border:1px solid rgba(255,255,255,0.04)}
+    .btn-danger{background:linear-gradient(180deg,var(--danger),#d63a3a);color:#fff}
+
+    .actions{margin:0.5rem 0 1rem 0}
+
+    /* Table */
+    table{width:100%;border-collapse:collapse;background:transparent}
+    table thead th{padding:0.7rem 0.6rem;text-align:left;color:var(--gray);font-weight:700;font-size:0.85rem;border-bottom:1px solid rgba(255,255,255,0.04)}
+    table tbody td{padding:0.6rem 0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;color:var(--light)}
+    .stage-badge{padding:0.25rem 0.45rem;border-radius:8px;font-weight:700;font-size:0.82rem;background:rgba(255,255,255,0.02);color:var(--gray)}
+    td.actions{display:flex;gap:0.35rem;align-items:center}
+
+    /* Form */
+    form .form-group{margin-bottom:0.75rem;display:flex;flex-direction:column;gap:0.25rem}
+    input[type="text"],input[type="number"],input[type="date"],textarea,select{
+      background:var(--dark);
+      color:var(--light);
+      padding:0.55rem 0.6rem;border-radius:8px;border:1px solid rgba(255,255,255,0.04);
+      outline:none;font-size:0.95rem;
+    }
+    label{color:var(--gray);font-size:0.88rem}
+
+    /* Notification */
+    .notification{
+      position:relative;
+      display:inline-block;
+      padding:0.55rem 0.75rem;border-radius:8px;margin-bottom:0.75rem;
+      color:#000;background:var(--primary);box-shadow:var(--border-glow);
+      display:none;
+    }
+    .notification.success{background:var(--success);color:#fff}
+    .notification.error{background:var(--danger);color:#fff}
+    .notification.warning{background:var(--warning);color:#fff}
+
+    /* Loading / empty */
+    .loading{color:var(--gray);padding:1rem;text-align:center}
+
+    footer{max-width:1400px;margin:2rem auto 0 auto;padding:1rem;text-align:center;color:var(--gray)}
+    @media (max-width:1024px){
+      .main-container{flex-direction:column;padding:0 1rem}
+      .sidebar{width:100%}
+      .stats{flex-direction:column}
+    }
+  </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header Section -->
-        <header>
-            <div class="header-content">
-                <img src="https://images.unsplash.com/photo-1569012871812-f38ee64cd54c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Fortishield Logo">
-                <div>
-                    <h1><i class="fas fa-handshake"></i> Fortishield Matrix CRM</h1>
-                    <p>Deals Management</p>
-                </div>
-            </div>
-        </header>
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <img class="logo-img" src="../images/logo.png" alt="Fortishield logo">
+        <div class="logo-text">
+          <div class="logo-title"><i class="fas fa-handshake"></i> Fortishield Matrix CRM</div>
+          <div class="logo-sub">Deals Management</div>
+        </div>
+      </div>
 
-        <!-- Navigation Section -->
-        <nav>
-            <ul>
-                <li><a href="customers.html" aria-label="View customer list"><i class="fas fa-users"></i> View Customers</a></li>
-                <li><a href="daily_tasks.html" aria-label="View daily tasks"><i class="fas fa-tasks"></i> Daily Tasks</a></li>
-                <li><a href="contacts.html" aria-label="View customer benchmarks"><i class="fas fa-chart-bar"></i> Customer Benchmarks</a></li>
-            </ul>
-        </nav>
+      <div aria-hidden="true" style="color:var(--gray);font-size:0.9rem">CRM System v2.1</div>
+    </div>
+  </header>
 
-        <!-- Main Content Area -->
-        <div class="main-content">
-            <!-- Sidebar Section -->
-            <div class="sidebar">
-                <h3><i class="fas fa-bars"></i> Navigation Menu</h3>
-                <ul>
-                    <li><a href="gm_dash.html" aria-label="View dashboard"><i class="fas fa-home"></i> View Dashboard</a></li>
-                   
-                    <li><a href="views.html"><i class="fas fa-list"></i> View Customers</a></li>
-                    <li><a href="opportunities.html" aria-label="View opportunities" class="active"><i class="fas fa-briefcase"></i> View Opportunities</a></li>
-                    <li><a href="activities_dash.html" aria-label="View detailed activities"><i class="fas fa-tasks"></i> Detailed Activities</a></li>
-                    <li><a href="activities_icons.html" aria-label="View activities overview"><i class="fas fa-icons"></i> Activities Overview</a></li>
-                    <li><a href="daily_tasks.html" aria-label="View daily tasks"><i class="fas fa-calendar-day"></i> Daily Tasks</a></li>
-                    <li><a href="contacts.html" aria-label="View contacts"><i class="fas fa-address-book"></i> View Contacts</a></li>
-                    <li><a href="trends.html" aria-label="View customer trends"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
-                    <li><a href="index.html" aria-label="Log out"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                </ul>
-            </div>
+  <nav>
+    <div class="nav-inner">
+      <ul class="nav-list" role="menubar" aria-label="Main navigation">
+        <li><a href="views.html" aria-label="View customer list"><i class="fas fa-users"></i> View Customers</a></li>
+        <li><a href="daily_tasks.html" aria-label="View daily tasks"><i class="fas fa-tasks"></i> Daily Tasks</a></li>
+        <li><a href="views.html" aria-label="View customer benchmarks"><i class="fas fa-chart-bar"></i> Customer Benchmarks</a></li>
+      </ul>
+    </div>
+  </nav>
 
-            <!-- Dashboard Content -->
-            <div class="dashboard">
-                <div class="notification" id="notification"></div>
+  <main class="main-container" role="main">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Sidebar">
+      <h3><i class="fas fa-bars"></i> Navigation Menu</h3>
+      <ul>
+        <li><a href="gm_dash.html" aria-label="View dashboard"><i class="fas fa-home"></i> View Dashboard</a></li>
+        <li><a href="views.html"><i class="fas fa-list"></i> View Customers</a></li>
+        <li><a href="deals_functional.html" class="active" aria-current="page"><i class="fas fa-briefcase"></i> View Opportunities</a></li>
+        <li><a href="activities_dash.html"><i class="fas fa-tasks"></i> Detailed Activities</a></li>
+        <li><a href="activities_icons.html"><i class="fas fa-icons"></i> Activities Overview</a></li>
+        <li><a href="daily_tasks.html"><i class="fas fa-calendar-day"></i> Daily Tasks</a></li>
+        
+        <li><a href="trends.html"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
+        <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </aside>
 
-                <div class="stats-container">
-                    <h2><i class="fas fa-chart-line"></i> Sales Overview</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <h3>Total Deals</h3>
-                            <div class="value" id="totalDeals">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Total Value</h3>
-                            <div class="value" id="totalValue">$0</div>
-                        </div>
-                    </div>
+    <!-- Content -->
+    <section class="content" aria-label="Deals content">
+      <div id="notification" class="notification" role="status" aria-live="polite"></div>
 
-                    <h2><i class="fas fa-tasks"></i> Pipeline Stages</h2>
-                    <div id="pipelineStages">
-                        <div class="loading">Loading pipeline data...</div>
-                    </div>
-                </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:0.75rem">
+        <div>
+          <h2><i class="fas fa-chart-line"></i> Sales Overview</h2>
+          <p class="sr-only">Summary of deals and pipeline</p>
+        </div>
+        <div>
+          <button id="refreshDeals" class="btn btn-secondary" aria-label="Refresh deals"><i class="fas fa-sync"></i> Refresh</button>
+        </div>
+      </div>
 
-                <div class="content-area">
-                    <div class="tabs">
-                        <div class="tab active" data-tab="view" role="tab" aria-selected="true" tabindex="0">View Deals</div>
-                        <div class="tab" data-tab="add" role="tab" aria-selected="false" tabindex="0">Add New Deal</div>
-                    </div>
-
-                    <div class="tab-content active" id="viewTab">
-                        <h2><i class="fas fa-list"></i> All Deals</h2>
-                        <div class="actions">
-                            <button class="btn btn-primary" id="refreshDeals" aria-label="Refresh deals">
-                                <i class="fas fa-sync"></i> Refresh
-                            </button>
-                        </div>
-                        <div id="dealsTable">
-                            <div class="loading">Loading deals...</div>
-                        </div>
-                    </div>
-
-                    <div class="tab-content" id="addTab">
-                        <h2><i class="fas fa-plus-circle"></i> Add New Deal</h2>
-                        <form id="dealForm">
-                            <div class="form-group">
-                                <label for="customer_id">Customer (Optional)</label>
-                                <select id="customer_id" name="customer_id" aria-label="Select a customer">
-                                    <option value="">Select a customer</option>
-                                    <!-- Populated dynamically -->
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="title">Deal Title *</label>
-                                <input type="text" id="title" name="title" required aria-required="true">
-                            </div>
-                            <div class="form-group">
-                                <label for="description">Description</label>
-                                <textarea id="description" name="description" rows="3"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="value">Deal Value ($)</label>
-                                <input type="number" id="value" name="value" step="0.01" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="stage">Stage</label>
-                                <select id="stage" name="stage" aria-label="Select deal stage">
-                                    <option value="prospect">Prospect</option>
-                                    <option value="qualification">Qualification</option>
-                                    <option value="proposal">Proposal</option>
-                                    <option value="negotiation">Negotiation</option>
-                                    <option value="closed_won">Closed Won</option>
-                                    <option value="closed_lost">Closed Lost</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="probability">Probability (%)</label>
-                                <input type="number" id="probability" name="probability" min="0" max="100" value="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="dead_line">Deadline</label>
-                                <input type="date" id="dead_line" name="dead_line">
-                            </div>
-                            <div class="form-actions">
-                                <button type="reset" class="btn btn-secondary" aria-label="Reset form">
-                                    <i class="fas fa-times"></i> Reset
-                                </button>
-                                <button type="submit" class="btn btn-primary" aria-label="Save deal">
-                                    <i class="fas fa-save"></i> Save Deal
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+      <div class="stats" aria-hidden="false">
+        <div class="stat-card">
+          <h3>Total Deals</h3>
+          <div class="stat-value" id="totalDeals">0</div>
+          <div class="stat-label">Active deals</div>
         </div>
 
-        <!-- Footer Section -->
-        <footer>
-            <p>&copy; 2025 Fortishield. All rights reserved. | CRM System v2.1</p>
-        </footer>
-    </div>
+        <div class="stat-card">
+          <h3>Total Value</h3>
+          <div class="stat-value" id="totalValue">$0.00</div>
+          <div class="stat-label">Pipeline value</div>
+        </div>
+      </div>
 
-    <script>
-        // Sample data for demonstration
-        const sampleDeals = [
-          
-        ];
+      <h3 style="margin-top:0.5rem;color:var(--gray)">Pipeline Stages</h3>
+      <div id="pipelineStages" class="pipeline" aria-live="polite">
+        <!-- pipeline stages injected here -->
+      </div>
 
-        const sampleCustomers = [
-         
-        ];
+      <div style="margin-top:1rem">
+        <div class="tabs" role="tablist" aria-label="Deals tabs">
+          <div class="tab active" data-tab="view" role="tab" aria-selected="true" tabindex="0">View Deals</div>
+          <div class="tab" data-tab="add" role="tab" aria-selected="false" tabindex="0">Add New Deal</div>
+        </div>
 
-        const DealsManager = {
-            elements: {
-                notification: document.getElementById('notification'),
-                totalDeals: document.getElementById('totalDeals'),
-                totalValue: document.getElementById('totalValue'),
-                pipelineStages: document.getElementById('pipelineStages'),
-                dealsTable: document.getElementById('dealsTable'),
-                customerSelect: document.getElementById('customer_id'),
-                dealForm: document.getElementById('dealForm'),
-                refreshDealsBtn: document.getElementById('refreshDeals')
-            },
+        <div id="viewTab" class="tab-content active" role="tabpanel">
+          <h2 style="margin-top:0.25rem"><i class="fas fa-list"></i> All Deals</h2>
+          <div id="dealsTable">
+            <div class="loading">Loading deals...</div>
+          </div>
+        </div>
 
-            init: function () {
-                this.deals = sampleDeals;
-                this.customers = sampleCustomers;
-                this.initializePage();
-            },
+        <div id="addTab" class="tab-content" role="tabpanel" aria-hidden="true">
+          <h2 style="margin-top:0.25rem"><i class="fas fa-plus-circle"></i> Add New Deal</h2>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <h3 style="margin:0">Customer Information</h3>
+            <button type="button" id="refreshCustomers" class="btn btn-secondary" aria-label="Refresh customers">
+              <i class="fas fa-sync"></i> Refresh Customers
+            </button>
+          </div>
+          <form id="dealForm" aria-label="Deal form">
+            <div class="form-group">
+              <label for="customer_id">Customer (Optional)</label>
+              <select id="customer_id" name="customer_id" aria-label="Select a customer">
+                <option value="">Select a customer</option>
+              </select>
+            </div>
 
-            initializePage: function () {
-                this.bindEvents();
-                this.loadInitialData();
-                this.startPeriodicUpdates();
-            },
+            <div class="form-group">
+              <label for="title">Deal Title *</label>
+              <input type="text" id="title" name="title" required aria-required="true" />
+            </div>
 
-            bindEvents: function () {
-                this.bindTabSwitching();
-                this.bindRefreshButton();
-                this.bindFormSubmission();
-                this.bindFormReset();
-            },
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea id="description" name="description" rows="3"></textarea>
+            </div>
 
-            bindTabSwitching: function () {
-                document.querySelectorAll('.tab').forEach(tab => {
-                    tab.addEventListener('click', () => this.switchTab(tab));
-                    tab.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            this.switchTab(tab);
-                        }
-                    });
-                });
-            },
+            <div class="form-group">
+              <label for="value">Deal Value ($)</label>
+              <input type="number" id="value" name="value" step="0.01" min="0" />
+            </div>
 
-            bindRefreshButton: function () {
-                this.elements.refreshDealsBtn.addEventListener('click', () => this.refreshDeals());
-            },
+            <div class="form-group">
+              <label for="stage">Stage</label>
+              <select id="stage" name="stage">
+                <option value="prospect">Prospect</option>
+                <option value="qualification">Qualification</option>
+                <option value="proposal">Proposal</option>
+                <option value="negotiation">Negotiation</option>
+                <option value="closed_won">Closed Won</option>
+                <option value="closed_lost">Closed Lost</option>
+              </select>
+            </div>
 
-            bindFormSubmission: function () {
-                this.elements.dealForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const dealId = this.elements.dealForm.dataset.id;
-                    if (dealId) {
-                        this.updateDeal(dealId);
-                    } else {
-                        this.createDeal();
-                    }
-                });
-            },
+            <div class="form-group">
+              <label for="probability">Probability (%)</label>
+              <input type="number" id="probability" name="probability" min="0" max="100" value="0" />
+            </div>
 
-            bindFormReset: function () {
-                this.elements.dealForm.addEventListener('reset', () => this.resetForm());
-            },
+            <div class="form-group">
+              <label for="dead_line">Deadline</label>
+              <input type="date" id="dead_line" name="dead_line" />
+            </div>
 
-            switchTab: function (tab) {
-                this.hideAllTabs();
-                this.showActiveTab(tab);
-            },
+            <div class="form-actions" style="display:flex;gap:0.5rem;margin-top:0.5rem">
+              <button type="reset" class="btn btn-secondary" aria-label="Reset form"><i class="fas fa-times"></i> Reset</button>
+              <button type="submit" class="btn btn-primary" aria-label="Save deal"><i class="fas fa-save"></i> Save Deal</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
 
-            hideAllTabs: function () {
-                document.querySelectorAll('.tab').forEach(t => {
-                    t.classList.remove('active');
-                    t.setAttribute('aria-selected', 'false');
-                });
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            },
+  <footer>&copy; 2025 Fortishield. All rights reserved.</footer>
 
-            showActiveTab: function (tab) {
-                tab.classList.add('active');
-                tab.setAttribute('aria-selected', 'true');
-                const tabName = tab.getAttribute('data-tab');
-                document.getElementById(`${tabName}Tab`).classList.add('active');
-            },
+  <script>
+    // Sample data (empty for now) — populate or wire to your API
+    const sampleDeals = [];
+    let sampleCustomers = [];
+    
+    // Fetch customers from API
+    async function fetchCustomers() {
+      try {
+        const response = await fetch('/customer');
+        if (response.ok) {
+          const customers = await response.json();
+          // Normalize customer data structure
+          sampleCustomers = Array.isArray(customers) ? customers.map(c => ({
+            id: c.id || c.customer_id,
+            username: c.username || c.name || c.email || `Customer ${c.id || c.customer_id}`
+          })) : [];
+        } else {
+          console.error('Failed to fetch customers:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching customers:', error);
+      }
+    }
 
-            refreshDeals: function () {
-                this.loadDeals();
-                this.loadDealsSummary();
-            },
+    const DealsManager = {
+      elements: {
+        notification: document.getElementById('notification'),
+        totalDeals: document.getElementById('totalDeals'),
+        totalValue: document.getElementById('totalValue'),
+        pipelineStages: document.getElementById('pipelineStages'),
+        dealsTable: document.getElementById('dealsTable'),
+        customerSelect: document.getElementById('customer_id'),
+        dealForm: document.getElementById('dealForm'),
+        refreshDealsBtn: document.getElementById('refreshDeals'),
+        refreshCustomersBtn: document.getElementById('refreshCustomers')
+      },
 
-            loadInitialData: function () {
-                this.loadCustomers();
-                this.loadDeals();
-                this.loadDealsSummary();
-                this.loadDealsNearingDeadline();
-            },
+      async init() {
+        // Fetch customers first
+        await fetchCustomers();
+        
+        // state
+        this.deals = sampleDeals.slice();
+        this.customers = sampleCustomers.slice();
 
-            startPeriodicUpdates: function () {
-                setInterval(() => {
-                    this.loadDeals();
-                    this.loadDealsSummary();
-                    this.loadDealsNearingDeadline();
-                }, 30000);
-            },
+        // build UI
+        this.bindEvents();
+        this.loadInitialData();
 
-            resetForm: function () {
-                this.elements.dealForm.dataset.id = '';
-                document.querySelector('.tab[data-tab="add"]').textContent = 'Add New Deal';
-                this.showNotification('Form reset successfully', 'success');
-            },
+        // periodic (optional)
+        this._polling = setInterval(() => {
+          this.loadDealsSummary();
+          this.loadDealsNearingDeadline();
+        }, 30000);
+      },
 
-            loadCustomers: function () {
-                this.populateCustomerDropdown(this.customers);
-            },
-
-            populateCustomerDropdown: function (customers) {
-                if (this.elements.customerSelect) {
-                    this.elements.customerSelect.innerHTML = '<option value="">Select a customer</option>';
-                    customers.forEach(customer => {
-                        const option = document.createElement('option');
-                        option.value = customer.id;
-                        option.textContent = customer.username;
-                        this.elements.customerSelect.appendChild(option);
-                    });
-                }
-            },
-
-            loadDeals: function () {
-                if (!this.elements.dealsTable) {
-                    console.error('Deals table element not found');
-                    return;
-                }
-                this.showLoadingDeals();
-                this.renderDealsTable(this.deals);
-            },
-
-            showLoadingDeals: function () {
-                this.elements.dealsTable.innerHTML = '<div class="loading">Loading deals...</div>';
-            },
-
-            renderDealsTable: function (deals) {
-                if (deals.length === 0) {
-                    this.showNoDealsMessage();
-                    return;
-                }
-                this.populateDealsTable(deals);
-            },
-
-            showNoDealsMessage: function () {
-                this.elements.dealsTable.innerHTML = '<div class="loading">No deals found</div>';
-            },
-
-            populateDealsTable: function (deals) {
-                let tableHTML = this.createDealsTableHeader();
-                tableHTML += this.createDealsTableBody(deals);
-                tableHTML += this.closeDealsTable();
-                this.elements.dealsTable.innerHTML = tableHTML;
-
-                // Add event listeners for action buttons
-                document.querySelectorAll('.action-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const id = btn.dataset.id;
-                        const action = btn.dataset.action;
-                        if (action === 'progress') {
-                            this.progressDeal(id, btn.dataset.direction);
-                        } else if (action === 'edit') {
-                            this.editDeal(id);
-                        } else if (action === 'delete') {
-                            this.deleteDeal(id);
-                        }
-                    });
-                });
-            },
-
-            createDealsTableHeader: function () {
-                return `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Customer</th>
-                                <th>Value</th>
-                                <th>Stage</th>
-                                <th>Probability</th>
-                                <th>Deadline</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-            },
-
-            createDealsTableBody: function (deals) {
-                let bodyHTML = '';
-                deals.forEach(deal => {
-                    bodyHTML += this.createDealRow(deal);
-                });
-                return bodyHTML;
-            },
-
-            createDealRow: function (deal) {
-                const deadline = this.formatDeadline(deal.dead_line);
-                const value = this.formatDealValue(deal.value);
-                const deadlineClass = this.getDeadlineClass(deal.dead_line);
-
-                return `
-                    <tr>
-                        <td>${this.escapeHtml(deal.title)}</td>
-                        <td>${this.escapeHtml(deal.customer_name || 'No customer')}</td>
-                        <td>${value}</td>
-                        <td><span class="stage-badge stage-${deal.stage}" aria-label="Stage: ${deal.stage.replace('_', ' ')}">${deal.stage.replace('_', ' ')}</span></td>
-                        <td>${deal.probability}%</td>
-                        <td${deadlineClass}>${deadline}</td>
-                        <td class="actions">
-                            <button class="action-btn btn-secondary" data-id="${deal.id}" data-action="progress" data-direction="backward" aria-label="Move to previous stage" title="Move to previous stage">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button class="action-btn btn-primary" data-id="${deal.id}" data-action="edit" aria-label="Edit deal" title="Edit deal">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="action-btn btn-secondary" data-id="${deal.id}" data-action="progress" data-direction="forward" aria-label="Move to next stage" title="Move to next stage">
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
-                            <button class="action-btn btn-danger" data-id="${deal.id}" data-action="delete" aria-label="Delete deal" title="Delete deal">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            },
-
-            formatDeadline: function (deadLine) {
-                return deadLine ? new Date(deadLine).toLocaleDateString() : 'N/A';
-            },
-
-            formatDealValue: function (value) {
-                return value ? `$${parseFloat(value).toFixed(2)}` : '$0.00';
-            },
-
-            getDeadlineClass: function (deadLine) {
-                if (deadLine && new Date(deadLine) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)) {
-                    return ' style="color: var(--danger); font-weight: bold;"';
-                }
-                return '';
-            },
-
-            escapeHtml: function (text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            },
-
-            closeDealsTable: function () {
-                return `
-                        </tbody>
-                    </table>
-                `;
-            },
-
-            loadDealsSummary: function () {
-                const summary = {
-                    totalDeals: this.deals.length,
-                    totalValue: this.deals.reduce((sum, deal) => sum + (deal.value || 0), 0),
-                    dealsByStage: [
-                        { stage: 'prospect', count: this.deals.filter(d => d.stage === 'prospect').length },
-                        { stage: 'qualification', count: this.deals.filter(d => d.stage === 'qualification').length },
-                        { stage: 'proposal', count: this.deals.filter(d => d.stage === 'proposal').length },
-                        { stage: 'negotiation', count: this.deals.filter(d => d.stage === 'negotiation').length },
-                        { stage: 'closed_won', count: this.deals.filter(d => d.stage === 'closed_won').length },
-                        { stage: 'closed_lost', count: this.deals.filter(d => d.stage === 'closed_lost').length }
-                    ]
-                };
-                this.updateSummary(summary);
-            },
-
-            updateSummary: function (summary) {
-                this.updateTotalDeals(summary.totalDeals);
-                this.updateTotalValue(summary.totalValue);
-                this.renderPipelineStages(summary);
-            },
-
-            updateTotalDeals: function (totalDeals) {
-                this.elements.totalDeals.textContent = totalDeals;
-            },
-
-            updateTotalValue: function (totalValue) {
-                this.elements.totalValue.textContent = `$${parseFloat(totalValue || 0).toFixed(2)}`;
-            },
-
-            renderPipelineStages: function (summary) {
-                let pipelineHTML = '';
-                const stageOrder = ['prospect', 'qualification', 'proposal', 'negotiation', 'closed_won', 'closed_lost'];
-                const stageLabels = {
-                    'prospect': 'Prospect',
-                    'qualification': 'Qualification',
-                    'proposal': 'Proposal',
-                    'negotiation': 'Negotiation',
-                    'closed_won': 'Closed Won',
-                    'closed_lost': 'Closed Lost'
-                };
-
-                stageOrder.forEach(stage => {
-                    const count = summary.dealsByStage.find(s => s.stage === stage)?.count || 0;
-                    pipelineHTML += this.createPipelineStage(stageLabels[stage], count);
-                });
-
-                this.elements.pipelineStages.innerHTML = pipelineHTML;
-            },
-
-            createPipelineStage: function (label, count) {
-                return `
-                    <div class="pipeline-stage">
-                        <h3>${label}</h3>
-                        <div class="pipeline-count">${count}</div>
-                    </div>
-                `;
-            },
-
-            loadDealsNearingDeadline: function () {
-                const deals = this.deals.filter(deal => {
-                    return deal.dead_line && new Date(deal.dead_line) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-                });
-                this.showDeadlineReminders(deals);
-            },
-
-            showDeadlineReminders: function (deals) {
-                if (deals.length > 0) {
-                    let reminderText = `You have ${deals.length} deal(s) with upcoming deadlines:\n`;
-                    deals.forEach(deal => {
-                        const deadline = new Date(deal.dead_line).toLocaleDateString();
-                        reminderText += `- ${deal.title} (${deadline})\n`;
-                    });
-                    console.log(reminderText);
-                    this.showNotification(`${deals.length} deal(s) nearing deadline`, 'warning');
-                }
-            },
-
-            createDeal: function () {
-                if (!this.elements.dealForm) {
-                    console.error('Deal form element not found');
-                    this.showNotification('Form not found. Please refresh the page.', 'error');
-                    return;
-                }
-
-                const dealData = this.getDealFormData();
-                this.deals.push({
-                    id: Date.now(),
-                    ...dealData,
-                    customer_name: this.customers.find(c => c.id == dealData.customer_id)?.username || null
-                });
-
-                this.showNotification('Deal created successfully!', 'success');
-                this.elements.dealForm.reset();
-                this.loadDeals();
-                this.loadDealsSummary();
-                this.notifyDealAdded();
-                this.switchToViewTab();
-            },
-
-            getDealFormData: function () {
-                const formData = new FormData(this.elements.dealForm);
-                const dealData = Object.fromEntries(formData.entries());
-                if (dealData.value) {
-                    dealData.value = parseFloat(dealData.value);
-                }
-                dealData.probability = parseInt(dealData.probability) || 0;
-                if (!dealData.customer_id || dealData.customer_id === "" || dealData.customer_id === "0") {
-                    delete dealData.customer_id;
-                }
-                return dealData;
-            },
-
-            editDeal: function (id) {
-                const deal = this.deals.find(d => d.id == id);
-                if (!deal) {
-                    this.showNotification('Deal not found', 'error');
-                    return;
-                }
-
-                this.elements.customerSelect.value = deal.customer_id || '';
-                this.elements.dealForm.querySelector('#title').value = deal.title;
-                this.elements.dealForm.querySelector('#description').value = deal.description || '';
-                this.elements.dealForm.querySelector('#value').value = deal.value || '';
-                this.elements.dealForm.querySelector('#stage').value = deal.stage;
-                this.elements.dealForm.querySelector('#probability').value = deal.probability;
-                this.elements.dealForm.querySelector('#dead_line').value = deal.dead_line || '';
-                this.elements.dealForm.dataset.id = id;
-
-                this.switchToAddTab();
-                document.querySelector('.tab[data-tab="add"]').textContent = 'Edit Deal';
-            },
-
-            updateDeal: function (id) {
-                const dealData = this.getDealFormData();
-                const index = this.deals.findIndex(d => d.id == id);
-                if (index !== -1) {
-                    this.deals[index] = {
-                        id,
-                        ...dealData,
-                        customer_name: this.customers.find(c => c.id == dealData.customer_id)?.username || null
-                    };
-                    this.showNotification('Deal updated successfully!', 'success');
-                    this.elements.dealForm.reset();
-                    this.loadDeals();
-                    this.loadDealsSummary();
-                    this.notifyDealUpdated();
-                    this.switchToViewTab();
-                } else {
-                    this.showNotification('Deal not found', 'error');
-                }
-            },
-
-            deleteDeal: function (id) {
-                if (!this.confirmDealDeletion()) {
-                    return;
-                }
-                this.deals = this.deals.filter(d => d.id != id);
-                this.showNotification('Deal deleted successfully!', 'success');
-                this.loadDeals();
-                this.loadDealsSummary();
-                this.notifyDealDeleted();
-            },
-
-            confirmDealDeletion: function () {
-                return confirm('Are you sure you want to delete this deal?');
-            },
-
-            progressDeal: function (id, direction) {
-                const deal = this.deals.find(d => d.id == id);
-                if (!deal) {
-                    this.showNotification('Deal not found', 'error');
-                    return;
-                }
-
-                const stageOrder = ['prospect', 'qualification', 'proposal', 'negotiation', 'closed_won', 'closed_lost'];
-                const currentIndex = stageOrder.indexOf(deal.stage);
-                let newIndex = direction === 'forward' ? currentIndex + 1 : currentIndex - 1;
-
-                if (newIndex >= 0 && newIndex < stageOrder.length) {
-                    deal.stage = stageOrder[newIndex];
-                    this.showNotification(`Deal moved to ${stageOrder[newIndex].replace('_', ' ')}`, 'success');
-                    this.loadDeals();
-                    this.loadDealsSummary();
-                    this.notifyDealUpdated();
-                } else {
-                    this.showNotification('Cannot progress further', 'error');
-                }
-            },
-
-            switchToAddTab: function () {
-                const addTab = document.querySelector('.tab[data-tab="add"]');
-                if (addTab) {
-                    this.switchTab(addTab);
-                }
-            },
-
-            switchToViewTab: function () {
-                const viewTab = document.querySelector('.tab[data-tab="view"]');
-                if (viewTab) {
-                    this.switchTab(viewTab);
-                    document.querySelector('.tab[data-tab="add"]').textContent = 'Add New Deal';
-                }
-            },
-
-            notifyDealAdded: function () {
-                if (typeof window.onDealAdded === 'function') {
-                    window.onDealAdded();
-                }
-            },
-
-            notifyDealUpdated: function () {
-                if (typeof window.onDealUpdated === 'function') {
-                    window.onDealUpdated();
-                }
-            },
-
-            notifyDealDeleted: function () {
-                if (typeof window.onDealDeleted === 'function') {
-                    window.onDealDeleted();
-                }
-            },
-
-            showNotification: function (message, type) {
-                if (!this.elements.notification) return;
-                this.elements.notification.textContent = message;
-                this.elements.notification.className = `notification ${type}`;
-                this.elements.notification.style.display = 'block';
-                setTimeout(() => {
-                    this.elements.notification.style.display = 'none';
-                }, 3000);
+      bindEvents() {
+        // tabs (keyboard accessible)
+        document.querySelectorAll('.tab').forEach(tab => {
+          tab.addEventListener('click', () => this.switchTab(tab));
+          tab.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault(); this.switchTab(tab);
             }
-        };
-
-        document.addEventListener('DOMContentLoaded', function () {
-            DealsManager.init();
+          });
         });
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function () {
-                DealsManager.init();
-            });
-        } else {
-            DealsManager.init();
+        // refresh
+        if (this.elements.refreshDealsBtn) {
+          this.elements.refreshDealsBtn.addEventListener('click', () => {
+            this.refreshDeals();
+          });
+        }
+        
+        // refresh customers
+        if (this.elements.refreshCustomersBtn) {
+          this.elements.refreshCustomersBtn.addEventListener('click', async () => {
+            await fetchCustomers();
+            this.customers = sampleCustomers.slice();
+            this.populateCustomerDropdown(this.customers);
+            this.showNotification('Customers refreshed successfully!', 'success');
+          });
         }
 
-        window.DealsManager = DealsManager;
+        // form
+        if (this.elements.dealForm) {
+          this.elements.dealForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = this.elements.dealForm.dataset.id;
+            if (id) this.updateDeal(id);
+            else this.createDeal();
+          });
+          this.elements.dealForm.addEventListener('reset', () => {
+            this.resetForm();
+          });
+        }
+      },
 
-        window.updateDashboardDeals = function () {
-            if (window.DealsManager) {
-                DealsManager.loadDealsSummary();
-            }
-        };
+      switchTab(tab) {
+        document.querySelectorAll('.tab').forEach(t => {
+          t.classList.remove('active'); t.setAttribute('aria-selected','false');
+        });
+        document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        tab.classList.add('active'); tab.setAttribute('aria-selected','true');
+        const name = tab.getAttribute('data-tab');
+        const panel = document.getElementById(name + 'Tab') || document.getElementById(name + 'Tab');
+        const content = document.getElementById(name + 'Tab') || document.getElementById(name + 'Tab');
+        // fallback: use attribute selector for our markup
+        const target = document.getElementById(name + 'Tab') || document.getElementById(name + 'Tab') || document.getElementById(name + 'Tab');
+        // our markup IDs are viewTab and addTab
+        if (name === 'view') {
+          document.getElementById('viewTab').classList.add('active');
+          document.getElementById('addTab').classList.remove('active');
+        } else {
+          document.getElementById('addTab').classList.add('active');
+          document.getElementById('viewTab').classList.remove('active');
+        }
+      },
 
-        window.onDealAdded = function () {
-            console.log('Deal added, refreshing dashboard deals...');
-            if (window.DealsManager) {
-                DealsManager.loadDealsSummary();
-            }
-            if (typeof window.updateDashboardDeals === 'function') {
-                window.updateDashboardDeals();
-            }
-        };
+      refreshDeals() {
+        this.loadDeals();
+        this.loadDealsSummary();
+      },
 
-        window.onDealUpdated = function () {
-            console.log('Deal updated, refreshing dashboard deals...');
-            if (window.DealsManager) {
-                DealsManager.loadDealsSummary();
-            }
-            if (typeof window.updateDashboardDeals === 'function') {
-                window.updateDashboardDeals();
-            }
-        };
+      loadInitialData() {
+        this.populateCustomerDropdown(this.customers);
+        this.loadDeals();
+        this.loadDealsSummary();
+        this.loadDealsNearingDeadline();
+      },
 
-        window.onDealDeleted = function () {
-            console.log('Deal deleted, refreshing dashboard deals...');
-            if (window.DealsManager) {
-                DealsManager.loadDealsSummary();
-            }
-            if (typeof window.updateDashboardDeals === 'function') {
-                window.updateDashboardDeals();
-            }
+      populateCustomerDropdown(customers) {
+        const sel = this.elements.customerSelect;
+        sel.innerHTML = '<option value="">Select a customer</option>';
+        customers.forEach(c => {
+          const o = document.createElement('option');
+          o.value = c.id; o.textContent = c.username || c.name || ('User ' + c.id);
+          sel.appendChild(o);
+        });
+      },
+
+      loadDeals() {
+        const container = this.elements.dealsTable;
+        if (!container) return;
+        if (!this.deals || this.deals.length === 0) {
+          container.innerHTML = '<div class="loading">No deals found</div>';
+          return;
+        }
+
+        let html = '<table><thead><tr><th>Title</th><th>Customer</th><th>Value</th><th>Stage</th><th>Probability</th><th>Deadline</th><th>Actions</th></tr></thead><tbody>';
+        this.deals.forEach(d => {
+          const deadline = d.dead_line ? new Date(d.dead_line).toLocaleDateString() : 'N/A';
+          const value = d.value ? `$${parseFloat(d.value).toFixed(2)}` : '$0.00';
+          const deadlineClass = (d.dead_line && new Date(d.dead_line) < new Date(Date.now() + 7*24*60*60*1000)) ? ' style="color:var(--danger);font-weight:700"' : '';
+          html += `<tr>
+            <td>${this.escapeHtml(d.title)}</td>
+            <td>${this.escapeHtml(d.customer_name || 'No customer')}</td>
+            <td>${value}</td>
+            <td><span class="stage-badge">${(d.stage||'prospect').replace('_',' ')}</span></td>
+            <td>${d.probability || 0}%</td>
+            <td${deadlineClass}>${deadline}</td>
+            <td class="actions">
+              <button class="btn btn-secondary action-btn" data-id="${d.id}" data-action="progress" data-direction="backward" title="Previous"><i class="fas fa-arrow-left"></i></button>
+              <button class="btn btn-primary action-btn" data-id="${d.id}" data-action="edit" title="Edit"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-secondary action-btn" data-id="${d.id}" data-action="progress" data-direction="forward" title="Next"><i class="fas fa-arrow-right"></i></button>
+              <button class="btn btn-danger action-btn" data-id="${d.id}" data-action="delete" title="Delete"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>`;
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+
+        // wire action buttons
+        container.querySelectorAll('.action-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = btn.dataset.id;
+            const action = btn.dataset.action;
+            if (action === 'progress') this.progressDeal(id, btn.dataset.direction);
+            else if (action === 'edit') this.editDeal(id);
+            else if (action === 'delete') this.deleteDeal(id);
+          });
+        });
+      },
+
+      loadDealsSummary() {
+        const summary = {
+          totalDeals: (this.deals || []).length,
+          totalValue: (this.deals || []).reduce((s,d)=> s + (parseFloat(d.value) || 0), 0),
+          dealsByStage: [
+            {stage:'prospect', count:(this.deals||[]).filter(d=>d.stage==='prospect').length},
+            {stage:'qualification', count:(this.deals||[]).filter(d=>d.stage==='qualification').length},
+            {stage:'proposal', count:(this.deals||[]).filter(d=>d.stage==='proposal').length},
+            {stage:'negotiation', count:(this.deals||[]).filter(d=>d.stage==='negotiation').length},
+            {stage:'closed_won', count:(this.deals||[]).filter(d=>d.stage==='closed_won').length},
+            {stage:'closed_lost', count:(this.deals||[]).filter(d=>d.stage==='closed_lost').length}
+          ]
         };
-    </script>
+        this.updateSummary(summary);
+      },
+
+      updateSummary(summary) {
+        if (this.elements.totalDeals) this.elements.totalDeals.textContent = summary.totalDeals;
+        if (this.elements.totalValue) this.elements.totalValue.textContent = `$${(parseFloat(summary.totalValue)||0).toFixed(2)}`;
+        this.renderPipelineStages(summary);
+      },
+
+      renderPipelineStages(summary) {
+        const stageOrder = ['prospect','qualification','proposal','negotiation','closed_won','closed_lost'];
+        const labels = {'prospect':'Prospect','qualification':'Qualification','proposal':'Proposal','negotiation':'Negotiation','closed_won':'Closed Won','closed_lost':'Closed Lost'};
+        let html = '';
+        stageOrder.forEach(stage => {
+          const count = (summary.dealsByStage.find(s=>s.stage===stage)||{count:0}).count || 0;
+          html += `<div class="pipeline-stage"><h4>${labels[stage]}</h4><div class="pipeline-count">${count}</div></div>`;
+        });
+        this.elements.pipelineStages.innerHTML = html;
+      },
+
+      loadDealsNearingDeadline() {
+        const soon = (this.deals || []).filter(d => d.dead_line && new Date(d.dead_line) < new Date(Date.now() + 7*24*60*60*1000));
+        if (soon.length) {
+          this.showNotification(`${soon.length} deal(s) nearing deadline`, 'warning');
+          console.log('Deals nearing deadline:', soon);
+        }
+      },
+
+      createDeal() {
+        if (!this.elements.dealForm) return this.showNotification('Form not available', 'error');
+        const data = this.getDealFormData();
+        const id = Date.now().toString();
+        const newDeal = {id, ...data, customer_name: this.customers.find(c=>c.id==data.customer_id)?.username || null};
+        this.deals.push(newDeal);
+        this.showNotification('Deal created successfully!', 'success');
+        this.elements.dealForm.reset();
+        this.loadDeals();
+        this.loadDealsSummary();
+        this.switchToViewTab();
+      },
+
+      getDealFormData() {
+        const fd = new FormData(this.elements.dealForm);
+        const obj = Object.fromEntries(fd.entries());
+        if (obj.value) obj.value = parseFloat(obj.value);
+        obj.probability = parseInt(obj.probability) || 0;
+        if (!obj.customer_id) delete obj.customer_id;
+        return obj;
+      },
+
+      editDeal(id) {
+        const deal = this.deals.find(d=>d.id==id);
+        if (!deal) return this.showNotification('Deal not found', 'error');
+        // populate form
+        this.elements.customerSelect.value = deal.customer_id || '';
+        this.elements.dealForm.querySelector('#title').value = deal.title || '';
+        this.elements.dealForm.querySelector('#description').value = deal.description || '';
+        this.elements.dealForm.querySelector('#value').value = deal.value || '';
+        this.elements.dealForm.querySelector('#stage').value = deal.stage || 'prospect';
+        this.elements.dealForm.querySelector('#probability').value = deal.probability || 0;
+        this.elements.dealForm.querySelector('#dead_line').value = deal.dead_line || '';
+        this.elements.dealForm.dataset.id = id;
+        // switch tab
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelector('.tab[data-tab="add"]').classList.add('active');
+        document.getElementById('addTab').classList.add('active');
+        document.getElementById('viewTab').classList.remove('active');
+      },
+
+      updateDeal(id) {
+        const data = this.getDealFormData();
+        const idx = this.deals.findIndex(d=>d.id==id);
+        if (idx === -1) return this.showNotification('Deal not found', 'error');
+        this.deals[idx] = {id, ...data, customer_name:this.customers.find(c=>c.id==data.customer_id)?.username || null};
+        this.showNotification('Deal updated successfully!', 'success');
+        this.elements.dealForm.reset();
+        delete this.elements.dealForm.dataset.id;
+        this.loadDeals();
+        this.loadDealsSummary();
+        this.switchToViewTab();
+      },
+
+      deleteDeal(id) {
+        if (!confirm('Are you sure you want to delete this deal?')) return;
+        this.deals = this.deals.filter(d=>d.id!=id);
+        this.showNotification('Deal deleted', 'success');
+        this.loadDeals();
+        this.loadDealsSummary();
+      },
+
+      progressDeal(id, direction) {
+        const deal = this.deals.find(d=>d.id==id);
+        if (!deal) return this.showNotification('Deal not found','error');
+        const order = ['prospect','qualification','proposal','negotiation','closed_won','closed_lost'];
+        const idx = order.indexOf(deal.stage || 'prospect');
+        let newIdx = (direction === 'forward') ? idx + 1 : idx - 1;
+        if (newIdx < 0 || newIdx >= order.length) return this.showNotification('Cannot progress further','error');
+        deal.stage = order[newIdx];
+        this.showNotification(`Deal moved to ${deal.stage.replace('_',' ')}`, 'success');
+        this.loadDeals();
+        this.loadDealsSummary();
+      },
+
+      resetForm() {
+        if (this.elements.dealForm) {
+          delete this.elements.dealForm.dataset.id;
+          this.showNotification('Form reset', 'success');
+          // ensure tab label is correct
+          document.querySelector('.tab[data-tab="add"]').textContent = 'Add New Deal';
+        }
+      },
+
+      switchToViewTab() {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelector('.tab[data-tab="view"]').classList.add('active');
+        document.getElementById('viewTab').classList.add('active');
+        document.getElementById('addTab').classList.remove('active');
+        document.querySelector('.tab[data-tab="add"]').textContent = 'Add New Deal';
+      },
+
+      showNotification(message, type='success') {
+        const el = this.elements.notification;
+        if (!el) return console.log(message);
+        el.textContent = message;
+        el.className = 'notification ' + (type || 'success');
+        el.style.display = 'inline-block';
+        setTimeout(()=>{ el.style.display = 'none'; }, 3000);
+      },
+
+      escapeHtml(text='') {
+        const d = document.createElement('div'); d.textContent = text; return d.innerHTML;
+      }
+    };
+
+    // init once DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+      DealsManager.init();
+    });
+
+    // expose for debugging
+    window.DealsManager = DealsManager;
+  </script>
 </body>
 </html>

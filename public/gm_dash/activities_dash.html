@@ -7,400 +7,359 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --secondary: #1f2937;
-            --dark: #111827;
-            --darker: #0a0e17;
-            --light: #f3f4f6;
-            --gray: #9ca3af;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --card-bg: #1e293b;
-            --card-border: #374151;
-        }
+    /* Root variables - Neon Cyan Theme */
+    :root {
+      --primary: #00f6ff;   /* Neon Cyan */
+      --primary-hover: #00c6d6;
+      --secondary: #131313;
+      --dark: #0a0a0a;
+      --darker: #000000;
+      --light: #e5e5e5;
+      --gray: #9ca3af;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --glass: rgba(255,255,255,0.05);
+      --border-glow: 0 0 12px rgba(0, 246, 255, 0.6);
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
 
-        body {
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
-            color: var(--light);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
+    body {
+      background: linear-gradient(135deg, var(--darker), var(--dark));
+      color: var(--light);
+      min-height: 100vh;
+    }
 
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-        /* Header Styles */
-        header {
-            background-color: rgba(17, 24, 39, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            border-bottom: 1px solid var(--card-border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+    /* Header */
+    header {
+      background: var(--darker);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.1);
+    }
 
-        header img {
-            max-width: 150px;
-            height: auto;
-            border-radius: 8px;
-        }
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
 
-        header h1 {
-            font-size: 1.8rem;
-            margin: 0.5rem 0;
-        }
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
 
-        header p {
-            font-size: 1rem;
-            color: var(--gray);
-        }
+    .logo-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      box-shadow: var(--border-glow);
+    }
 
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+    .logo-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 1px;
+    }
 
-        /* Navigation */
-        nav {
-            background: var(--secondary);
-            padding: 1rem;
-            margin: 1rem auto;
-            max-width: 1400px;
-        }
+    .logo-subtitle {
+      color: var(--gray);
+      font-size: 1rem;
+    }
 
-        nav ul {
-            display: flex;
-            gap: 1.5rem;
-            list-style: none;
-            justify-content: center;
-        }
+    /* Navigation */
+    nav {
+      background: var(--dark);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
 
-        nav ul li a {
-            color: var(--gray);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem;
-            position: relative;
-            transition: all 0.3s ease;
-        }
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
 
-        nav ul li a:hover, nav ul li a.active {
-            color: var(--light);
-        }
+    .nav-list {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
 
-        nav ul li a.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary);
-            border-radius: 2px;
-        }
+    .nav-item a {
+      color: var(--gray);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-        nav ul li a:focus {
-            outline: 2px solid var(--primary);
-            outline-offset: 2px;
-        }
+    .nav-item a:hover, .nav-item a.active {
+      color: var(--primary);
+      background: var(--glass);
+      box-shadow: var(--border-glow);
+    }
 
-        /* Main Content */
-        .main-content {
-            display: flex;
-            flex: 1;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 2rem;
-        }
+    /* Main Layout */
+    .main-container {
+      display: flex;
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      gap: 2rem;
+      flex: 1;
+    }
 
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            flex-shrink: 0;
-            background: var(--secondary);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-right: 2rem;
-            height: fit-content;
-        }
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      flex-shrink: 0;
+      background: var(--secondary);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: inset 0 0 25px rgba(255,255,255,0.05);
+      height: fit-content;
+    }
 
-        .sidebar h3 {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            color: var(--light);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+    .sidebar h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
 
-        .sidebar h3 i {
-            color: var(--primary);
-        }
+    .sidebar ul {
+      list-style: none;
+    }
 
-        .sidebar ul {
-            list-style: none;
-        }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 0.75rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+      margin-bottom: 0.5rem;
+    }
 
-        .sidebar li {
-            margin-bottom: 0.75rem;
-        }
+    .sidebar a:hover, .sidebar a.active {
+      background: var(--glass);
+      color: var(--primary);
+      box-shadow: var(--border-glow);
+    }
 
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--gray);
-            text-decoration: none;
-            padding: 0.75rem;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 2rem;
+      background: var(--secondary);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    }
 
-        .sidebar a:hover, .sidebar a:focus {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--light);
-        }
+    .content h2 {
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-        .sidebar a:focus {
-            outline: 2px solid var(--primary);
-            outline-offset: 2px;
-        }
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
 
-        .sidebar a i {
-            width: 20px;
-            text-align: center;
-        }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--light);
+    }
 
-        /* Dashboard Content */
-        .dashboard {
-            flex: 1;
-        }
+    .form-control {
+      display: flex;
+      gap: 0.5rem;
+    }
 
-        .dashboard h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--light);
-        }
+    .form-control input {
+      flex: 1;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: var(--dark);
+      color: var(--light);
+    }
 
-        /* Icon Grid */
-        .icon-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
+    .form-control button {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: none;
+      background: var(--primary);
+      color: var(--darker);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
 
-        .icon-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
+    .form-control button:hover {
+      background: var(--primary-hover);
+    }
 
-        .icon-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
+    /* Cards */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
 
-        .icon-card i {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
+    .icon-card {
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.4s ease;
+    }
 
-        .icon-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            color: var(--light);
-        }
+    .icon-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--border-glow);
+    }
 
-        .icon-card p {
-            font-size: 0.9rem;
-            color: var(--gray);
-            margin-bottom: 1rem;
-        }
+    .icon-card i {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
 
-        .icon-card .count {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--light);
-        }
+    .icon-card h3 {
+      color: var(--light);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
 
-        /* Form Group */
-        .form-group {
-            margin-bottom: 2rem;
-        }
+    .icon-card p {
+      color: var(--gray);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
 
-        .form-group label {
-            display: block;
-            font-size: 1rem;
-            color: var(--gray);
-            margin-bottom: 0.5rem;
-        }
+    .count {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }    .icon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Force 3 columns */
+  gap: 1.5rem;
+  justify-items: center;
+}
 
-        .form-control {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
+.icon-grid .icon-card:nth-child(6) {
+  grid-column: 3/ span 1; /* Centers the 6th card under the 2nd column */
+}
 
-        .form-control input {
-            padding: 0.5rem;
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            background: var(--secondary);
-            color: var(--light);
-            font-size: 1rem;
-        }
+    /* Footer */
+    footer {
+      background: var(--dark);
+      padding: 1.5rem 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: auto;
+      text-align: center;
+    }
 
-        .form-control input:focus {
-            outline: 2px solid var(--primary);
-            outline-offset: 2px;
-        }
+    footer p {
+      color: var(--gray);
+      font-size: 0.85rem;
+    }
 
-        .form-control button {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 8px;
-            background: var(--primary);
-            color: white;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .main-container {
+        flex-direction: column;
+      }
 
-        .form-control button:hover {
-            background: var(--primary-hover);
-        }
+      .sidebar {
+        width: 100%;
+      }
+    }
 
-        .form-control button:focus {
-            outline: 2px solid var(--light);
-            outline-offset: 2px;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark);
-            padding: 1.5rem 2rem;
-            border-top: 1px solid var(--card-border);
-            margin-top: auto;
-            text-align: center;
-        }
-
-        footer p {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .main-content {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                margin-right: 0;
-                margin-bottom: 2rem;
-            }
-
-            .icon-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            header img {
-                max-width: 120px;
-            }
-
-            nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .icon-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header {
-                padding: 1rem;
-            }
-
-            .main-content {
-                padding: 1rem;
-            }
-
-            .icon-card {
-                padding: 1rem;
-            }
-
-            .form-control {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .form-control input,
-            .form-control button {
-                width: 100%;
-            }
-        }
+    @media (max-width: 768px) {
+      .icon-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-control {
+        flex-direction: column;
+      }
+    }
     </style>
 </head>
 <body>
     <div class="app-container">
         <!-- Header Section -->
         <header>
-            <div class="header-content">
-                <img src="https://images.unsplash.com/photo-1569012871812-f38ee64cd54c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Fortishield Logo">
+            <div class="logo">
+                <img src="../images/logo.png" alt="Fortishield Logo" class="logo-img">
                 <div>
-                    <h1>Fortishield Matrix CRM</h1>
-                    <p>Activities Overview</p>
+                    <div class="logo-title">Fortishield Matrix CRM</div>
+                    <div class="logo-subtitle">Activities Overview</div>
                 </div>
             </div>
         </header>
 
         <!-- Navigation Section -->
         <nav>
-            <ul>
-                <li><a href="views.html" aria-label="View customer list"><i class="fas fa-users"></i> View Customers</a></li>
-                <li><a href="activities_icons.html" aria-label="View activity dashboard" class="active"><i class="fas fa-chart-line"></i> View Activities</a></li>
-                <li><a href="contacts.html" aria-label="View customer benchmarks"><i class="fas fa-chart-bar"></i> Customer Benchmarks</a></li>
-            </ul>
+            <div class="nav-container">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="views.html" aria-label="View customer list"><i class="fas fa-users"></i> View Customers</a></li>
+                    <li class="nav-item"><a href="activities_icons.html" aria-label="View activity dashboard" class="active"><i class="fas fa-chart-line"></i> View Activities</a></li>
+                    <li class="nav-item"><a href="views.html" aria-label="View customer benchmarks"><i class="fas fa-chart-bar"></i> Customer Benchmarks</a></li>
+                </ul>
+            </div>
         </nav>
 
         <!-- Main Content Area -->
-        <div class="main-content">
+        <div class="main-container">
             <!-- Sidebar Section -->
-            <div class="sidebar">
-                <h3>Navigation Menu</h3>
+            <aside class="sidebar">
+                <h3><i class="fas fa-bars"></i> Navigation Menu</h3>
                 <ul>
                     <li><a href="gm_dash.html" aria-label="View dashboard"><i class="fas fa-home"></i> View Dashboard</a></li>
                     <li><a href="views.html"><i class="fas fa-list"></i> View Customers</a></li>
@@ -408,15 +367,15 @@
                     <li><a href="activities_dash.html" aria-label="View detailed activities"><i class="fas fa-tasks"></i> Detailed Activities</a></li>
                     <li><a href="activities_icons.html" aria-label="View activities overview" class="active"><i class="fas fa-icons"></i> Activities Overview</a></li>
                     <li><a href="daily_tasks.html" aria-label="View daily tasks"><i class="fas fa-calendar-day"></i> Daily Tasks</a></li>
-                    <li><a href="contacts.html" aria-label="View contacts"><i class="fas fa-address-book"></i> View Contacts</a></li>
+                    
                     <li><a href="trends.html" aria-label="View customer trends"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
                     <li><a href="../index.html" aria-label="Log out"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
-            </div>
+            </aside>
 
             <!-- Dashboard Content -->
-            <div class="dashboard">
-                <h2>Activities Overview</h2>
+            <main class="content">
+                <h2><i class="fas fa-icons"></i> Activities Overview</h2>
                 
                 <div class="form-group">
                     <label for="myNameInput">Enter Your Name:</label>
@@ -469,7 +428,7 @@
                         <div class="count" id="completionRate">0%</div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
 
         <!-- Footer Section -->
@@ -495,12 +454,14 @@
         
         // Sample data for demonstration
         const sampleActivities = [
-            { id: 1, title: "Client Meeting", status: "completed", assigned_to: "John Doe", created_at: "2025-09-09" },
-            { id: 2, title: "Proposal Submission", status: "pending", assigned_to: "Jane Smith", created_at: "2025-09-08" },
-            { id: 3, title: "Follow-up Call", status: "pending", assigned_to: "John Doe", created_at: "2025-09-09" },
-            { id: 4, title: "Contract Review", status: "completed", assigned_to: "Mike Johnson", created_at: "2025-09-07" },
-            { id: 5, title: "Product Demo", status: "pending", assigned_to: "Sarah Wilson", created_at: "2025-09-09" },
-            { id: 6, title: "Budget Planning", status: "completed", assigned_to: "John Doe", created_at: "2025-09-06" }
+            { id: 1, title: "Client Meeting", status: "completed", assigned_to: "John Doe", created_at: "2025-09-17" },
+            { id: 2, title: "Proposal Submission", status: "pending", assigned_to: "Jane Smith", created_at: "2025-09-16" },
+            { id: 3, title: "Follow-up Call", status: "pending", assigned_to: "John Doe", created_at: "2025-09-17" },
+            { id: 4, title: "Contract Review", status: "completed", assigned_to: "Mike Johnson", created_at: "2025-09-15" },
+            { id: 5, title: "Product Demo", status: "pending", assigned_to: "Sarah Wilson", created_at: "2025-09-17" },
+            { id: 6, title: "Budget Planning", status: "completed", assigned_to: "John Doe", created_at: "2025-09-14" },
+            { id: 7, title: "Team Meeting", status: "completed", assigned_to: "Jane Smith", created_at: "2025-09-17" },
+            { id: 8, title: "Report Preparation", status: "pending", assigned_to: "Mike Johnson", created_at: "2025-09-18" }
         ];
         
         // Initialize the dashboard
@@ -523,6 +484,8 @@
             myName = myNameInput.value.trim();
             if (myName) {
                 updateStats();
+                // Save to localStorage for persistence
+                localStorage.setItem('userName', myName);
             }
         }
         
@@ -556,6 +519,16 @@
                 completionRateEl.textContent = '0%';
             }
         }
+        
+        // Check if we have a saved name
+        window.addEventListener('load', function() {
+            const savedName = localStorage.getItem('userName');
+            if (savedName) {
+                myNameInput.value = savedName;
+                myName = savedName;
+                updateStats();
+            }
+        });
     </script>
 </body>
 </html>

@@ -1,623 +1,722 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Trends - Fortishield CRM</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/main.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
-      color: var(--light);
-      min-height: 100vh;
-      line-height: 1.6;
-      padding: 2rem;
-    }
-    
-    .app-container {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-    
-    .header {
-      text-align: center;
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-    
-    .header h1 {
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .header p {
-      color: var(--gray);
-    }
-    
-    .chart-container {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .chart-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--light);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .chart-title i {
-      color: var(--primary);
-    }
-    
-    canvas {
-      max-height: 500px;
-    }
-    
-    .loading-message {
-      text-align: center;
-      color: var(--gray);
-      font-style: italic;
-      padding: 2rem;
-    }
-    
-    .hidden {
-      display: none;
-    }
-    
-    .refresh-btn {
-      padding: 0.75rem 1.5rem;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      margin-bottom: 2rem;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .refresh-btn:hover {
-      background: var(--primary-hover);
-      transform: translateY(-2px);
-    }
-    
-    @media (max-width: 768px) {
-      body {
-        padding: 1rem;
-      }
-      
-      .container {
-        padding: 1rem;
-      }
-      
-      .header {
-        padding: 1rem;
-      }
-      
-      .header h1 {
-        font-size: 1.5rem;
-      }
-      
-      .chart-container {
-        padding: 1rem;
-      }
-      
-      .chart-title {
-        font-size: 1rem;
-      }
-      
-      canvas {
-        max-height: 300px;
-      }
-      
-      .refresh-btn {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Trends - Fortishield CRM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- ======================
+         Fortishield Neon Theme
+         ====================== -->
+    <style>
+        /* Variables */
+        :root {
+            --primary: #00f6ff;   /* Neon Cyan */
+            --primary-hover: #00c6d6;
+            --secondary: #131313;
+            --dark: #0a0a0a;
+            --darker: #000000;
+            --light: #e5e5e5;
+            --gray: #9ca3af;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --glass: rgba(255,255,255,0.05);
+            --border-glow: 0 0 12px rgba(0, 246, 255, 0.6);
+        }
+
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            background: var(--secondary); /* Solid dark background for better HCI */
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ===== Header ===== */
+        header {
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: var(--darker); /* Neon theme consistency */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+            text-shadow: var(--border-glow);
+        }
+
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        nav {
+            display: flex;
+            gap: 1.2rem;
+            flex: 0 1 auto;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--primary);
+            background: var(--glass);
+            box-shadow: var(--border-glow);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-badge {
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.7);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-profile .avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: var(--dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* ===== Layout ===== */
+        .main-content {
+            display: flex;
+            max-width: 1400px;
+            margin: 2rem auto;
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: inset 0 0 25px rgba(255,255,255,0.05);
+        }
+
+        .sidebar h2 {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--gray);
+            text-decoration: none;
+            padding: 0.7rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: var(--glass);
+            color: var(--primary);
+            box-shadow: var(--border-glow);
+        }
+
+        /* ===== Dashboard Content ===== */
+        .dashboard {
+            flex: 1;
+            padding: 2rem;
+            background: var(--secondary);
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 0 25px rgba(0,0,0,0.6);
+        }
+
+        .dashboard h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard p {
+            color: var(--light); /* Light for visibility, not black */
+            margin-bottom: 2rem;
+        }
+
+        /* ===== Chart Styling ===== */
+        .chart-container {
+            background: white; /* White background for charts only */
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #000000; /* Black for visibility on white background */
+        }
+
+        canvas {
+            max-height: 500px;
+            background: white; /* Ensure canvas background is white */
+        }
+
+        .loading-message {
+            text-align: center;
+            color: #000000; /* Black for visibility on white background */
+            font-style: italic;
+            padding: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: var(--light); /* Light for visibility, not black */
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--border-glow);
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .message {
+            padding: 0.8rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        /* ===== Footer ===== */
+        footer {
+            text-align: center;
+            padding: 1.2rem;
+            background: var(--dark);
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        footer p {
+            color: var(--gray);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+            .header-content {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .nav {
+                margin: 0;
+                flex-basis: 100%;
+                justify-content: center;
+            }
+            .user-actions {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                gap: 1rem;
+            }
+            
+            .dashboard {
+                padding: 1rem;
+            }
+            
+            .chart-container {
+                padding: 1rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="app-container">
-    <header>
-      <div class="header-content">
-        <div class="logo">
-          <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
-          <div class="logo-text">Fortishield CRM</div>
-        </div>
-        
-        <nav class="nav">
-          <a href="customer_dash.html"><i class="fas fa-home"></i> Home</a>
-          <a href="records.html"><i class="fas fa-user-plus"></i> Records</a>
-          <a href="sms.html"><i class="fas fa-comments"></i> Communications</a>
-          <a href="trends.html" class="active"><i class="fas fa-chart-line"></i> Trends</a>
-        </nav>
-        
-        <div class="user-actions">
-          <button class="notification-btn">
-            <i class="fas fa-bell"></i>
-            <span class="notification-badge">3</span>
-          </button>
-          
-          <div class="user-profile">
-            <div class="avatar">JD</div>
-            <span>John Doe</span>
-          </div>
-        </div>
-      </div>
-    </header>
-    
-    <div class="main-content">
-      <aside class="sidebar">
-        <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
-        <ul>
-          <li><a href="customer_dash.html"><i class="fas fa-home"></i> Home</a></li>
-          <li><a href="view.html"><i class="fas fa-users"></i> View Customers</a></li>
-          <li><a href="records.html"><i class="fas fa-user-plus"></i> Record Customers</a></li>
-          <li><a href="communications.html"><i class="fas fa-comment-alt"></i> Customers InTouch</a></li>
-          <li><a href="trends.html"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
-          <li><a href="sms.html"><i class="fas fa-sms"></i> Communications</a></li>
-          <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-      </aside>
-      
-      <main class="dashboard">
-        <div class="container">
-          <div class="header">
-            <h1>Customer Trends Dashboard</h1>
-            <p>Analyze customer data and identify patterns to improve business decisions</p>
-          </div>
-          
-          <button id="refreshBtn" class="refresh-btn"><i class="fas fa-sync-alt"></i> Refresh Data</button>
-          
-          <!-- Service Distribution Chart -->
-          <div class="chart-container">
-            <div class="chart-title"><i class="fas fa-chart-pie"></i> Service Distribution</div>
-            <canvas id="serviceChart"></canvas>
-            <div id="serviceChartMessage" class="loading-message">Loading data...</div>
-          </div>
-          
-          <!-- Customer Growth Over Time Chart -->
-          <div class="chart-container">
-            <div class="chart-title"><i class="fas fa-chart-line"></i> Customer Growth Over Time</div>
-            <canvas id="growthChart"></canvas>
-            <div id="growthChartMessage" class="loading-message">Loading data...</div>
-          </div>
-          
-          <!-- Top Services Chart -->
-          <div class="chart-container">
-            <div class="chart-title"><i class="fas fa-chart-bar"></i> Top Services</div>
-            <canvas id="topServicesChart"></canvas>
-            <div id="topServicesChartMessage" class="loading-message">Loading data...</div>
-          </div>
-        </div>
-      </main>
-    </div>
-    
-    <footer>
-      <div class="footer-content">
-        <div class="copyright">© 2023 Fortishield Matrix CRM. All rights reserved.</div>
-        <div class="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Contact Us</a>
-        </div>
-      </div>
-    </footer>
-  </div>
-
-  <script>
-    // Initialize charts
-    let serviceChart, growthChart, topServicesChart;
-    
-    // Fetch service statistics from API
-    async function fetchServiceStatistics() {
-      try {
-        console.log('Fetching service statistics...');
-        // Try to fetch from the file-based endpoint first
-        let response = await fetch('/api/trends/file');
-        console.log('File-based endpoint response status:', response.status);
-        if (!response.ok) {
-          // Fallback to database-based endpoint
-          console.log('Falling back to database-based endpoint');
-          response = await fetch('/api/trends');
-        }
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log('Received data:', data);
-        
-        // Update charts with real data
-        updateCharts(data);
-      } catch (error) {
-        console.error('Error fetching service statistics:', error);
-        // Show error message on charts
-        showMessage('serviceChartMessage', 'Error loading data');
-        showMessage('topServicesChartMessage', 'Error loading data');
-        showMessage('growthChartMessage', 'Error loading data');
-      }
-    }
-    
-    // Show message on a chart
-    function showMessage(elementId, message) {
-      const element = document.getElementById(elementId);
-      const canvasId = elementId.replace('Message', '');
-      const canvas = document.getElementById(canvasId);
-      
-      // Hide canvas and show message
-      canvas.classList.add('hidden');
-      element.classList.remove('hidden');
-      element.textContent = message;
-    }
-    
-    // Show chart
-    function showChart(canvasId) {
-      const canvas = document.getElementById(canvasId);
-      const messageElement = document.getElementById(canvasId + 'Message');
-      
-      // Show canvas and hide message
-      canvas.classList.remove('hidden');
-      messageElement.classList.add('hidden');
-    }
-    
-    // Update charts with fetched data
-    function updateCharts(data) {
-      try {
-        console.log('Updating charts with data:', data);
-        
-        // Service Distribution Chart
-        if (data.serviceDistribution && data.serviceDistribution.length > 0) {
-          const serviceCtx = document.getElementById('serviceChart').getContext('2d');
-          if (serviceChart) serviceChart.destroy();
-          
-          showChart('serviceChart');
-          
-          const serviceData = data.serviceDistribution;
-          serviceChart = new Chart(serviceCtx, {
-            type: 'pie',
-            data: {
-              labels: serviceData.map(item => item.service),
-              datasets: [{
-                data: serviceData.map(item => item.count),
-                backgroundColor: [
-                  '#FF6384',
-                  '#36A2EB',
-                  '#FFCE56',
-                  '#4BC0C0',
-                  '#9966FF',
-                  '#FF9F40'
-                ]
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: 'top',
-                },
-                title: {
-                  display: true,
-                  text: 'Distribution of Services'
-                }
-              }
-            }
-          });
-        } else {
-          // Clear the chart completely when there's no data
-          showChart('serviceChart');
-          if (serviceChart) serviceChart.destroy();
-          serviceChart = new Chart(serviceCtx, {
-            type: 'pie',
-            data: {
-              labels: [],
-              datasets: [{
-                data: [],
-                backgroundColor: []
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: 'top',
-                },
-                title: {
-                  display: true,
-                  text: 'Distribution of Services'
-                }
-              }
-            }
-          });
-        }
-        
-        // Customer Growth Over Time Chart
-        if (data.customerGrowth && data.customerGrowth.length > 0) {
-          const growthCtx = document.getElementById('growthChart').getContext('2d');
-          if (growthChart) growthChart.destroy();
-          
-          showChart('growthChart');
-          
-          const growthData = data.customerGrowth;
-          
-          // Prepare datasets for the chart
-          const datasets = [
-            {
-              label: 'New Customers',
-              data: growthData.map(item => item.count),
-              borderColor: '#36A2EB',
-              backgroundColor: 'rgba(54, 162, 235, 0.2)',
-              fill: false,
-              tension: 0 // Remove smoothing for zigzag appearance
-            },
-            {
-              label: 'Cumulative Customers',
-              data: growthData.map(item => item.cumulative_count),
-              borderColor: '#FF6384',
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              fill: false,
-              tension: 0 // Remove smoothing for zigzag appearance
-            }
-          ];
-          
-          // If we have service growth data, add it to the chart
-          if (data.serviceGrowth && data.serviceGrowth.length > 0) {
-            try {
-              // Group service growth data by service
-              const serviceGrowthByService = {};
-              data.serviceGrowth.forEach(item => {
-                if (!serviceGrowthByService[item.service]) {
-                  serviceGrowthByService[item.service] = [];
-                }
-                serviceGrowthByService[item.service].push(item);
-              });
-              
-              // Create a color palette for services
-              const serviceColors = [
-                '#4BC0C0', '#9966FF', '#FF9F40', '#FFCD56',
-                '#C9CBCF', '#4D5360', '#F7464A', '#E2EAE9'
-              ];
-              
-              // Add each service as a separate dataset
-              let colorIndex = 0;
-              Object.keys(serviceGrowthByService).forEach(service => {
-                const serviceData = serviceGrowthByService[service];
-                // Create a complete timeline with zero values for missing dates
-                const completeTimeline = growthData.map(growthItem => {
-                  const serviceItem = serviceData.find(item => item.date === growthItem.date);
-                  return serviceItem ? serviceItem.count : 0;
-                });
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="logo-text">Fortishield CRM</div>
+                </div>
                 
-                datasets.push({
-                  label: service,
-                  data: completeTimeline,
-                  borderColor: serviceColors[colorIndex % serviceColors.length],
-                  backgroundColor: serviceColors[colorIndex % serviceColors.length] + '20',
-                  fill: false,
-                  tension: 0, // Remove smoothing for zigzag appearance
-                  hidden: true // Initially hidden to avoid clutter
-                });
-                colorIndex++;
-              });
+                <nav class="nav">
+                    <a href="customer_dash.html"><i class="fas fa-home"></i> Home</a>
+                    <a href="records.html"><i class="fas fa-user-plus"></i> Records</a>
+                    <a href="communications.html"><i class="fas fa-comments"></i> Communications</a>
+                    <a href="trends.html" class="active"><i class="fas fa-chart-line"></i> Trends</a>
+                </nav>
+                
+                <div class="user-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-profile">
+                        <div class="avatar">JD</div>
+                        <span>John Doe</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <aside class="sidebar">
+                <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                <ul>
+                    <li><a href="customer_dash.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="view.html"><i class="fas fa-users"></i> View Customers</a></li>
+                    <li><a href="records.html"><i class="fas fa-user-plus"></i> Record Customers</a></li>
+                    <li><a href="communications.html"><i class="fas fa-comment-alt"></i> Customers InTouch</a></li>
+                    <li><a href="trends.html" class="active"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
+                    <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </aside>
+            
+            <main class="dashboard">
+                <div class="container">
+                    <h1>Customer Trends Dashboard</h1>
+                    <p>Analyze customer data and identify patterns to improve business decisions.</p>
+                    
+                    <button id="refreshBtn" class="btn"><i class="fas fa-sync-alt"></i> Refresh Data</button>
+                    
+                    <!-- Service Distribution Chart -->
+                    <div class="chart-container">
+                        <div class="chart-title">Service Distribution</div>
+                        <canvas id="serviceChart"></canvas>
+                        <div id="serviceChartMessage" class="loading-message">Loading data...</div>
+                    </div>
+                    
+                    <!-- Customer Growth Over Time Chart -->
+                    <div class="chart-container">
+                        <div class="chart-title">Customer Growth Over Time</div>
+                        <canvas id="growthChart"></canvas>
+                        <div id="growthChartMessage" class="loading-message">Loading data...</div>
+                    </div>
+                    
+                    <!-- Top Services Chart -->
+                    <div class="chart-container">
+                        <div class="chart-title">Top Services</div>
+                        <canvas id="topServicesChart"></canvas>
+                        <div id="topServicesChartMessage" class="loading-message">Loading data...</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <footer>
+            <div class="footer-content">
+                <div class="copyright">© 2025 Fortishield Matrix CRM. All rights reserved.</div>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Contact Us</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize charts
+        let serviceChart, growthChart, topServicesChart;
+        
+        // Fetch service statistics from API
+        async function fetchServiceStatistics() {
+            try {
+                console.log('Fetching service statistics...');
+                let response = await fetch('/api/trends');
+                console.log('Database-based endpoint response status:', response.status);
+                if (!response.ok) {
+                    console.log('Falling back to file-based endpoint');
+                    response = await fetch('/api/trends/file');
+                }
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Received data:', data);
+                
+                updateCharts(data);
             } catch (error) {
-              console.error('Error processing service growth data:', error);
+                console.error('Error fetching service statistics:', error);
+                showMessage('serviceChartMessage', 'Error loading data', 'error');
+                showMessage('growthChartMessage', 'Error loading data', 'error');
+                showMessage('topServicesChartMessage', 'Error loading data', 'error');
             }
-          }
-          
-          growthChart = new Chart(growthCtx, {
-            type: 'line',
-            data: {
-              labels: growthData.map(item => item.date),
-              datasets: datasets
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                title: {
-                  display: true,
-                  text: 'Customer Growth Over Time'
-                },
-                legend: {
-                  display: true,
-                  position: 'top'
-                }
-              },
-              scales: {
-                y: {
-                  beginAtZero: true
-                }
-              },
-              interaction: {
-                mode: 'index',
-                intersect: false
-              }
-            }
-          });
-        } else {
-          showMessage('growthChartMessage', 'No data available');
-          // Clear the chart completely when there's no data
-          showChart('growthChart');
-          if (growthChart) growthChart.destroy();
-          const growthCtx = document.getElementById('growthChart').getContext('2d');
-          growthChart = new Chart(growthCtx, {
-            type: 'line',
-            data: {
-              labels: [],
-              datasets: [
-                {
-                  label: 'New Customers',
-                  data: [],
-                  borderColor: '#36A2EB',
-                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                  fill: false
-                },
-                {
-                  label: 'Cumulative Customers',
-                  data: [],
-                  borderColor: '#FF6384',
-                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                  fill: false
-                }
-              ]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                title: {
-                  display: true,
-                  text: 'Customer Growth Over Time'
-                }
-              },
-              scales: {
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          });
         }
         
-        // Top Services Chart
-        if (data.topServices && data.topServices.length > 0) {
-          const topServicesCtx = document.getElementById('topServicesChart').getContext('2d');
-          if (topServicesChart) topServicesChart.destroy();
-          
-          showChart('topServicesChart');
-          
-          const topServicesData = data.topServices;
-          topServicesChart = new Chart(topServicesCtx, {
-            type: 'bar',
-            data: {
-              labels: topServicesData.map(item => item.service),
-              datasets: [{
-                label: 'Number of Customers',
-                data: topServicesData.map(item => item.count),
-                backgroundColor: '#4BC0C0'
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                title: {
-                  display: true,
-                  text: 'Top Services'
-                }
-              },
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  ticks: {
-                    stepSize: 1
-                  }
-                }
-              }
-            }
-          });
-        } else {
-          showMessage('topServicesChartMessage', 'No data available');
-          // Clear the chart completely when there's no data
-          showChart('topServicesChart');
-          if (topServicesChart) topServicesChart.destroy();
-          const topServicesCtx = document.getElementById('topServicesChart').getContext('2d');
-          topServicesChart = new Chart(topServicesCtx, {
-            type: 'bar',
-            data: {
-              labels: [],
-              datasets: [{
-                label: 'Number of Customers',
-                data: [],
-                backgroundColor: '#4BC0C0'
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                title: {
-                  display: true,
-                  text: 'Top Services'
-                }
-              },
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  ticks: {
-                    stepSize: 1
-                  }
-                }
-              }
-            }
-          });
+        // Show message on a chart
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            const canvasId = elementId.replace('Message', '');
+            const canvas = document.getElementById(canvasId);
+            
+            canvas.classList.add('hidden');
+            element.classList.remove('hidden');
+            element.textContent = message;
+            element.className = `loading-message ${type}`;
         }
         
-        console.log('Charts updated successfully');
-      } catch (error) {
-        console.error('Error updating charts:', error);
-        // Show error message on charts
-        showMessage('serviceChartMessage', 'Error loading data');
-        showMessage('growthChartMessage', 'Error loading data');
-        showMessage('topServicesChartMessage', 'Error loading data');
-      }
-    }
-    
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('Page loaded, fetching data...');
-      
-      // Initially show loading messages
-      showMessage('serviceChartMessage', 'Loading data...');
-      showMessage('growthChartMessage', 'Loading data...');
-      showMessage('topServicesChartMessage', 'Loading data...');
-      
-      // Then try to fetch real data
-      fetchServiceStatistics();
-      
-      // Set up refresh button
-      document.getElementById('refreshBtn').addEventListener('click', fetchServiceStatistics);
-      
-      // Refresh data every 30 seconds
-      setInterval(fetchServiceStatistics, 30000);
-    });
-    
-    // Function to refresh charts when a customer is added
-    window.onCustomerAdded = function() {
-      console.log('Customer added, refreshing charts...');
-      fetchServiceStatistics();
-    };
-    
-    // Function to refresh charts when a customer is deleted
-    window.onCustomerDeleted = function() {
-      console.log('Customer deleted, refreshing charts...');
-      fetchServiceStatistics();
-    };
-  </script>
+        // Show chart
+        function showChart(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const messageElement = document.getElementById(canvasId + 'Message');
+            
+            canvas.classList.remove('hidden');
+            messageElement.classList.add('hidden');
+        }
+        
+        // Update charts with fetched data
+        function updateCharts(data) {
+            try {
+                console.log('Updating charts with data:', data);
+                
+                // Service Distribution Chart (Pie)
+                if (data.serviceDistribution && data.serviceDistribution.length > 0) {
+                    const serviceCtx = document.getElementById('serviceChart').getContext('2d');
+                    if (serviceChart) serviceChart.destroy();
+                    
+                    showChart('serviceChart');
+                    
+                    const serviceData = data.serviceDistribution;
+                    serviceChart = new Chart(serviceCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: serviceData.map(item => item.service),
+                            datasets: [{
+                                data: serviceData.map(item => item.count),
+                                backgroundColor: [
+                                    '#FF6384', // Pink
+                                    '#36A2EB', // Blue
+                                    '#FFCE56', // Yellow
+                                    '#4BC0C0', // Teal
+                                    '#9966FF', // Purple
+                                    '#FF9F40'  // Orange
+                                ],
+                                borderColor: 'rgba(0, 0, 0, 0.2)', // Darker border for white background
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                    labels: {
+                                        color: '#000000', // Black for visibility on white background
+                                        font: { size: 14 }
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Distribution of Services',
+                                    color: 'var(--primary)',
+                                    font: { size: 16 }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                    titleColor: 'var(--primary)',
+                                    bodyColor: '#000000', // Black for visibility
+                                    borderColor: 'var(--primary)',
+                                    borderWidth: 1
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    showMessage('serviceChartMessage', 'No data available', 'error');
+                    if (serviceChart) serviceChart.destroy();
+                }
+                
+                // Customer Growth Over Time Chart (Line)
+                if (data.customerGrowth && data.customerGrowth.length > 0) {
+                    const growthCtx = document.getElementById('growthChart').getContext('2d');
+                    if (growthChart) growthChart.destroy();
+                    
+                    showChart('growthChart');
+                    
+                    const growthData = data.customerGrowth;
+                    growthChart = new Chart(growthCtx, {
+                        type: 'line',
+                        data: {
+                            labels: growthData.map(item => item.date),
+                            datasets: [
+                                {
+                                    label: 'New Customers',
+                                    data: growthData.map(item => item.count),
+                                    borderColor: '#36A2EB',
+                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                    fill: false,
+                                    tension: 0
+                                },
+                                {
+                                    label: 'Cumulative Customers',
+                                    data: data.customerGrowth.map(item => item.cumulative_count),
+                                    borderColor: '#FF6384',
+                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                    fill: false,
+                                    tension: 0
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Customer Growth Over Time',
+                                    color: 'var(--primary)',
+                                    font: { size: 16 }
+                                },
+                                legend: {
+                                    position: 'top',
+                                    labels: {
+                                        color: '#000000', // Black for visibility on white background
+                                        font: { size: 14 }
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                    titleColor: 'var(--primary)',
+                                    bodyColor: '#000000', // Black for visibility
+                                    borderColor: 'var(--primary)',
+                                    borderWidth: 1
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: '#000000', // Black for visibility on white background
+                                        font: { size: 12 }
+                                    }
+                                },
+                                x: {
+                                    ticks: {
+                                        color: '#000000', // Black for visibility on white background
+                                        font: { size: 12 }
+                                    }
+                                }
+                            },
+                            interaction: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        }
+                    });
+                } else {
+                    showMessage('growthChartMessage', 'No data available', 'error');
+                    if (growthChart) growthChart.destroy();
+                }
+                
+                // Top Services Chart (Bar)
+                if (data.topServices && data.topServices.length > 0) {
+                    const topServicesCtx = document.getElementById('topServicesChart').getContext('2d');
+                    if (topServicesChart) topServicesChart.destroy();
+                    
+                    showChart('topServicesChart');
+                    
+                    const topServicesData = data.topServices;
+                    topServicesChart = new Chart(topServicesCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: topServicesData.map(item => item.service),
+                            datasets: [{
+                                label: 'Number of Customers',
+                                data: topServicesData.map(item => item.count),
+                                backgroundColor: '#4BC0C0',
+                                borderColor: '#4BC0C0',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Top Services',
+                                    color: 'var(--primary)',
+                                    font: { size: 16 }
+                                },
+                                legend: {
+                                    labels: {
+                                        color: '#000000', // Black for visibility on white background
+                                        font: { size: 14 }
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                    titleColor: 'var(--primary)',
+                                    bodyColor: '#000000', // Black for visibility
+                                    borderColor: 'var(--primary)',
+                                    borderWidth: 1
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1,
+                                        color: '#000000', // Black for visibility on white background
+                                        font: { size: 12 }
+                                    }
+                                },
+                                x: {
+                                    ticks: {
+                                        color: '#000000', // Black for visibility on white background
+                                        font: { size: 12 }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    showMessage('topServicesChartMessage', 'No data available', 'error');
+                    if (topServicesChart) topServicesChart.destroy();
+                }
+                
+                console.log('Charts updated successfully');
+            } catch (error) {
+                console.error('Error updating charts:', error);
+                showMessage('serviceChartMessage', 'Error loading data', 'error');
+                showMessage('growthChartMessage', 'Error loading data', 'error');
+                showMessage('topServicesChartMessage', 'Error loading data', 'error');
+            }
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, fetching data...');
+            
+            showMessage('serviceChartMessage', 'Loading data...', '');
+            showMessage('growthChartMessage', 'Loading data...', '');
+            showMessage('topServicesChartMessage', 'Loading data...', '');
+            
+            fetchServiceStatistics();
+            
+            document.getElementById('refreshBtn').addEventListener('click', fetchServiceStatistics);
+            
+            setInterval(fetchServiceStatistics, 30000);
+        });
+    </script>
 </body>
 </html>

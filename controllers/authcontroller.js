@@ -1,4 +1,6 @@
 const db = require('../config/db');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // ----------------- REGISTER USER -----------------
 const registerUser = async (req, res) => {
@@ -18,13 +20,16 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Insert new user
-    const sql = `INSERT INTO users (username, email, roles,password, contacts) VALUES (?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO users (username, email, roles, password, contacts) VALUES (?, ?, ?, ?, ?)`;
     const [result] = await db.execute(sql, [
       username,
       email,
       roles,
-      password,
+      hashedPassword,
       contacts
     ]);
 
@@ -47,26 +52,69 @@ const loginUser = async (req, res) => {
   const { username, password, roles } = req.body;
 
   try {
-    const [users] = await db.execute(
-      'SELECT * FROM users WHERE username = ? AND password = ? AND roles = ?',
-      [username, password, roles]
-    );
+    // If role is admin, check admin table only
+    if (roles === 'admin') {
+      const [admins] = await db.execute(
+        'SELECT * FROM admin WHERE username = ?',
+        [username]
+      );
 
-    if (users.length === 0) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid credentials'
-      });
+      if (admins.length > 0) {
+        // Admin found, check password
+        const admin = admins[0];
+        const isPasswordValid = await bcrypt.compare(password, admin.password);
+        if (isPasswordValid) {
+          // Generate JWT token for admin
+          const token = jwt.sign(
+            {
+              id: admin.admin_id,
+              username: admin.username,
+              role: 'admin'
+            },
+            process.env.JWT_SECRET || 'fallback_secret_key',
+            { expiresIn: '24h' }
+          );
+          
+          return res.status(200).json({
+            success: true,
+            message: 'Login successful',
+            token: token,
+            user: {
+              id: admin.admin_id,
+              username: admin.username,
+              roles: admin.role || 'admin'
+            }
+          });
+        }
+      }
+    } else {
+      // Check regular users table
+      const [users] = await db.execute(
+        'SELECT * FROM users WHERE username = ? AND roles = ?',
+        [username, roles]
+      );
+
+      if (users.length > 0) {
+        // User found, check password
+        const user = users[0];
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (isPasswordValid) {
+          return res.status(200).json({
+            success: true,
+            message: 'Login successful',
+            user: {
+              id: user.id,
+              username: user.username,
+              roles: user.roles
+            }
+          });
+        }
+      }
     }
 
-    res.status(200).json({
-      success: true,
-      message: 'Login successful',
-      user: {
-        id: users[0].id,
-        username: users[0].username,
-        roles: users[0].roles
-      }
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid credentials'
     });
   } catch (err) {
     console.error('Error in login:', err);

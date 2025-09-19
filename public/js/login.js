@@ -13,7 +13,9 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const loginData = { username, password, roles };
 
   try {
-    const response = await fetch('/auth/login', {
+    // Use different endpoint for admin vs regular users
+    const endpoint = roles === 'admin' ? '/admin/login' : '/auth/login';
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(loginData)
@@ -22,10 +24,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const result = await response.json();
 
     if (response.ok && result.success) {
-      alert("Login successful!");
+     // alert("Login successful!");
 
       // Redirect based on role
-      switch (roles.toLowerCase()) {
+      switch (result.user.roles.toLowerCase()) {
         case 'general_manager':
           window.location.href = "../gm_dash/gm_dash.html";
           break;
@@ -37,8 +39,12 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
           break;
         case'customer_admin':
         window.location.href="../customer/customer_dash.html";
+        break;
+        case 'admin':
+          window.location.href = "../admin/main_dashboard.html";
+          break;
         default:
-          alert("Unauthorized access");
+          window.location.href = "../index.html"; // Default redirect
       }
     } else {
 

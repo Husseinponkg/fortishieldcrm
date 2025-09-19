@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Monitoring - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #00f6ff;   /* Neon Cyan */
+            --primary-hover: #00c6d6;
+            --secondary: #131313;
+            --dark: #0a0a0a;
+            --darker: #000000;
+            --light: #e5e5e5;
+            --gray: #9ca3af;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --glass: rgba(255,255,255,0.05);
+            --border-glow: 0 0 12px rgba(0, 246, 255, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: var(--darker);
+            box-shadow: inset 0 -1px 0 rgba(255,255,255,0.1);
+        }
+        .header h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header div {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .header span {
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: var(--light);
+        }
+        .btn-danger:hover {
+            background: var(--primary);
+            color: var(--dark);
+            box-shadow: var(--border-glow);
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+        .btn-warning:hover {
+            background: var(--primary);
+            color: var(--dark);
+            box-shadow: var(--border-glow);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: inset 0 0 25px rgba(255,255,255,0.05);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar li {
+            padding: 0.75rem;
+            color: var(--gray);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .sidebar li:hover,
+        .sidebar li.active {
+            background: var(--glass);
+            color: var(--primary);
+            box-shadow: var(--border-glow);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 270px;
+            padding: 2rem;
+        }
+        .card {
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 2rem;
+            box-shadow: 0 0 25px rgba(0,0,0,0.6);
+        }
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        th {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        td {
+            color: var(--gray);
+        }
+        .status-completed {
+            color: var(--success);
+        }
+        .status-pending {
+            color: var(--warning);
+        }
+        .status-not-completed {
+            color: var(--danger);
+        }
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: flex-end;
+        }
+        .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .form-group label {
+            display: block;
+            color: var(--light);
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--glass);
+            color: var(--light);
+            font-size: 0.9rem;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: var(--border-glow);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: var(--secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 0 25px rgba(0,0,0,0.6);
+        }
+        .modal-content .close {
+            float: right;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+        }
+        .modal-content h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .modal-content p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-chart-line"></i> Activity Monitoring</h1>
+        <div>
+            <span id="admin-username"><i class="fas fa-user"></i> Admin</span> | 
+            <a href="#" id="logout-btn" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <ul>
+            <li data-page="dashboard"><i class="fas fa-home"></i> Dashboard</li>
+            <li data-page="users"><i class="fas fa-users"></i> User Management</li>
+            <li class="active" data-page="activities"><i class="fas fa-chart-line"></i> Activity Monitoring</li>
+            <li data-page="logs"><i class="fas fa-file-alt"></i> System Logs</li>
+            <li data-page="troubleshoot"><i class="fas fa-tools"></i> Troubleshooting</li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <div class="card">
+            <h3><i class="fas fa-filter"></i> Filter Activities</h3>
+            <div class="filter-section">
+                <div class="form-group">
+                    <label for="filter-customer"><i class="fas fa-user-friends"></i> Customer</label>
+                    <input type="text" id="filter-customer" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="filter-status"><i class="fas fa-tasks"></i> Status</label>
+                    <select id="filter-status" class="form-control">
+                        <option value="">All Statuses</option>
+                        <option value="completed">Completed</option>
+                        <option value="pending">Pending</option>
+                        <option value="not completed">Not Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-date"><i class="fas fa-calendar-alt"></i> Date</label>
+                    <input type="date" id="filter-date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <button class="btn" id="apply-filters"><i class="fas fa-check"></i> Apply Filters</button>
+                    <button class="btn btn-warning" id="clear-filters"><i class="fas fa-times"></i> Clear</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3><i class="fas fa-list"></i> Recent System Activities</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Task Type</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="activities-table">
+                    <tr>
+                        <td colspan="8" style="text-align: center;">Loading activities...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- View Activity Modal -->
+    <div id="view-activity-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-eye"></i> Activity Details</h2>
+            <p><strong>ID:</strong> <span id="view-activity-id"></span></p>
+            <p><strong>Customer:</strong> <span id="view-activity-customer"></span></p>
+            <p><strong>Task Type:</strong> <span id="view-activity-task-type"></span></p>
+            <p><strong>Description:</strong> <span id="view-activity-description"></span></p>
+            <p><strong>Status:</strong> <span id="view-activity-status"></span></p>
+            <p><strong>Assigned To:</strong> <span id="view-activity-assigned-to"></span></p>
+            <p><strong>Date:</strong> <span id="view-activity-date"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Page navigation
+        document.querySelectorAll('.sidebar ul li').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar ul li').forEach(li => li.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.getAttribute('data-page');
+                const routes = {
+                    dashboard: 'main_dashboard.html',
+                    users: 'user_management.html',
+                    activities: 'activity_monitoring.html',
+                    logs: 'system_logs.html',
+                    troubleshoot: 'troubleshooting.html'
+                };
+                if (routes[page]) {
+                    window.location.href = routes[page];
+                }
+            });
+        });
+
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            // Remove any stored admin data
+            localStorage.removeItem('adminToken');
+            window.location.href = '../index.html';
+        });
+
+        // View activity modal
+        const modal = document.getElementById('view-activity-modal');
+        const span = document.querySelector('.modal .close');
+
+        span.onclick = function() {
+            modal.style.display = 'none';
+        };
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        function viewActivity(activity) {
+            document.getElementById('view-activity-id').textContent = activity.id;
+            document.getElementById('view-activity-customer').textContent = activity.customer_name || 'N/A';
+            document.getElementById('view-activity-task-type').textContent = activity.task_type || 'N/A';
+            document.getElementById('view-activity-description').textContent = activity.description || 'N/A';
+            document.getElementById('view-activity-status').textContent = activity.status || 'N/A';
+            document.getElementById('view-activity-status').className = `status-${activity.status.replace(' ', '-')}`;
+            document.getElementById('view-activity-assigned-to').textContent = activity.assigned_to || 'N/A';
+            document.getElementById('view-activity-date').textContent = activity.created_at ? new Date(activity.created_at).toLocaleString() : 'N/A';
+            modal.style.display = 'block';
+        }
+
+        // Fetch activities with optional filters
+        async function fetchActivities(filters = {}) {
+            const activitiesTable = document.getElementById('activities-table');
+            activitiesTable.innerHTML = '<tr><td colspan="8" style="text-align: center;">Loading activities...</td></tr>';
+            
+            try {
+                const query = new URLSearchParams(filters).toString();
+                const response = await fetch(`/admin/get-recent-activities${query ? `?${query}` : ''}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.success && data.activities?.length) {
+                    activitiesTable.innerHTML = data.activities.map(activity => `
+                        <tr>
+                            <td>${activity.id}</td>
+                            <td>${activity.customer_name || 'N/A'}</td>
+                            <td>${activity.task_type || 'N/A'}</td>
+                            <td>${activity.description || 'N/A'}</td>
+                            <td><span class="${activity.status === 'completed' ? 'status-completed' : activity.status === 'pending' ? 'status-pending' : 'status-not-completed'}">${activity.status || 'N/A'}</span></td>
+                            <td>${activity.assigned_to || 'N/A'}</td>
+                            <td>${activity.created_at ? new Date(activity.created_at).toLocaleString() : 'N/A'}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn" onclick='viewActivity(${JSON.stringify(activity)})'><i class="fas fa-eye"></i> View</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    activitiesTable.innerHTML = `<tr><td colspan="8" style="text-align: center;">${data.message || 'No activities found'}</td></tr>`;
+                }
+            } catch (error) {
+                console.error('Error fetching activities:', error);
+                activitiesTable.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #ef4444;">Error loading activities: ${error.message}. Please try again later.</td></tr>`;
+            }
+        }
+
+        // Apply filters
+        document.getElementById('apply-filters').addEventListener('click', function() {
+            const filters = {};
+            const customer = document.getElementById('filter-customer').value;
+            const status = document.getElementById('filter-status').value;
+            const date = document.getElementById('filter-date').value;
+            if (customer) filters.customer = customer;
+            if (status) filters.status = status;
+            if (date) filters.date = date;
+            fetchActivities(filters);
+        });
+
+        // Clear filters
+        document.getElementById('clear-filters').addEventListener('click', function() {
+            document.getElementById('filter-customer').value = '';
+            document.getElementById('filter-status').value = '';
+            document.getElementById('filter-date').value = '';
+            fetchActivities();
+        });
+
+        // Initialize with activities
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchActivities();
+        });
+    </script>
+</body>
+</html>

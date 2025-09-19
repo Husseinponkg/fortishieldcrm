@@ -1,583 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortishield Matrix CRM - Activities Overview</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* General body styling */
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --secondary: #1f2937;
-            --dark: #111827;
-            --darker: #0a0e17;
-            --light: #f3f4f6;
-            --gray: #9ca3af;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --card-bg: #1e293b;
-            --card-border: #374151;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
-            color: var(--light);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-        
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        
-        /* Header Styles */
-        header {
-            background-color: rgba(17, 24, 39, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--card-border);
-            text-align: center;
-        }
-        
-        .header-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .logo-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-        
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .logo-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--primary) 0%, #818cf8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.25rem;
-        }
-        
-        .logo-subtitle {
-            color: var(--gray);
-            font-size: 1rem;
-        }
-        
-        /* Navigation */
-        nav {
-            background-color: rgba(31, 41, 55, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--card-border);
-        }
-        
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-        
-        .nav-list {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .nav-item a {
-            color: var(--gray);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.75rem 1.25rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .nav-item a:hover, .nav-item a.active {
-            color: var(--light);
-            background: rgba(255, 255, 255, 0.05);
-        }
-        
-        /* Main layout */
-        .main-container {
-            display: flex;
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-            gap: 2rem;
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            flex-shrink: 0;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            height: fit-content;
-        }
-        
-        .sidebar h3 {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            color: var(--light);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid var(--card-border);
-        }
-        
-        .sidebar h3 i {
-            color: var(--primary);
-        }
-        
-        .sidebar ul {
-            list-style: none;
-        }
-        
-        .sidebar li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--gray);
-            text-decoration: none;
-            padding: 0.75rem;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        
-        .sidebar a:hover, .sidebar a.active {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--light);
-        }
-        
-        .sidebar a i {
-            width: 20px;
-            text-align: center;
-        }
-        
-        /* Main content area */
-        .content {
-            flex: 1;
-            padding: 1.5rem;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-        }
-        
-        .content h2 {
-            color: var(--light);
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .content h2 i {
-            color: var(--primary);
-        }
-        
-        /* Form styling */
-        .form-group {
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-        }
-        
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--light);
-        }
-        
-        .form-control {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-        
-        input[type="text"] {
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--card-border);
-            border-radius: 6px;
-            background: var(--secondary);
-            color: var(--light);
-            flex: 1;
-            font-size: 1rem;
-        }
-        
-        button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s;
-            white-space: nowrap;
-        }
-        
-        button:hover {
-            background-color: var(--primary-hover);
-        }
-        
-        /* Icon grid */
-        .icon-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .icon-card {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--card-bg) 100%);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .icon-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-        
-        .icon-card i {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-        
-        .icon-card h3 {
-            color: var(--light);
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-        
-        .icon-card p {
-            color: var(--gray);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-        
-        .count {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            padding: 1.5rem 2rem;
-            border-top: 1px solid var(--card-border);
-            margin-top: auto;
-            text-align: center;
-        }
-        
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .copyright {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .main-container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                margin-bottom: 1.5rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 1rem;
-            }
-            
-            .logo {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .logo-text {
-                align-items: center;
-            }
-            
-            .nav-list {
-                gap: 0.5rem;
-            }
-            
-            .nav-item a {
-                padding: 0.5rem 0.75rem;
-                font-size: 0.9rem;
-            }
-            
-            .icon-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .main-container {
-                padding: 0 1rem;
-                margin: 1rem auto;
-            }
-            
-            .content, .sidebar {
-                padding: 1rem;
-            }
-            
-            .form-control {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            button {
-                width: 100%;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fortishield Matrix CRM - Activities Overview</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Root variables - Neon Cyan Theme */
+    :root {
+      --primary: #00f6ff;   /* Neon Cyan */
+      --primary-hover: #00c6d6;
+      --secondary: #131313;
+      --dark: #0a0a0a;
+      --darker: #000000;
+      --light: #e5e5e5;
+      --gray: #9ca3af;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --glass: rgba(255,255,255,0.05);
+      --border-glow: 0 0 12px rgba(0, 246, 255, 0.6);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--darker), var(--dark));
+      color: var(--light);
+      min-height: 100vh;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background: var(--darker);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.1);
+    }
+
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .logo-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      box-shadow: var(--border-glow);
+    }
+
+    .logo-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 1px;
+    }
+
+    .logo-subtitle {
+      color: var(--gray);
+      font-size: 1rem;
+    }
+
+    /* Navigation */
+    nav {
+      background: var(--dark);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .nav-list {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-item a {
+      color: var(--gray);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-item a:hover, .nav-item a.active {
+      color: var(--primary);
+      background: var(--glass);
+      box-shadow: var(--border-glow);
+    }
+
+    /* Main Layout */
+    .main-container {
+      display: flex;
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      gap: 2rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      flex-shrink: 0;
+      background: var(--secondary);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: inset 0 0 25px rgba(255,255,255,0.05);
+      height: fit-content;
+    }
+
+    .sidebar h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 0.75rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .sidebar a:hover, .sidebar a.active {
+      background: var(--glass);
+      color: var(--primary);
+      box-shadow: var(--border-glow);
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 1.5rem;
+      background: var(--secondary);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    }
+
+    .content h2 {
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Cards */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .icon-card {
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .icon-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--border-glow);
+    }
+
+    .icon-card i {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .icon-card h3 {
+      color: var(--light);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .icon-card p {
+      color: var(--gray);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    .icon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Force 3 columns */
+  gap: 1.5rem;
+  justify-items: center;
+}
+
+.icon-grid .icon-card:nth-child(6) {
+  grid-column: 3/ span 1; /* Centers the 6th card under the 2nd column */
+}
+
+
+    .count {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--dark);
+      padding: 1.5rem 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: auto;
+      text-align: center;
+    }
+
+    footer p {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .main-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .icon-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header Section -->
-        <header>
-            <div class="header-content">
-                <div class="logo">
-                    <img src="https://images.unsplash.com/photo-1569012871812-f38ee64cd54c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Fortishield Logo" class="logo-img">
-                    <div class="logo-text">
-                        <div class="logo-title">Fortishield Matrix CRM</div>
-                        <div class="logo-subtitle">Activities Overview</div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Navigation Section -->
-        <nav>
-            <div class="nav-container">
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="customers.html" class="active"><i class="fas fa-users"></i> View Customers</a></li>
-                    <li class="nav-item"><a href="activities_icons.html"><i class="fas fa-chart-line"></i> View Activities</a></li>
-                    <li class="nav-item"><a href="contacts.html"><i class="fas fa-chart-bar"></i> Customer Benchmarks</a></li>
-                </ul>
-            </div>
-        </nav>
-
-        <div class="main-container">
-            <!-- Sidebar Section -->
-            <div class="sidebar">
-                <h3><i class="fas fa-bars"></i> Navigation Menu</h3>
-                <ul>
-                    <li><a href="gm_dash.html"><i class="fas fa-home"></i> View Dashboard</a></li>
-                    <li><a href="customers.html"><i class="fas fa-user-plus"></i> Record Customers</a></li>
-                    <li><a href="views.html"><i class="fas fa-list"></i> View Customers</a></li>
-                    <li><a href="deals.html"><i class="fas fa-briefcase"></i> View Opportunities</a></li>
-                    <li><a href="activities_dash.html"><i class="fas fa-tasks"></i> Detailed Activities</a></li>
-                    <li><a href="activities_icons.html" class="active"><i class="fas fa-icons"></i> Activities Overview</a></li>
-                    <li><a href="daily_tasks.html"><i class="fas fa-calendar-day"></i> Daily Tasks</a></li>
-                    <li><a href="contacts.html"><i class="fas fa-address-book"></i> View Contacts</a></li>
-                    <li><a href="trends.html"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
-                    <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                </ul>
-            </div>
-
-            <!-- Main Content Area -->
-            <div class="content">
-                <h2><i class="fas fa-icons"></i> Activities Overview</h2>
-                
-                <div class="form-group">
-                    <label for="myNameInput">Enter Your Name:</label>
-                    <div class="form-control">
-                        <input type="text" id="myNameInput" placeholder="Enter your name">
-                        <button id="updateNameBtn">Update</button>
-                    </div>
-                </div>
-                
-                <div class="icon-grid">
-                    <div class="icon-card">
-                        <i class="fas fa-tasks"></i>
-                        <h3>Total Activities</h3>
-                        <p>All activities in the system</p>
-                        <div class="count" id="totalActivities">0</div>
-                    </div>
-                    
-                    <div class="icon-card">
-                        <i class="fas fa-clock"></i>
-                        <h3>Pending Activities</h3>
-                        <p>Activities requiring attention</p>
-                        <div class="count" id="pendingActivities">0</div>
-                    </div>
-                    
-                    <div class="icon-card">
-                        <i class="fas fa-check-circle"></i>
-                        <h3>Completed Activities</h3>
-                        <p>Successfully finished tasks</p>
-                        <div class="count" id="completedActivities">0</div>
-                    </div>
-                    
-                    <div class="icon-card">
-                        <i class="fas fa-user"></i>
-                        <h3>Assigned to Me</h3>
-                        <p>Activities assigned to you</p>
-                        <div class="count" id="myActivities">0</div>
-                    </div>
-                    
-                    <div class="icon-card">
-                        <i class="fas fa-calendar-plus"></i>
-                        <h3>Today's Activities</h3>
-                        <p>Activities scheduled for today</p>
-                        <div class="count" id="todaysActivities">0</div>
-                    </div>
-                    
-                    <div class="icon-card">
-                        <i class="fas fa-chart-bar"></i>
-                        <h3>Completion Rate</h3>
-                        <p>Percentage of completed activities</p>
-                        <div class="count" id="completionRate">0%</div>
-                    </div>
-                </div>
-            </div>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="header-content">
+        <div class="logo">
+          <img src="../images/logo.png" alt="Fortishield Logo" class="logo-img">
+          <div>
+            <div class="logo-title">Fortishield Matrix CRM</div>
+            <div class="logo-subtitle">Activities Overview</div>
+          </div>
         </div>
+      </div>
+    </header>
 
-        <!-- Footer Section -->
-        <footer>
-            <div class="footer-content">
-                <p class="copyright">&copy; 2025 Fortishield. All rights reserved. | CRM System v2.1</p>
-            </div>
-        </footer>
+    <!-- Navigation -->
+    <nav>
+      <div class="nav-container">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="customers.html"><i class="fas fa-users"></i> View Customers</a></li>
+          <li class="nav-item"><a href="activities_icons.html" class="active"><i class="fas fa-chart-line"></i> View Activities</a></li>
+          <li class="nav-item"><a href="views.html"><i class="fas fa-chart-bar"></i> Customer Benchmarks</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="main-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h3><i class="fas fa-bars"></i> Navigation Menu</h3>
+        <ul>
+          <li><a href="gm_dash.html"><i class="fas fa-home"></i> View Dashboard</a></li>
+          
+          <li><a href="views.html"><i class="fas fa-list"></i> View Customers</a></li>
+          <li><a href="deals_functional.html"><i class="fas fa-briefcase"></i> View Opportunities</a></li>
+          <li><a href="activities_dash.html"><i class="fas fa-tasks"></i> Detailed Activities</a></li>
+          <li><a href="activities_icons.html" class="active"><i class="fas fa-icons"></i> Activities Overview</a></li>
+          <li><a href="daily_tasks.html"><i class="fas fa-calendar-day"></i> Daily Tasks</a></li>
+          
+          <li><a href="trends.html"><i class="fas fa-chart-line"></i> Customer Trends</a></li>
+          <li><a href="../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+      </aside>
+
+      <!-- Content -->
+      <main class="content">
+        <h2><i class="fas fa-icons"></i> Activities Overview</h2>
+
+        <div class="icon-grid">
+          <div class="icon-card">
+            <i class="fas fa-tasks"></i>
+            <h3>Total Activities</h3>
+            <p>All activities in the system</p>
+            <div class="count" id="totalActivities">0</div>
+          </div>
+
+          <div class="icon-card">
+            <i class="fas fa-clock"></i>
+            <h3>Pending Activities</h3>
+            <p>Activities requiring attention</p>
+            <div class="count" id="pendingActivities">0</div>
+          </div>
+
+          <div class="icon-card">
+            <i class="fas fa-check-circle"></i>
+            <h3>Completed Activities</h3>
+            <p>Successfully finished tasks</p>
+            <div class="count" id="completedActivities">0</div>
+          </div>
+
+          <div class="icon-card">
+            <i class="fas fa-user"></i>
+            <h3>Assigned to Me</h3>
+            <p>Activities assigned to you</p>
+            <div class="count" id="myActivities">0</div>
+          </div>
+
+          <div class="icon-card">
+            <i class="fas fa-calendar-plus"></i>
+            <h3>Today's Activities</h3>
+            <p>Activities scheduled for today</p>
+            <div class="count" id="todaysActivities">0</div>
+          </div>
+
+          <div class="icon-card">
+            <i class="fas fa-chart-bar"></i>
+            <h3>Completion Rate</h3>
+            <p>Percentage of completed activities</p>
+            <div class="count" id="completionRate">0%</div>
+          </div>
+        </div>
+      </main>
     </div>
 
-    <script>
-        // Global variables
-        let activities = [];
-        let myName = '';
-        
-        // DOM elements
-        const totalActivitiesEl = document.getElementById('totalActivities');
-        const pendingActivitiesEl = document.getElementById('pendingActivities');
-        const completedActivitiesEl = document.getElementById('completedActivities');
-        const myActivitiesEl = document.getElementById('myActivities');
-        const todaysActivitiesEl = document.getElementById('todaysActivities');
-        const completionRateEl = document.getElementById('completionRate');
-        const myNameInput = document.getElementById('myNameInput');
-        const updateNameBtn = document.getElementById('updateNameBtn');
-        
-        // Sample data for demonstration
-        const sampleActivities = [
-            { id: 1, title: "Client Meeting", status: "completed", assigned_to: "John Doe", created_at: "2023-08-15" },
-            { id: 2, title: "Proposal Submission", status: "pending", assigned_to: "Jane Smith", created_at: "2023-08-16" },
-            { id: 3, title: "Follow-up Call", status: "pending", assigned_to: "John Doe", created_at: "2023-08-16" },
-            { id: 4, title: "Contract Review", status: "completed", assigned_to: "Mike Johnson", created_at: "2023-08-14" },
-            { id: 5, title: "Product Demo", status: "pending", assigned_to: "Sarah Wilson", created_at: "2023-08-17" },
-            { id: 6, title: "Budget Planning", status: "completed", assigned_to: "John Doe", created_at: "2023-08-13" }
-        ];
-        
-        // Initialize the dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            // For demonstration, use sample data
-            activities = sampleActivities;
-            updateStats();
-            
-            // Set up event listeners for name input
-            updateNameBtn.addEventListener('click', updateMyName);
-            myNameInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    updateMyName();
-                }
-            });
-        });
-        
-        // Update my name from input
-        function updateMyName() {
-            myName = myNameInput.value.trim();
-            if (myName) {
-                updateStats();
-            }
-        }
-        
-        // Update statistics
-        function updateStats() {
-            // Total activities
-            totalActivitiesEl.textContent = activities.length;
-            
-            // Pending activities
-            const pendingCount = activities.filter(activity => activity.status === 'pending').length;
-            pendingActivitiesEl.textContent = pendingCount;
-            
-            // Completed activities
-            const completedCount = activities.filter(activity => activity.status === 'completed').length;
-            completedActivitiesEl.textContent = completedCount;
-            
-            // Assigned to me (using the entered name)
-            const myCount = myName ? activities.filter(activity => activity.assigned_to === myName).length : 0;
-            myActivitiesEl.textContent = myCount;
-            
-            // Today's activities (using current date for demo)
-            const today = new Date().toISOString().split('T')[0];
-            const todaysCount = activities.filter(activity => activity.created_at === today).length;
-            todaysActivitiesEl.textContent = todaysCount;
-            
-            // Completion rate
-            if (activities.length > 0) {
-                const rate = Math.round((completedCount / activities.length) * 100);
-                completionRateEl.textContent = rate + '%';
-            } else {
-                completionRateEl.textContent = '0%';
-            }
-        }
-    </script>
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2025 Fortishield. All rights reserved. | CRM System v2.1</p>
+    </footer>
+  </div>
 </body>
 </html>
